@@ -1149,7 +1149,7 @@ const Codecolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'pkgSpecCrit', label: '包装规格', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'prepnSpec', label: '剂型描述', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'prepnTypeDesc', label: '制剂规格', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'produceDateStr', label: '剂型描述', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'produceDateStr', label: '生产日期', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'pkgAmount', label: '最小包装数量', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'expireDate', label: '有效期至', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'batchNo', label: '批次号', showOverflowTooltip: true },
