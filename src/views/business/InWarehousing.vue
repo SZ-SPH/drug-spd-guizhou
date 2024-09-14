@@ -190,21 +190,21 @@
             v-if="Codecolumns.showColumn('entName')" />
           <el-table-column prop="packageLevel" label="码等级" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('packageLevel')" />
-          <el-table-column prop="physicName" label="有效期" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="physicName" label="药品名称" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('physicName')" />
-          <el-table-column prop="exprie" label="药品id" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="exprie" label="有效期" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('exprie')" />
-          <el-table-column prop="drugEntBaseInfoId" label="批准文号" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="drugEntBaseInfoId" label="药品id" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('drugEntBaseInfoId')" />
-          <el-table-column prop="approvalLicenceNo" label="包装规格" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="approvalLicenceNo" label="批准文号" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('approvalLicenceNo')" />
-          <el-table-column prop="pkgSpecCrit" label="制剂规格" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="pkgSpecCrit" label="包装规格" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('pkgSpecCrit')" />
-          <el-table-column prop="prepnSpec" label="剂型描述" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="prepnSpec" label="制剂规格" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('prepnSpec')" />
-          <el-table-column prop="prepnTypeDesc" label="生产日期" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="prepnTypeDesc" label="剂型描述" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('prepnTypeDesc')" />
-          <el-table-column prop="produceDateStr" label="剂型描述" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="produceDateStr" label="生产日期" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('produceDateStr')" />
           <el-table-column prop="pkgAmount" label="最小包装数量" align="center" :show-overflow-tooltip="true"
             v-if="Codecolumns.showColumn('pkgAmount')" />
