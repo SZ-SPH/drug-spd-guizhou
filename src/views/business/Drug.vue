@@ -252,14 +252,14 @@
     { visible: true, align: 'center', type: '', prop: 'drugMnemonicCode', label: '药品助记码', showOverflowTooltip: true },
     { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '药品规格', showOverflowTooltip: true },
     { visible: true, align: 'center', type: '', prop: 'drugCategory', label: '药品类别', showOverflowTooltip: true },
-    { visible: true, align: 'center', type: '', prop: 'drugVarietyName', label: '药品品种名称', showOverflowTooltip: true },
+    { visible: false, align: 'center', type: '', prop: 'drugVarietyName', label: '药品品种名称', showOverflowTooltip: true },
     { visible: true, align: 'center', type: '', prop: 'drugClassification', label: '药物分类', showOverflowTooltip: true },
     { visible: false, align: 'center', type: '', prop: 'tracingSourceCode', label: '溯源码', showOverflowTooltip: true },
     { visible: false, align: 'center', type: '', prop: 'drugBatchNumber', label: '批号', showOverflowTooltip: true },
-    { visible: false, align: 'center', type: '', prop: 'minunit', label: '最小单位', showOverflowTooltip: true },
-    { visible: false, align: 'center', type: '', prop: 'produceName', label: '生产厂家', showOverflowTooltip: true },
-    { visible: false, align: 'center', type: '', prop: 'packageRatio', label: '转换系数' },
-    { visible: false, align: 'center', type: '', prop: 'packageUnit', label: '包装单位', showOverflowTooltip: true },
+    { visible: true, align: 'center', type: '', prop: 'minunit', label: '最小单位', showOverflowTooltip: true },
+    { visible: true, align: 'center', type: '', prop: 'produceName', label: '生产厂家', showOverflowTooltip: true },
+    { visible: true, align: 'center', type: '', prop: 'packageRatio', label: '转换系数' },
+    { visible: true, align: 'center', type: '', prop: 'packageUnit', label: '包装单位', showOverflowTooltip: true },
     //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
   ])
   const Drugtotal = ref(0)

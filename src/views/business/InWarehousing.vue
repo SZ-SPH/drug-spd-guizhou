@@ -4,67 +4,73 @@
  * @Date: (2024-06-25)
 -->
 <template>
+  <!-- 入库单据 -->
+  <div>
+    <el-row :gutter="15" class="mb10">
+      <el-form :model="ReceiptqueryParams" label-position="right" inline ref="ReceiptqueryRef"
+        v-show="ReceiptshowSearch" @submit.prevent>
+        <el-form-item label="入库单" prop="ReceiptCode">
+          <el-input v-model="ReceiptqueryParams.ReceiptCode" placeholder="请输入入库单号" />
+        </el-form-item>
+        <el-form-item>
+          <el-button icon="search" type="primary" @click="ReceipthandleQuery">{{ $t('btn.search') }}</el-button>
+          <el-button icon="refresh" @click="ReceiptresetQuery">{{ $t('btn.reset') }}</el-button>
+        </el-form-item>
+      </el-form>
+      <el-col :span="1.5">
+        <el-button type="primary" v-hasPermi="['warehousereceipt:add']" plain icon="plus" @click="ReceipthandleAdd">
+          增加入库单
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="warning" plain icon="download" @click="ReceipthandleSubmithis"
+          v-hasPermi="['inwarehousing:export']">
+          确认收货
+        </el-button>
+      </el-col>
+    </el-row>
+    <el-table @row-click="ReceiptDrugdatalist" :data="ReceiptdataList" v-loading="Receiptloading" ref="table" border
+      header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="ReceiptsortChange"
+      :row-class-name="rowClassName" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="50" align="center" />
+      <el-table-column prop="receiptId" label="入库单id" align="center" v-if="Receiptcolumns.showColumn('receiptId')" />
+      <el-table-column prop="receiptCode" label="入库单编号" align="center" :show-overflow-tooltip="true"
+        v-if="Receiptcolumns.showColumn('receiptCode')" />
+      <el-table-column prop="storageTime" label="入库时间" align="center" :show-overflow-tooltip="true"
+        v-if="Receiptcolumns.showColumn('storageTime')" />
+      <el-table-column prop="creationTime" label="创建时间" align="center" :show-overflow-tooltip="true"
+        v-if="Receiptcolumns.showColumn('creationTime')" />
+      <el-table-column prop="creator" label="创建人" align="center" :show-overflow-tooltip="true"
+        v-if="Receiptcolumns.showColumn('creator')" />
+      <el-table-column prop="changeTime" label="修改时间" align="center" :show-overflow-tooltip="true"
+        v-if="Receiptcolumns.showColumn('changeTime')" />
+      <el-table-column prop="modifiedBy" label="修改人" align="center" :show-overflow-tooltip="true"
+        v-if="Receiptcolumns.showColumn('modifiedBy')" />
+      <!-- 未修改 -->
+      <el-table-column prop="state" label="状态" align="center" :show-overflow-tooltip="true"
+        v-if="Receiptcolumns.showColumn('state')" />
+      <el-table-column prop="invoiceNumber" label="发票号" align="center" :show-overflow-tooltip="true"
+        v-if="Receiptcolumns.showColumn('invoiceNumber')" />
+
+      <!-- 未修改 -->
+
+      <el-table-column label="操作" width="120" fixed="right">
+        <template #default="scope">
+          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['warehousereceipt:edit']"
+            @click="ReceipthandleUpdate(scope.row)"></el-button>
+          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['warehousereceipt:delete']"
+            @click="ReceipthandleDelete(scope.row)"></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <pagination :total="Receipttotal" v-model:page="ReceiptqueryParams.pageNum"
+      v-model:limit="ReceiptqueryParams.pageSize" @pagination="ReceiptgetList" />
+
+  </div>
   <div>
     <div class="table-content">
-
-      <!-- 入库单据 -->
-      <div class="table-item">
-        <el-row :gutter="15" class="mb10">
-          <el-form :model="ReceiptqueryParams" label-position="right" inline ref="ReceiptqueryRef"
-            v-show="ReceiptshowSearch" @submit.prevent>
-            <el-form-item label="入库单" prop="ReceiptCode">
-              <el-input v-model="ReceiptqueryParams.ReceiptCode" placeholder="请输入入库单号" />
-            </el-form-item>
-            <el-form-item>
-              <el-button icon="search" type="primary" @click="ReceipthandleQuery">{{ $t('btn.search') }}</el-button>
-              <el-button icon="refresh" @click="ReceiptresetQuery">{{ $t('btn.reset') }}</el-button>
-            </el-form-item>
-          </el-form>
-          <el-col :span="1.5">
-            <el-button type="primary" v-hasPermi="['warehousereceipt:add']" plain icon="plus" @click="ReceipthandleAdd">
-              增加入库单
-            </el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button type="warning" plain icon="download" @click="ReceipthandleSubmithis"
-              v-hasPermi="['inwarehousing:export']">
-              确认收货
-            </el-button>
-          </el-col>
-        </el-row>
-        <el-table @row-click="ReceiptDrugdatalist" :data="ReceiptdataList" v-loading="Receiptloading" ref="table" border
-          header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="ReceiptsortChange"
-          @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="receiptId" label="入库单id" align="center"
-            v-if="Receiptcolumns.showColumn('receiptId')" />
-          <el-table-column prop="receiptCode" label="入库单编号" align="center" :show-overflow-tooltip="true"
-            v-if="Receiptcolumns.showColumn('receiptCode')" />
-          <el-table-column prop="storageTime" label="入库时间" align="center" :show-overflow-tooltip="true"
-            v-if="Receiptcolumns.showColumn('storageTime')" />
-          <el-table-column prop="creationTime" label="创建时间" align="center" :show-overflow-tooltip="true"
-            v-if="Receiptcolumns.showColumn('creationTime')" />
-          <el-table-column prop="creator" label="创建人" align="center" :show-overflow-tooltip="true"
-            v-if="Receiptcolumns.showColumn('creator')" />
-          <el-table-column prop="changeTime" label="修改时间" align="center" :show-overflow-tooltip="true"
-            v-if="Receiptcolumns.showColumn('changeTime')" />
-          <el-table-column prop="modifiedBy" label="修改人" align="center" :show-overflow-tooltip="true"
-            v-if="Receiptcolumns.showColumn('modifiedBy')" />
-          <el-table-column label="操作" width="120" fixed="right">
-            <template #default="scope">
-              <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['warehousereceipt:edit']"
-                @click="ReceipthandleUpdate(scope.row)"></el-button>
-              <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['warehousereceipt:delete']"
-                @click="ReceipthandleDelete(scope.row)"></el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <pagination :total="Receipttotal" v-model:page="ReceiptqueryParams.pageNum"
-          v-model:limit="ReceiptqueryParams.pageSize" @pagination="ReceiptgetList" />
-
-      </div>
       <!-- 药品 -->
-      <div class="table-item">
+      <div class="table-item1">
         <el-row :gutter="15" class="mb10">
           <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch"
             @submit.prevent>
@@ -85,7 +91,8 @@
         </el-row>
 
         <el-table @row-click="CODEDrugdatalist" :data="dataList" v-loading="loading" ref="table" border
-          header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="sortChange">
+          :row-class-name="rowcodeClassName" header-cell-class-name="el-table-header-cell" highlight-current-row
+          @sort-change="sortChange">
           <el-table-column prop="id" label="id" align="center" v-if="columns.showColumn('id')" />
           <el-table-column prop="drugId" label="药品id" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('drugId')" />
@@ -93,16 +100,49 @@
             v-if="columns.showColumn('drugName')" />
           <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('drugCode')" />
-          <el-table-column prop="codeCount" label="药品数量" align="center" :show-overflow-tooltip="true"
-            v-if="columns.showColumn('codeCount')" />
+          <el-table-column prop="codeCount" label="药品有码数量" align="center" :show-overflow-tooltip="true"
+            v-if="columns.showColumn('codeCount')">
+
+          </el-table-column>
           <el-table-column prop="inventoryQuantity" label="药品入库数量" align="center" :show-overflow-tooltip="true"
-            v-if="columns.showColumn('inventoryQuantity')" />
+            v-if="columns.showColumn('inventoryQuantity')">
+            <template #default="{ row }">
+              <el-input v-model="row.inventoryQuantity" size="small" />
+            </template>
+            <!-- @blur="DrugQuantityChange(row)" -->
+          </el-table-column>
           <el-table-column prop="tracingSourceCode" label="药品溯源码" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('tracingSourceCode')" />
           <el-table-column prop="batchNumber" label="药品批号" align="center" :show-overflow-tooltip="true"
-            v-if="columns.showColumn('batchNumber')" />
+            v-if="columns.showColumn('batchNumber')">
+            <template #default="{ row }">
+              <el-input v-model="row.batchNumber" size="small" />
+            </template>
+            <!-- @blur="DrugQuantityChange(row)" -->
+          </el-table-column>
           <el-table-column prop="drugSpecifications" label="药品规格" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('drugSpecifications')" />
+          <!-- 未修改 -->
+          <!-- ManufacturerId -->
+          <el-table-column prop="manufacturerId" label="生产厂家" align="center" :show-overflow-tooltip="true"
+            v-if="columns.showColumn('manufacturerId')" />
+          <el-table-column prop="exprie" label="有效期" align="center" :show-overflow-tooltip="true"
+            v-if="columns.showColumn('exprie')" />
+          <el-table-column prop="price" label="价格" align="center" :show-overflow-tooltip="true"
+            v-if="columns.showColumn('price')">
+            <template #default="{ row }">
+              <el-input v-model="row.price" size="small" />
+            </template>
+            <!-- @blur="DrugQuantityChange(row)" -->
+          </el-table-column>
+          <el-table-column prop="locationNumber" label="货位号" align="center" :show-overflow-tooltip="true"
+            v-if="columns.showColumn('locationNumber')" />
+          <el-table-column prop="dateOfManufacture" label="生产日期" align="center" :show-overflow-tooltip="true"
+            v-if="columns.showColumn('dateOfManufacture')" />
+          <el-table-column prop="minunit" label="最小单位" align="center" :show-overflow-tooltip="true"
+            v-if="columns.showColumn('minunit')" />
+          <!-- 未修改 -->
+
           <el-table-column label="操作" width="120" fixed="right">
             <template #default="scope">
               <el-button type="success" size="small" icon="FullScreen" title="扫码添加" v-hasPermi="['inwarehousing:add']"
@@ -117,81 +157,87 @@
 
 
       </div>
+      <!-- 详情信息 -->
+      <div class="table-item2">
+        <el-row :gutter="15" class="mb10">
 
+          <el-form :model="CodequeryParams" label-position="right" inline ref="CodeDrugqueryRef" v-show="CodeshowSearch"
+            @submit.prevent>
+            <el-form-item label="溯源码" prop="Code">
+              <el-input v-model="CodequeryParams.Code" placeholder="请输入溯源码" />
+            </el-form-item>
+            <el-form-item>
+              <el-button icon="search" type="primary" @click="CodehandleQuery">{{ $t('btn.search') }}</el-button>
+              <el-button icon="refresh" @click="CoderesetQuery">{{ $t('btn.reset') }}</el-button>
+            </el-form-item>
+          </el-form>
+        </el-row>
+
+        <el-table :data="CodedataList" v-loading="Codeloading" ref="table" border
+          header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="CodesortChange"
+          @selection-change="CodehandleSelectionChange">
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column prop="id" label="Id" align="center" v-if="Codecolumns.showColumn('id')" />
+          <el-table-column prop="receiptid" label="入库单id" align="center" v-if="Codecolumns.showColumn('receiptid')" />
+          <el-table-column prop="drugId" label="药品id" align="center" v-if="Codecolumns.showColumn('drugId')" />
+          <el-table-column prop="inWarehouseId" label="入库药品id" align="center"
+            v-if="Codecolumns.showColumn('inWarehouseId')" />
+
+          <el-table-column prop="code" label="追溯码" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('code')" />
+          <el-table-column prop="physicTypeDesc" label="药品类型描述" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('physicTypeDesc')" />
+          <el-table-column prop="refEntId" label="企业id" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('refEntId')" />
+          <el-table-column prop="entName" label="企业名称" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('entName')" />
+          <el-table-column prop="packageLevel" label="码等级" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('packageLevel')" />
+          <el-table-column prop="physicName" label="有效期" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('physicName')" />
+          <el-table-column prop="exprie" label="药品id" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('exprie')" />
+          <el-table-column prop="drugEntBaseInfoId" label="批准文号" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('drugEntBaseInfoId')" />
+          <el-table-column prop="approvalLicenceNo" label="包装规格" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('approvalLicenceNo')" />
+          <el-table-column prop="pkgSpecCrit" label="制剂规格" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('pkgSpecCrit')" />
+          <el-table-column prop="prepnSpec" label="剂型描述" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('prepnSpec')" />
+          <el-table-column prop="prepnTypeDesc" label="生产日期" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('prepnTypeDesc')" />
+          <el-table-column prop="produceDateStr" label="剂型描述" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('produceDateStr')" />
+          <el-table-column prop="pkgAmount" label="最小包装数量" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('pkgAmount')" />
+          <el-table-column prop="expireDate" label="有效期至" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('expireDate')" />
+          <el-table-column prop="batchNo" label="批次号" align="center" :show-overflow-tooltip="true"
+            v-if="Codecolumns.showColumn('batchNo')" />
+          <el-table-column label="操作" width="120" fixed="right">
+            <template #default="scope">
+              <el-button type="primary" size="small" icon="view" title="详情"
+                @click="CodehandlePreview(scope.row)"></el-button>
+              <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['codedetails:edit']"
+                @click="CodehandleUpdate(scope.row)"></el-button>
+              <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['codedetails:delete']"
+                @click="CodehandleDelete(scope.row)"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination :total="Codetotal" v-model:page="CodequeryParams.pageNum" v-model:limit="CodequeryParams.pageSize"
+          @pagination="CodegetList" />
+
+      </div>
     </div>
-    <!-- 详情信息 -->
-    <div>
-      <el-form :model="CodequeryParams" label-position="right" inline ref="CodeDrugqueryRef" v-show="CodeshowSearch"
-        @submit.prevent>
-        <el-form-item label="溯源码" prop="Code">
-          <el-input v-model="CodequeryParams.Code" placeholder="请输入溯源码" />
-        </el-form-item>
-        <el-form-item>
-          <el-button icon="search" type="primary" @click="CodehandleQuery">{{ $t('btn.search') }}</el-button>
-          <el-button icon="refresh" @click="CoderesetQuery">{{ $t('btn.reset') }}</el-button>
-        </el-form-item>
-      </el-form>
-      <el-table :data="CodedataList" v-loading="Codeloading" ref="table" border
-        header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="CodesortChange"
-        @selection-change="CodehandleSelectionChange">
-        <el-table-column type="selection" width="50" align="center" />
-        <el-table-column prop="id" label="Id" align="center" v-if="Codecolumns.showColumn('id')" />
-        <el-table-column prop="receiptid" label="入库单id" align="center" v-if="Codecolumns.showColumn('receiptid')" />
-        <el-table-column prop="drugId" label="药品id" align="center" v-if="Codecolumns.showColumn('drugId')" />
-        <el-table-column prop="inWarehouseId" label="入库药品id" align="center"
-          v-if="Codecolumns.showColumn('inWarehouseId')" />
 
-        <el-table-column prop="code" label="追溯码" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('code')" />
-        <el-table-column prop="physicTypeDesc" label="药品类型描述" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('physicTypeDesc')" />
-        <el-table-column prop="refEntId" label="企业id" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('refEntId')" />
-        <el-table-column prop="entName" label="企业名称" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('entName')" />
-        <el-table-column prop="packageLevel" label="码等级" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('packageLevel')" />
-        <el-table-column prop="physicName" label="有效期" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('physicName')" />
-        <el-table-column prop="exprie" label="药品id" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('exprie')" />
-        <el-table-column prop="drugEntBaseInfoId" label="批准文号" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('drugEntBaseInfoId')" />
-        <el-table-column prop="approvalLicenceNo" label="包装规格" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('approvalLicenceNo')" />
-        <el-table-column prop="pkgSpecCrit" label="制剂规格" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('pkgSpecCrit')" />
-        <el-table-column prop="prepnSpec" label="剂型描述" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('prepnSpec')" />
-        <el-table-column prop="prepnTypeDesc" label="生产日期" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('prepnTypeDesc')" />
-        <el-table-column prop="produceDateStr" label="剂型描述" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('produceDateStr')" />
-        <el-table-column prop="pkgAmount" label="最小包装数量" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('pkgAmount')" />
-        <el-table-column prop="expireDate" label="有效期至" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('expireDate')" />
-        <el-table-column prop="batchNo" label="批次号" align="center" :show-overflow-tooltip="true"
-          v-if="Codecolumns.showColumn('batchNo')" />
-        <el-table-column label="操作" width="120" fixed="right">
-          <template #default="scope">
-            <el-button type="primary" size="small" icon="view" title="详情"
-              @click="CodehandlePreview(scope.row)"></el-button>
-            <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['codedetails:edit']"
-              @click="CodehandleUpdate(scope.row)"></el-button>
-            <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['codedetails:delete']"
-              @click="CodehandleDelete(scope.row)"></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination :total="Codetotal" v-model:page="CodequeryParams.pageNum" v-model:limit="CodequeryParams.pageSize"
-        @pagination="CodegetList" />
-    </div>
-    <el-dialog :title="Codetitle" :lock-scroll="false" v-model="Codeopen">
-      <el-form ref="CodeformRef" :model="Codeform" :rules="Coderules" label-width="100px">
-        <el-row :gutter="20">
+  </div>
+  <el-dialog :title="Codetitle" :lock-scroll="false" v-model="Codeopen">
+    <el-form ref="CodeformRef" :model="Codeform" :rules="Coderules" label-width="100px">
+      <el-row :gutter="20">
 
-          <!-- <el-col :lg="12">
+        <!-- <el-col :lg="12">
             <el-form-item label="Id" prop="id">
               <el-input v-model.number="Codeform.id" placeholder="请输入Id" :disabled="Codeopertype != 1" />
             </el-form-item>
@@ -214,313 +260,316 @@
             </el-form-item>
           </el-col> -->
 
-          <el-col :lg="12">
-            <el-form-item label="追溯码" prop="code">
-              <el-input v-model="Codeform.code" placeholder="请输入追溯码" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="追溯码" prop="code">
+            <el-input v-model="Codeform.code" placeholder="请输入追溯码" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="药品类型描述" prop="physicTypeDesc">
-              <el-input v-model="Codeform.physicTypeDesc" placeholder="请输入药品类型描述" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="药品类型描述" prop="physicTypeDesc">
+            <el-input v-model="Codeform.physicTypeDesc" placeholder="请输入药品类型描述" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="企业id" prop="refEntId">
-              <el-input v-model="Codeform.refEntId" placeholder="请输入企业id" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="企业id" prop="refEntId">
+            <el-input v-model="Codeform.refEntId" placeholder="请输入企业id" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="企业名称" prop="entName">
-              <el-input v-model="Codeform.entName" placeholder="请输入企业名称" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="企业名称" prop="entName">
+            <el-input v-model="Codeform.entName" placeholder="请输入企业名称" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="码等级" prop="packageLevel">
-              <el-input v-model="Codeform.packageLevel" placeholder="请输入码等级" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="码等级" prop="packageLevel">
+            <el-input v-model="Codeform.packageLevel" placeholder="请输入码等级" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="有效期" prop="physicName">
-              <el-input v-model="Codeform.physicName" placeholder="请输入有效期" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="有效期" prop="physicName">
+            <el-input v-model="Codeform.physicName" placeholder="请输入有效期" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="有效期" prop="exprie">
-              <el-input v-model="Codeform.exprie" placeholder="请输入有效期" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="有效期" prop="exprie">
+            <el-input v-model="Codeform.exprie" placeholder="请输入有效期" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="批准文号" prop="drugEntBaseInfoId">
-              <el-input v-model="Codeform.drugEntBaseInfoId" placeholder="请输入批准文号" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="批准文号" prop="drugEntBaseInfoId">
+            <el-input v-model="Codeform.drugEntBaseInfoId" placeholder="请输入批准文号" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="包装规格" prop="approvalLicenceNo">
-              <el-input v-model="Codeform.approvalLicenceNo" placeholder="请输入包装规格" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="包装规格" prop="approvalLicenceNo">
+            <el-input v-model="Codeform.approvalLicenceNo" placeholder="请输入包装规格" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="制剂规格" prop="pkgSpecCrit">
-              <el-input v-model="Codeform.pkgSpecCrit" placeholder="请输入制剂规格" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="制剂规格" prop="pkgSpecCrit">
+            <el-input v-model="Codeform.pkgSpecCrit" placeholder="请输入制剂规格" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="剂型描述" prop="prepnSpec">
-              <el-input v-model="Codeform.prepnSpec" placeholder="请输入剂型描述" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="剂型描述" prop="prepnSpec">
+            <el-input v-model="Codeform.prepnSpec" placeholder="请输入剂型描述" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="生产日期" prop="prepnTypeDesc">
-              <el-input v-model="Codeform.prepnTypeDesc" placeholder="请输入生产日期" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="生产日期" prop="prepnTypeDesc">
+            <el-input v-model="Codeform.prepnTypeDesc" placeholder="请输入生产日期" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="剂型描述" prop="produceDateStr">
-              <el-input v-model="Codeform.produceDateStr" placeholder="请输入剂型描述" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="剂型描述" prop="produceDateStr">
+            <el-input v-model="Codeform.produceDateStr" placeholder="请输入剂型描述" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="最小包装数量" prop="pkgAmount">
-              <el-input v-model="Codeform.pkgAmount" placeholder="请输入最小包装数量" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="最小包装数量" prop="pkgAmount">
+            <el-input v-model="Codeform.pkgAmount" placeholder="请输入最小包装数量" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="有效期至" prop="expireDate">
-              <el-input v-model="Codeform.expireDate" placeholder="请输入有效期至" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="有效期至" prop="expireDate">
+            <el-input v-model="Codeform.expireDate" placeholder="请输入有效期至" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="批次号" prop="batchNo">
-              <el-input v-model="Codeform.batchNo" placeholder="请输入批次号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer v-if="Codeopertype != 3">
-        <el-button text @click="Codecancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="CodesubmitForm">{{ $t('btn.submit') }}</el-button>
-      </template>
-    </el-dialog>
-    <!-- 入库单 -->
-    <el-dialog :title="Receipttitle" :lock-scroll="false" v-model="Receiptopen">
-      <el-form ref="ReceiptformRef" :model="Receiptform" :rules="Receiptrules" label-width="100px">
-        <el-row :gutter="20">
+        <el-col :lg="12">
+          <el-form-item label="批次号" prop="batchNo">
+            <el-input v-model="Codeform.batchNo" placeholder="请输入批次号" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <template #footer v-if="Codeopertype != 3">
+      <el-button text @click="Codecancel">{{ $t('btn.cancel') }}</el-button>
+      <el-button type="primary" @click="CodesubmitForm">{{ $t('btn.submit') }}</el-button>
+    </template>
+  </el-dialog>
+  <!-- 入库单 -->
+  <el-dialog :title="Receipttitle" :lock-scroll="false" v-model="Receiptopen">
+    <el-form ref="ReceiptformRef" :model="Receiptform" :rules="Receiptrules" label-width="100px">
+      <el-row :gutter="20">
 
-          <!-- <el-col :lg="12">
-            <el-form-item label="入库单id" prop="receiptId">
-              <el-input v-model.number="Receiptform.receiptId" placeholder="请输入入库单id" />
-            </el-form-item>
-          </el-col> -->
 
-          <el-col :lg="12">
-            <el-form-item label="入库单编号" prop="receiptCode">
-              <el-input v-model="Receiptform.receiptCode" placeholder="请输入入库单编号" />
-            </el-form-item>
-          </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="入库时间" prop="storageTime">
-              <el-input v-model="Receiptform.storageTime" placeholder="请输入入库时间" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="入库单编号" prop="receiptCode">
+            <el-input v-model="Receiptform.receiptCode" placeholder="请输入入库单编号" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="创建时间" prop="creationTime">
-              <el-input v-model="Receiptform.creationTime" placeholder="请输入创建时间" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="入库时间" prop="storageTime">
+            <el-input v-model="Receiptform.storageTime" placeholder="请输入入库时间" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="创建人" prop="creator">
-              <el-input v-model="Receiptform.creator" placeholder="请输入创建人" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="创建时间" prop="creationTime">
+            <el-input v-model="Receiptform.creationTime" placeholder="请输入创建时间" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="修改时间" prop="changeTime">
-              <el-input v-model="Receiptform.changeTime" placeholder="请输入修改时间" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="12">
+          <el-form-item label="创建人" prop="creator">
+            <el-input v-model="Receiptform.creator" placeholder="请输入创建人" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="修改人" prop="modifiedBy">
-              <el-input v-model="Receiptform.modifiedBy" placeholder="请输入修改人" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer v-if="opertype != 3">
-        <el-button text @click="Receiptcancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="ReceiptsubmitForm">{{ $t('btn.submit') }}</el-button>
-      </template>
-    </el-dialog>
-    <!-- 药品选择 -->
-    <el-dialog :title="title" :lock-scroll="false" v-model="open">
-      <el-form :model="DrugqueryParams" label-position="right" inline ref="DrugqueryRef" v-show="DrugshowSearch"
-        @submit.prevent>
-        <el-form-item label="药品名称" prop="drugName">
-          <el-input v-model="DrugqueryParams.drugName" placeholder="请输入药品名称" />
-        </el-form-item>
-        <el-form-item label="药品编号" prop="drugCode">
-          <el-input v-model="DrugqueryParams.drugCode" placeholder="请输入药品编号" />
-        </el-form-item>
-        <el-form-item label="药品助记码" prop="drugMnemonicCode">
-          <el-input v-model="DrugqueryParams.drugMnemonicCode" placeholder="请输入药品助记码" />
-        </el-form-item>
-        <el-form-item>
-          <el-button icon="search" type="primary" @click="DrughandleQuery">{{ $t('btn.search') }}</el-button>
-          <el-button icon="refresh" @click="DrugresetQuery">{{ $t('btn.reset') }}</el-button>
-        </el-form-item>
-      </el-form>
-      <el-table :data="DrugdataList" v-loading="Drugloading" ref="drugtable" border
-        header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="DrugsortChange"
-        v-model:selection="selectedItems" @selection-change="DrughandleSelectionChange">
-        <el-table-column type="selection" width="50" align="center" />
-        <el-table-column prop="drugId" label="drugId" align="center" v-if="Drugcolumns.showColumn('drugId')" />
-        <el-table-column prop="drugName" label="药品名称" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('drugName')" />
-        <el-table-column prop="drugCode" label="药品编号" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('drugCode')" />
-        <el-table-column prop="drugMnemonicCode" label="药品助记码" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('drugMnemonicCode')" />
-        <el-table-column prop="drugSpecifications" label="药品规格" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('drugSpecifications')" />
-        <el-table-column prop="drugCategory" label="药品类别" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('drugCategory')" />
-        <el-table-column prop="drugVarietyName" label="药品品种名称" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('drugVarietyName')" />
-        <el-table-column prop="drugClassification" label="药物分类" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('drugClassification')" />
-        <el-table-column prop="tracingSourceCode" label="溯源码" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('tracingSourceCode')" />
-        <el-table-column prop="drugBatchNumber" label="批号" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('drugBatchNumber')" />
-        <el-table-column prop="minunit" label="最小单位" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('minunit')" />
-        <el-table-column prop="produceName" label="生产厂家" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('produceName')" />
-        <el-table-column prop="packageRatio" label="转换系数" align="center"
-          v-if="Drugcolumns.showColumn('packageRatio')" />
-        <el-table-column prop="packageUnit" label="包装单位" align="center" :show-overflow-tooltip="true"
-          v-if="Drugcolumns.showColumn('packageUnit')" />
+        <el-col :lg="12">
+          <el-form-item label="修改时间" prop="changeTime">
+            <el-input v-model="Receiptform.changeTime" placeholder="请输入修改时间" />
+          </el-form-item>
+        </el-col>
 
-      </el-table>
-      <pagination :total="Drugtotal" v-model:page="DrugqueryParams.pageNum" v-model:limit="DrugqueryParams.pageSize"
-        @pagination="DruggetList" />
-      <template #footer v-if="opertype != 3">
-        <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
-      </template>
+        <el-col :lg="12">
+          <el-form-item label="修改人" prop="modifiedBy">
+            <el-input v-model="Receiptform.modifiedBy" placeholder="请输入修改人" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="状态" prop="state">
+            <el-input v-model="Receiptform.state" placeholder="请输入状态" />
+          </el-form-item>
+        </el-col> <el-col :lg="12">
+          <el-form-item label="发票号" prop="invoiceNumber">
+            <el-input v-model="Receiptform.invoiceNumber" placeholder="请输入发票号" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <template #footer v-if="opertype != 3">
+      <el-button text @click="Receiptcancel">{{ $t('btn.cancel') }}</el-button>
+      <el-button type="primary" @click="ReceiptsubmitForm">{{ $t('btn.submit') }}</el-button>
+    </template>
+  </el-dialog>
+  <!-- 药品选择 -->
+  <el-dialog :title="title" :lock-scroll="false" v-model="open">
+    <el-form :model="DrugqueryParams" label-position="right" inline ref="DrugqueryRef" v-show="DrugshowSearch"
+      @submit.prevent>
+      <el-form-item label="药品名称" prop="drugName">
+        <el-input v-model="DrugqueryParams.drugName" placeholder="请输入药品名称" />
+      </el-form-item>
+      <el-form-item label="药品编号" prop="drugCode">
+        <el-input v-model="DrugqueryParams.drugCode" placeholder="请输入药品编号" />
+      </el-form-item>
+      <el-form-item label="药品助记码" prop="drugMnemonicCode">
+        <el-input v-model="DrugqueryParams.drugMnemonicCode" placeholder="请输入药品助记码" />
+      </el-form-item>
+      <el-form-item>
+        <el-button icon="search" type="primary" @click="DrughandleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" @click="DrugresetQuery">{{ $t('btn.reset') }}</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table :data="DrugdataList" v-loading="Drugloading" ref="drugtable" border
+      header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="DrugsortChange"
+      v-model:selection="selectedItems" @selection-change="DrughandleSelectionChange">
+      <el-table-column type="selection" width="50" align="center" />
+      <el-table-column prop="drugId" label="drugId" align="center" v-if="Drugcolumns.showColumn('drugId')" />
+      <el-table-column prop="drugName" label="药品名称" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('drugName')" />
+      <el-table-column prop="drugCode" label="药品编号" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('drugCode')" />
+      <el-table-column prop="drugMnemonicCode" label="药品助记码" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('drugMnemonicCode')" />
+      <el-table-column prop="drugSpecifications" label="药品规格" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('drugSpecifications')" />
+      <el-table-column prop="drugCategory" label="药品类别" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('drugCategory')" />
+      <el-table-column prop="drugVarietyName" label="药品品种名称" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('drugVarietyName')" />
+      <el-table-column prop="drugClassification" label="药物分类" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('drugClassification')" />
+      <el-table-column prop="tracingSourceCode" label="溯源码" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('tracingSourceCode')" />
+      <el-table-column prop="drugBatchNumber" label="批号" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('drugBatchNumber')" />
+      <el-table-column prop="minunit" label="最小单位" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('minunit')" />
+      <el-table-column prop="produceName" label="生产厂家" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('produceName')" />
+      <el-table-column prop="packageRatio" label="转换系数" align="center" v-if="Drugcolumns.showColumn('packageRatio')" />
+      <el-table-column prop="packageUnit" label="包装单位" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('packageUnit')" />
 
-    </el-dialog>
-    <!-- 扫码入库 -->
-    <el-dialog :title="FUllcodetitle" :lock-scroll="false" v-model="FUllcodeopen">
-      <el-form ref="FUllcodeformRef" :model="FUllcodeform" :rules="FUllcoderules" label-width="100px">
-        <el-row :gutter="20">
-          <el-col :lg="12">
-            <el-form-item label="溯源码" prop="Code">
-              <el-input v-model="FUllcodeform.Code" placeholder="请输入溯源码" ref="refInput" @input="handleInput"
-                @blur="handleBlur" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="入库时间" prop="storageTime">
-              <el-input v-model="FUllcodeform.storageTime" placeholder="请输入入库时间" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="药品类型描述" prop="physicTypeDesc">
-              <el-input v-model="FUllcodeform.physicTypeDesc" placeholder="请输入药品类型描述" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="企业id" prop="refEntId">
-              <el-input v-model="FUllcodeform.refEntId" placeholder="请输入企业id" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="企业名称" prop="entName">
-              <el-input v-model="FUllcodeform.entName" placeholder="请输入企业名称" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="码等级" prop="packageLevel">
-              <el-input v-model="FUllcodeform.packageLevel" placeholder="请输入码等级" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="药品名称" prop="physicName">
-              <el-input v-model="FUllcodeform.physicName" placeholder="请输入药品名称" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="有效期" prop="exprie">
-              <el-input v-model="FUllcodeform.exprie" placeholder="请输入药品有效期" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="药品ID" prop="drugEntBaseInfoId">
-              <el-input v-model="FUllcodeform.drugEntBaseInfoId" placeholder="请输入药品ID" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="批准文号" prop="approvalLicenceNo">
-              <el-input v-model="FUllcodeform.approvalLicenceNo" placeholder="请输入批准文号" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="包装规格" prop="pkgSpecCrit">
-              <el-input v-model="FUllcodeform.pkgSpecCrit" placeholder="请输入包装规格" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="制剂规格" prop="prepnSpec">
-              <el-input v-model="FUllcodeform.prepnSpec" placeholder="请输入制剂规格" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="剂型描述" prop="prepnTypeDesc">
-              <el-input v-model="FUllcodeform.prepnTypeDesc" placeholder="请输入剂型描述" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="最小包装数量" prop="pkgAmount">
-              <el-input v-model="FUllcodeform.pkgAmount" placeholder="请输入最小包装数量" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="有效期至" prop="expireDate">
-              <el-input v-model="FUllcodeform.expireDate" placeholder="请输入有效期至" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="批次号" prop="batchNo">
-              <el-input v-model="FUllcodeform.batchNo" placeholder="请输入批次号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer>
-        <el-button text @click="FUllcodecancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="FUllcodesubmitForm">{{ $t('btn.submit') }}</el-button>
-      </template>
-    </el-dialog>
-  </div>
+    </el-table>
+    <pagination :total="Drugtotal" v-model:page="DrugqueryParams.pageNum" v-model:limit="DrugqueryParams.pageSize"
+      @pagination="DruggetList" />
+    <template #footer v-if="opertype != 3">
+      <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
+      <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
+    </template>
+
+  </el-dialog>
+  <!-- 扫码入库 -->
+  <el-dialog :title="FUllcodetitle" :lock-scroll="false" v-model="FUllcodeopen">
+    <el-form ref="FUllcodeformRef" :model="FUllcodeform" :rules="FUllcoderules" label-width="100px">
+      <el-row :gutter="20">
+        <el-col :lg="12">
+          <el-form-item label="溯源码" prop="Code">
+            <el-input v-model="FUllcodeform.Code" placeholder="请输入溯源码" ref="refInput" @input="handleInput"
+              @blur="handleBlur" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="入库时间" prop="storageTime">
+            <el-input v-model="FUllcodeform.storageTime" placeholder="请输入入库时间" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="药品类型描述" prop="physicTypeDesc">
+            <el-input v-model="FUllcodeform.physicTypeDesc" placeholder="请输入药品类型描述" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="企业id" prop="refEntId">
+            <el-input v-model="FUllcodeform.refEntId" placeholder="请输入企业id" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="企业名称" prop="entName">
+            <el-input v-model="FUllcodeform.entName" placeholder="请输入企业名称" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="码等级" prop="packageLevel">
+            <el-input v-model="FUllcodeform.packageLevel" placeholder="请输入码等级" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="药品名称" prop="physicName">
+            <el-input v-model="FUllcodeform.physicName" placeholder="请输入药品名称" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="有效期" prop="exprie">
+            <el-input v-model="FUllcodeform.exprie" placeholder="请输入药品有效期" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="药品ID" prop="drugEntBaseInfoId">
+            <el-input v-model="FUllcodeform.drugEntBaseInfoId" placeholder="请输入药品ID" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="批准文号" prop="approvalLicenceNo">
+            <el-input v-model="FUllcodeform.approvalLicenceNo" placeholder="请输入批准文号" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="包装规格" prop="pkgSpecCrit">
+            <el-input v-model="FUllcodeform.pkgSpecCrit" placeholder="请输入包装规格" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="制剂规格" prop="prepnSpec">
+            <el-input v-model="FUllcodeform.prepnSpec" placeholder="请输入制剂规格" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="剂型描述" prop="prepnTypeDesc">
+            <el-input v-model="FUllcodeform.prepnTypeDesc" placeholder="请输入剂型描述" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="最小包装数量" prop="pkgAmount">
+            <el-input v-model="FUllcodeform.pkgAmount" placeholder="请输入最小包装数量" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="有效期至" prop="expireDate">
+            <el-input v-model="FUllcodeform.expireDate" placeholder="请输入有效期至" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="批次号" prop="batchNo">
+            <el-input v-model="FUllcodeform.batchNo" placeholder="请输入批次号" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <template #footer>
+      <el-button text @click="FUllcodecancel">{{ $t('btn.cancel') }}</el-button>
+      <el-button type="primary" @click="FUllcodesubmitForm">{{ $t('btn.submit') }}</el-button>
+    </template>
+  </el-dialog>
   <el-dialog :title="Warehousetitle" :lock-scroll="false" v-model="Warehouseopen">
     <el-form :model="WarehousequeryParams" label-position="right" inline ref="WarehousequeryRef"
       v-show="WarehouseshowSearch" @submit.prevent>
@@ -625,6 +674,13 @@ const columns = ref([
   { visible: true, align: 'center', type: '', prop: 'inventoryQuantity', label: '药品入库数量', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '药品规格', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'receiptId', label: '入库单据id' },
+  { visible: true, align: 'center', type: '', prop: 'manufacturerId', label: '生产厂家' },
+  { visible: true, align: 'center', type: '', prop: 'exprie', label: '有效期' },
+  { visible: true, align: 'center', type: '', prop: 'price', label: '价格' },
+  { visible: true, align: 'center', type: '', prop: 'locationNumber', label: '货位号' },
+  { visible: true, align: 'center', type: '', prop: 'dateOfManufacture', label: '生产日期' },
+  { visible: true, align: 'center', type: '', prop: 'minunit', label: '最小单位' },
+
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
@@ -711,7 +767,13 @@ function reset() {
     inventoryQuantity: null,
     drugSpecifications: null,
     receiptId: null,
-  };
+    manufacturerId: null,
+    exprie: null,
+    price: null,
+    locationNumber: null,
+    dateOfManufacture: null,
+    minunit: null,
+  }
   proxy.resetForm("formRef")
 }
 
@@ -771,8 +833,8 @@ function handleUpdate(row) {
 // 添加&修改 表单提交 获取选择的入库单号 进行填充
 function submitForm() {
   // queryParams.receiptId
-
   // if (form.value.id != undefined && opertype.value === 1) {
+  // console.log(FictitiousDrugData.value)
   addInWarehousing(FictitiousDrugData.value).then((res) => {
     proxy.$modal.msgSuccess("新增成功")
     open.value = false
@@ -843,6 +905,11 @@ const Receiptcolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'creator', label: '创建人', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'changeTime', label: '修改时间', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'modifiedBy', label: '修改人', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'state', label: '状态', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'invoiceNumber', label: '发票号', showOverflowTooltip: true },
+
+
+
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const Receipttotal = ref(0)
@@ -946,6 +1013,9 @@ function Receiptreset() {
     creator: null,
     changeTime: null,
     modifiedBy: null,
+    state: null,
+    invoiceNumber: null,
+
   };
   proxy.resetForm("ReceiptformRef")
 }
@@ -989,7 +1059,7 @@ function ReceipthandleUpdate(row) {
     }
   })
 }
-
+''
 // 添加&修改 表单提交
 function ReceiptsubmitForm() {
   proxy.$refs["ReceiptformRef"].validate((valid) => {
@@ -1035,8 +1105,12 @@ function ReceipthandleDelete(row) {
 
 ReceipthandleQuery()
 
+// 当前选中的行
+const selectedRow = ref(null);
 //双击更新数据
 function ReceiptDrugdatalist(row) {
+  selectedRow.value = row;
+
   queryParams.receiptId = row.receiptId
   getList()
   if (CodequeryParams.drugId != 0 || CodequeryParams.receiptid != 0) {
@@ -1045,7 +1119,15 @@ function ReceiptDrugdatalist(row) {
     CodegetList()
   }
 }
+
+
+
+// 当前选中的行
+const selectedcodeRow = ref(null);
+//双击更新数据
 function CODEDrugdatalist(row) {
+  selectedcodeRow.value = row;
+
   CodequeryParams.receiptid = queryParams.receiptId
   CodequeryParams.drugId = row.drugId
   CodequeryParams.inWarehouseId = row.id
@@ -1515,14 +1597,14 @@ const Drugcolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'drugMnemonicCode', label: '药品助记码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '药品规格', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'drugCategory', label: '药品类别', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugVarietyName', label: '药品品种名称', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'drugVarietyName', label: '药品品种名称', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'drugClassification', label: '药物分类', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'tracingSourceCode', label: '溯源码', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'drugBatchNumber', label: '批号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'minunit', label: '最小单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'produceName', label: '生产厂家', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'packageRatio', label: '转换系数' },
-  { visible: false, align: 'center', type: '', prop: 'packageUnit', label: '包装单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'minunit', label: '最小单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'produceName', label: '生产厂家', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'packageRatio', label: '转换系数' },
+  { visible: true, align: 'center', type: '', prop: 'packageUnit', label: '包装单位', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const Drugtotal = ref(0)
@@ -1922,8 +2004,20 @@ function WarehousehandleSelectionChange(selection) {
   Warehousesingle.value = selection.length != 1
   Warehousemultiple.value = !selection.length;
 }
+
+
+// 动态为行绑定类
+function rowClassName({ row }) {
+  return row === selectedRow.value ? 'selectedrow' : '';
+}
+
+// 动态为行绑定类
+function rowcodeClassName({ row }) {
+  return row === selectedcodeRow.value ? 'selectedrow' : '';
+}
+
 </script>
-<style scoped>
+<style>
 .table-content {
   padding: 10px 0;
   display: flex;
@@ -1931,12 +2025,24 @@ function WarehousehandleSelectionChange(selection) {
   gap: 10px;
 }
 
-.table-item {
-  width: 33.33%;
+.table-item1 {
+  width: 70%;
+  flex: 1;
+}
+
+.table-item2 {
+  width: 30%;
   flex: 1;
 }
 
 .tb3 {
   margin-top: 42px;
+}
+
+/* 定义选中行的背景颜色 */
+.selectedrow {
+  /* background-color: #65c332 !important; */
+  background-color: hsl(119, 67%, 70%) !important;
+  /* 自定义的背景色 */
 }
 </style>

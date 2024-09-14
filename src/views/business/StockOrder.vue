@@ -51,7 +51,8 @@
         v-if="PlanDrugscolumns.showColumn('drugQuantity')">
         <template #default="{ row }">
           <el-input v-model="row.drugQuantity" size="small" @blur="DrugQuantityChange(row)" />
-        </template></el-table-column>
+        </template>
+      </el-table-column>
       <el-table-column prop="remarks" label="备注" align="center" :show-overflow-tooltip="true"
         v-if="PlanDrugscolumns.showColumn('remarks')" />
       <el-table-column label="操作" width="160">
