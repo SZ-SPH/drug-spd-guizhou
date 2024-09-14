@@ -46,13 +46,10 @@
         v-if="Receiptcolumns.showColumn('changeTime')" />
       <el-table-column prop="modifiedBy" label="修改人" align="center" :show-overflow-tooltip="true"
         v-if="Receiptcolumns.showColumn('modifiedBy')" />
-      <!-- 未修改 -->
       <el-table-column prop="state" label="状态" align="center" :show-overflow-tooltip="true"
         v-if="Receiptcolumns.showColumn('state')" />
       <el-table-column prop="invoiceNumber" label="发票号" align="center" :show-overflow-tooltip="true"
         v-if="Receiptcolumns.showColumn('invoiceNumber')" />
-
-      <!-- 未修改 -->
 
       <el-table-column label="操作" width="120" fixed="right">
         <template #default="scope">
@@ -237,29 +234,6 @@
     <el-form ref="CodeformRef" :model="Codeform" :rules="Coderules" label-width="100px">
       <el-row :gutter="20">
 
-        <!-- <el-col :lg="12">
-            <el-form-item label="Id" prop="id">
-              <el-input v-model.number="Codeform.id" placeholder="请输入Id" :disabled="Codeopertype != 1" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="入库单id" prop="receiptid">
-              <el-input v-model.number="Codeform.receiptid" placeholder="请输入入库单id" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品id" prop="drugId">
-              <el-input v-model.number="Codeform.drugId" placeholder="请输入药品id" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="入库药品id" prop="inWarehouseId">
-              <el-input v-model.number="Codeform.inWarehouseId" placeholder="请输入入库药品id" />
-            </el-form-item>
-          </el-col> -->
-
         <el-col :lg="12">
           <el-form-item label="追溯码" prop="code">
             <el-input v-model="Codeform.code" placeholder="请输入追溯码" />
@@ -291,8 +265,8 @@
         </el-col>
 
         <el-col :lg="12">
-          <el-form-item label="有效期" prop="physicName">
-            <el-input v-model="Codeform.physicName" placeholder="请输入有效期" />
+          <el-form-item label="药品名称" prop="physicName">
+            <el-input v-model="Codeform.physicName" placeholder="请输入药品名称" />
           </el-form-item>
         </el-col>
 
@@ -303,38 +277,38 @@
         </el-col>
 
         <el-col :lg="12">
-          <el-form-item label="批准文号" prop="drugEntBaseInfoId">
-            <el-input v-model="Codeform.drugEntBaseInfoId" placeholder="请输入批准文号" />
+          <el-form-item label="药品id" prop="drugEntBaseInfoId">
+            <el-input v-model="Codeform.drugEntBaseInfoId" placeholder="请输入药品id" />
           </el-form-item>
         </el-col>
 
         <el-col :lg="12">
-          <el-form-item label="包装规格" prop="approvalLicenceNo">
-            <el-input v-model="Codeform.approvalLicenceNo" placeholder="请输入包装规格" />
+          <el-form-item label="批准文号" prop="approvalLicenceNo">
+            <el-input v-model="Codeform.approvalLicenceNo" placeholder="请输入批准文号" />
           </el-form-item>
         </el-col>
 
         <el-col :lg="12">
-          <el-form-item label="制剂规格" prop="pkgSpecCrit">
-            <el-input v-model="Codeform.pkgSpecCrit" placeholder="请输入制剂规格" />
+          <el-form-item label="包装规格" prop="pkgSpecCrit">
+            <el-input v-model="Codeform.pkgSpecCrit" placeholder="请输入包装规格" />
           </el-form-item>
         </el-col>
 
         <el-col :lg="12">
-          <el-form-item label="剂型描述" prop="prepnSpec">
-            <el-input v-model="Codeform.prepnSpec" placeholder="请输入剂型描述" />
+          <el-form-item label="制剂规格" prop="prepnSpec">
+            <el-input v-model="Codeform.prepnSpec" placeholder="请输入制剂规格" />
           </el-form-item>
         </el-col>
 
         <el-col :lg="12">
-          <el-form-item label="生产日期" prop="prepnTypeDesc">
-            <el-input v-model="Codeform.prepnTypeDesc" placeholder="请输入生产日期" />
+          <el-form-item label="剂型描述" prop="prepnTypeDesc">
+            <el-input v-model="Codeform.prepnTypeDesc" placeholder="请输入剂型描述" />
           </el-form-item>
         </el-col>
 
         <el-col :lg="12">
-          <el-form-item label="剂型描述" prop="produceDateStr">
-            <el-input v-model="Codeform.produceDateStr" placeholder="请输入剂型描述" />
+          <el-form-item label="生产日期" prop="produceDateStr">
+            <el-input v-model="Codeform.produceDateStr" placeholder="请输入生产日期" />
           </el-form-item>
         </el-col>
 
@@ -1023,7 +997,6 @@ import useUserStore from "@/store/modules/user";
 
 var userId = useUserStore().userId;
 var userInfo = useUserStore().userInfo;
-//{"userId":1,"userName":"admin","nickName":"管理员","userType":"0","avatar":"","email":"","phonenumber":"","sex":0,"status":0,"delFlag":0,"loginIP":"127.0.0.1","loginDate":"2023-07-25 16:58:43","deptId":0,"deptName":null,"roleIds":[1],"postIds":null,"roles":[{"roleId":1,"roleName":"超级管理员","roleKey":"admin","roleSort":1,"status":0,"delFlag":0,"dataScope":1,"menuCheckStrictly":true,"deptCheckStrictly":false,"menuIds":null,"deptIds":null,"userNum":0,"createBy":"admin","createTime":"2023-07-12 18:19:06","updateTime":null,"remark":"超级管理员"}],"welcomeMessage":"早上好","welcomeContent":"忙碌了一周，停一停脚步！","createBy":"","createTime":"2023-07-26 09:59:39","updateTime":null,"remark":"管理员"}
 
 // 昵称
 var nickName = useUserStore().name;
@@ -1169,13 +1142,13 @@ const Codecolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'refEntId', label: '企业id', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'entName', label: '企业名称', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'packageLevel', label: '码等级', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'physicName', label: '有效期', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'exprie', label: '药品id', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugEntBaseInfoId', label: '批准文号', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'approvalLicenceNo', label: '包装规格', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'pkgSpecCrit', label: '制剂规格', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'physicName', label: '药品名称', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'exprie', label: '有效期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugEntBaseInfoId', label: '药品id', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'approvalLicenceNo', label: '批准文号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'pkgSpecCrit', label: '包装规格', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'prepnSpec', label: '剂型描述', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'prepnTypeDesc', label: '生产日期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'prepnTypeDesc', label: '制剂规格', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'produceDateStr', label: '剂型描述', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'pkgAmount', label: '最小包装数量', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'expireDate', label: '有效期至', showOverflowTooltip: true },
