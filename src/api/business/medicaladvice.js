@@ -2,7 +2,7 @@ import request from '@/utils/request'
 import { downFile } from '@/utils/request'
 
 /**
- * 医嘱基础信息分页查询
+ * 医嘱分页查询
  * @param {查询条件} data
  */
 export function listMedicalAdvice(query) {
@@ -14,7 +14,7 @@ export function listMedicalAdvice(query) {
 }
 
 /**
- * 新增医嘱基础信息
+ * 新增医嘱
  * @param data
  */
 export function addMedicalAdvice(data) {
@@ -25,7 +25,7 @@ export function addMedicalAdvice(data) {
   })
 }
 /**
- * 修改医嘱基础信息
+ * 修改医嘱
  * @param data
  */
 export function updateMedicalAdvice(data) {
@@ -36,7 +36,7 @@ export function updateMedicalAdvice(data) {
   })
 }
 /**
- * 获取医嘱基础信息详情
+ * 获取医嘱详情
  * @param {Id}
  */
 export function getMedicalAdvice(id) {
@@ -47,7 +47,7 @@ export function getMedicalAdvice(id) {
 }
 
 /**
- * 删除医嘱基础信息
+ * 删除医嘱
  * @param {主键} pid
  */
 export function delMedicalAdvice(pid) {
@@ -56,7 +56,14 @@ export function delMedicalAdvice(pid) {
     method: 'delete'
   })
 }
-// 导出医嘱基础信息
+// 清空医嘱
+export function clearMedicalAdvice() {
+  return request({
+    url: 'business/MedicalAdvice/clean',
+    method: 'delete'
+  })
+}
+// 导出医嘱
 export async function exportMedicalAdvice(query) {
   await downFile('business/MedicalAdvice/export', { ...query })
 }
