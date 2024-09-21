@@ -50,7 +50,8 @@
         v-if="Receiptcolumns.showColumn('state')" />
       <el-table-column prop="invoiceNumber" label="发票号" align="center" :show-overflow-tooltip="true"
         v-if="Receiptcolumns.showColumn('invoiceNumber')" />
-
+      <el-table-column prop="supplierId" label="供应商" align="center" :show-overflow-tooltip="true"
+        v-if="Receiptcolumns.showColumn('supplierId')" />
       <el-table-column label="操作" width="120" fixed="right">
         <template #default="scope">
           <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['warehousereceipt:edit']"
@@ -62,7 +63,6 @@
     </el-table>
     <pagination :total="Receipttotal" v-model:page="ReceiptqueryParams.pageNum"
       v-model:limit="ReceiptqueryParams.pageSize" @pagination="ReceiptgetList" />
-
   </div>
   <div>
     <div class="table-content">
@@ -86,7 +86,6 @@
             </el-button>
           </el-col>
         </el-row>
-
         <el-table @row-click="CODEDrugdatalist" :data="dataList" v-loading="loading" ref="table" border
           :row-class-name="rowcodeClassName" header-cell-class-name="el-table-header-cell" highlight-current-row
           @sort-change="sortChange">
@@ -99,27 +98,28 @@
             v-if="columns.showColumn('drugCode')" />
           <el-table-column prop="codeCount" label="药品有码数量" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('codeCount')">
-
           </el-table-column>
           <el-table-column prop="inventoryQuantity" label="药品入库数量" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('inventoryQuantity')">
             <template #default="{ row }">
-              <el-input v-model="row.inventoryQuantity" size="small" />
+              <el-input :disabled="Rstate.value == '已推送'" v-model="row.inventoryQuantity" size="small"
+                @blur="DrugQuantityChange(row)" />
             </template>
-            <!-- @blur="DrugQuantityChange(row)" -->
+
           </el-table-column>
           <el-table-column prop="tracingSourceCode" label="药品溯源码" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('tracingSourceCode')" />
           <el-table-column prop="batchNumber" label="药品批号" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('batchNumber')">
             <template #default="{ row }">
-              <el-input v-model="row.batchNumber" size="small" />
+              <el-input :disabled="Rstate.value == '已推送'" v-model="row.batchNumber" size="small"
+                @blur="DrugQuantityChange(row)" />
+
             </template>
             <!-- @blur="DrugQuantityChange(row)" -->
           </el-table-column>
           <el-table-column prop="drugSpecifications" label="药品规格" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('drugSpecifications')" />
-          <!-- 未修改 -->
           <!-- ManufacturerId -->
           <el-table-column prop="manufacturerId" label="生产厂家" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('manufacturerId')" />
@@ -128,7 +128,7 @@
           <el-table-column prop="price" label="价格" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('price')">
             <template #default="{ row }">
-              <el-input v-model="row.price" size="small" />
+              <el-input v-model="row.price" size="small" @blur="DrugQuantityChange(row)" />
             </template>
             <!-- @blur="DrugQuantityChange(row)" -->
           </el-table-column>
@@ -138,21 +138,20 @@
             v-if="columns.showColumn('dateOfManufacture')" />
           <el-table-column prop="minunit" label="最小单位" align="center" :show-overflow-tooltip="true"
             v-if="columns.showColumn('minunit')" />
-          <!-- 未修改 -->
 
           <el-table-column label="操作" width="120" fixed="right">
             <template #default="scope">
-              <el-button type="success" size="small" icon="FullScreen" title="扫码添加" v-hasPermi="['inwarehousing:add']"
-                @click="CodeScreenAdd(scope.row)"></el-button>
-              <el-button type="primary" size="small" icon="edit" title="手动添加" v-hasPermi="['inwarehousing:add']"
-                @click="CodehandleAdd(scope.row)"></el-button>
+              <el-button :disabled="Rstate.value == '已推送'" type="success" size="small" icon="FullScreen" title="扫码添加"
+                v-hasPermi="['inwarehousing:add']" @click="CodeScreenAdd(scope.row)"></el-button>
+              <el-button :disabled="Rstate.value == '已推送'" type="primary" size="small" icon="edit" title="手动添加"
+                v-hasPermi="['inwarehousing:add']" @click="CodehandleAdd(scope.row)"></el-button>
+              <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['inwarehousing:delete']"
+                @click="handleDelete(scope.row)"></el-button>
             </template>
           </el-table-column>
         </el-table>
         <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
           @pagination="getList" />
-
-
       </div>
       <!-- 详情信息 -->
       <div class="table-item2">
@@ -348,6 +347,16 @@
             <el-input v-model="Receiptform.receiptCode" placeholder="请输入入库单编号" />
           </el-form-item>
         </el-col>
+        <el-col :lg="12">
+          <el-form-item label="发票号" prop="invoiceNumber">
+            <el-input v-model="Receiptform.invoiceNumber" placeholder="请输入发票号" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="供应商" prop="supplierId">
+            <el-input v-model="Receiptform.supplierId" placeholder="请输入供应商" />
+          </el-form-item>
+        </el-col>
 
         <el-col :lg="12">
           <el-form-item label="入库时间" prop="storageTime">
@@ -382,11 +391,9 @@
           <el-form-item label="状态" prop="state">
             <el-input v-model="Receiptform.state" placeholder="请输入状态" />
           </el-form-item>
-        </el-col> <el-col :lg="12">
-          <el-form-item label="发票号" prop="invoiceNumber">
-            <el-input v-model="Receiptform.invoiceNumber" placeholder="请输入发票号" />
-          </el-form-item>
         </el-col>
+
+
       </el-row>
     </el-form>
     <template #footer v-if="opertype != 3">
@@ -544,6 +551,7 @@
       <el-button type="primary" @click="FUllcodesubmitForm">{{ $t('btn.submit') }}</el-button>
     </template>
   </el-dialog>
+  <!-- 仓库 -->
   <el-dialog :title="Warehousetitle" :lock-scroll="false" v-model="Warehouseopen">
     <el-form :model="WarehousequeryParams" label-position="right" inline ref="WarehousequeryRef"
       v-show="WarehouseshowSearch" @submit.prevent>
@@ -582,7 +590,7 @@
       header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="WarehousesortChange"
       @selection-change="WarehousehandleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="id" label="id" align="center" v-if="Warehousecolumns.showColumn('id')" />
+      <!-- <el-table-column prop="id" label="id" align="center" v-if="Warehousecolumns.showColumn('id')" /> -->
       <el-table-column prop="name" label="名称" align="center" :show-overflow-tooltip="true"
         v-if="Warehousecolumns.showColumn('name')" />
       <el-table-column prop="state" label="状态" align="center" v-if="Warehousecolumns.showColumn('state')">
@@ -592,16 +600,6 @@
       </el-table-column>
       <el-table-column prop="code" label="编码" align="center" :show-overflow-tooltip="true"
         v-if="Warehousecolumns.showColumn('code')" />
-      <!-- <el-table-column label="操作" width="160">
-        <template #default="scope">
-          <el-button type="primary" size="small" icon="view" title="详情"
-            @click="WarehousehandlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['warehouse:edit']"
-            @click="WarehousehandleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['warehouse:delete']"
-            @click="WarehousehandleDelete(scope.row)"></el-button>
-        </template>
-      </el-table-column> -->
     </el-table>
     <pagination :total="Warehousetotal" v-model:page="WarehousequeryParams.pageNum"
       v-model:limit="WarehousequeryParams.pageSize" @pagination="WarehousegetList" />
@@ -611,7 +609,6 @@
     </template>
 
   </el-dialog>
-
 </template>
 
 <script setup name="inwarehousing">
@@ -821,7 +818,6 @@ function submitForm() {
 // 删除按钮操作
 function handleDelete(row) {
   const Ids = row.id || ids.value
-
   proxy
     .$confirm('是否确认删除参数编号为"' + Ids + '"的数据项？', "警告", {
       confirmButtonText: proxy.$t('common.ok'),
@@ -880,7 +876,8 @@ const Receiptcolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'changeTime', label: '修改时间', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'modifiedBy', label: '修改人', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'state', label: '状态', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'invoiceNumber', label: '发票号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'state', label: '状态', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'supplierId', label: '供应商', showOverflowTooltip: true },
 
 
 
@@ -963,7 +960,7 @@ const Receiptstate = reactive({
   Receiptmultiple: true,
   Receiptform: {},
   Receiptrules: {
-    receiptId: [{ required: true, message: "入库单id不能为空", trigger: "blur", type: "number" }],
+    // receiptId: [{ required: true, message: "入库单id不能为空", trigger: "blur", type: "number" }],
   },
   Receiptoptions: {
   }
@@ -989,7 +986,7 @@ function Receiptreset() {
     modifiedBy: null,
     state: null,
     invoiceNumber: null,
-
+    supplierId: null,
   };
   proxy.resetForm("ReceiptformRef")
 }
@@ -1077,7 +1074,7 @@ function ReceipthandleDelete(row) {
 
 
 ReceipthandleQuery()
-
+const Rstate = ref("")
 // 当前选中的行
 const selectedRow = ref(null);
 //双击更新数据
@@ -1085,6 +1082,10 @@ function ReceiptDrugdatalist(row) {
   selectedRow.value = row;
 
   queryParams.receiptId = row.receiptId
+
+  Rstate.value = row.state == null ? 'defaultState' : row.state;
+
+
   getList()
   if (CodequeryParams.drugId != 0 || CodequeryParams.receiptid != 0) {
     CodequeryParams.receiptid = 0
@@ -1902,35 +1903,49 @@ function WarehousehandleUpdate(row) {
     }
   })
 }
-const sendOutData = ref()
+const sendOutData = ref({
+  warehouseId: null,
+  receiptIds: [],
+  warehousecode: null,
+  org_id: null,
+})
 
 // 添加&修改 表单提交
 function WarehousesubmitForm() {
-  //选择一个单据
-  if (Warehouseids.value.length == 1) {
 
+  //选择一个单据
+  if (Warehouseids.value.length == 1 && Receiptids.value.length > 0) {
     proxy
-      .$confirm("是否确认收货" + Receiptids.value.length + "个单据?", "警告", {
+      .$confirm("是否确认收货" + (Receiptids.value.length + 1) + "个单据?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
       .then(() => {
-
+        //获取仓库编码 获取 入库单信息 获取
         sendOutData.value.warehouseId = Warehouseids.value[0]
         sendOutData.value.receiptIds = Receiptids.value
+        sendOutData.value.warehousecode = Warehousecode.value[0]
+        console.log(sendOutData.value)
         // sendOutData.value.
         //数据分析
         //传递单据
-        sendOutWarehouseReceipt(Receiptids.value).then((res) => {
+        sendOutWarehouseReceipt(sendOutData.value).then((res) => {
           proxy.$modal.msgSuccess('发送成功')
+          Warehouseopen.value = false
           Receiptopen.value = false
           ReceiptgetList()
         })
       }
       )
+  } else if (Warehouseids.value.length > 1) {
+    proxy.$modal.msgWarning("只能选择一个仓库");
+  } else if (Receiptids.value.length <= 0) {
+    proxy.$modal.msgWarning("需选择入库单");
+
   } else {
-    alert("选择一个仓库")
+    proxy.$modal.msgWarning("请选择一个仓库");
+
   }
 
 
@@ -1969,16 +1984,29 @@ function WarehousehandleExport() {
       await proxy.downFile('/business/Warehouse/export', { ...WarehousequeryParams })
     })
 }
+const Warehousecode = ref()
 
 WarehousehandleQuery()
 // 多选框选中数据
 function WarehousehandleSelectionChange(selection) {
   Warehouseids.value = selection.map((item) => item.id);
+  Warehousecode.value = selection.map((item) => item.code);
+
   Warehousesingle.value = selection.length != 1
   Warehousemultiple.value = !selection.length;
 }
 
+function DrugQuantityChange(row) {
+  form.value = row
+  if (form.value.id != undefined) {
+    updateInWarehousing(form.value).then((res) => {
+      proxy.$modal.msgSuccess("修改成功")
+      open.value = false
+      getList()
+    })
+  }
 
+}
 // 动态为行绑定类
 function rowClassName({ row }) {
   return row === selectedRow.value ? 'selectedrow' : '';
