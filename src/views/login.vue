@@ -4,7 +4,7 @@
     <div class="login">
       <h3 class="title">{{ defaultSettings.title }}</h3>
 
-      <LangSelect title="多语言设置" class="langSet" />
+      <!-- <LangSelect title="多语言设置" class="langSet" /> -->
 
       <div style="padding: 0 25px 5px 25px">
         <el-tabs v-model="loginType" @tab-click="handleLoginType">

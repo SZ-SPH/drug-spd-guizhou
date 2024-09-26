@@ -35,7 +35,7 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" :disabled="single" v-hasPermi="['codedetails:edit']" plain icon="edit"
+        <el-button type="success" :disabled="Codesingle" v-hasPermi="['codedetails:edit']" plain icon="edit"
           @click="CodehandleUpdate">
           {{ $t('btn.edit') }}
         </el-button>
@@ -129,131 +129,132 @@
       @pagination="CodegetList" />
 
 
-    <el-dialog :title="Codetitle" :lock-scroll="false" v-model="Codeopen">
-      <el-form ref="CodeformRef" :model="Codeform" :rules="Coderules" label-width="100px">
-        <el-row :gutter="20">
 
-          <el-col :lg="12">
-            <el-form-item label="Id" prop="id">
-              <el-input v-model.number="Codeform.id" placeholder="请输入Id" :disabled="Codeopertype != 1" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="入库单id" prop="receiptid">
-              <el-input v-model.number="Codeform.receiptid" placeholder="请输入入库单id" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品id" prop="drugId">
-              <el-input v-model.number="Codeform.drugId" placeholder="请输入药品id" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="追溯码" prop="code">
-              <el-input v-model="Codeform.code" placeholder="请输入追溯码" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品类型描述" prop="physicTypeDesc">
-              <el-input v-model="Codeform.physicTypeDesc" placeholder="请输入药品类型描述" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="企业id" prop="refEntId">
-              <el-input v-model="Codeform.refEntId" placeholder="请输入企业id" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="企业名称" prop="entName">
-              <el-input v-model="Codeform.entName" placeholder="请输入企业名称" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="码等级" prop="packageLevel">
-              <el-input v-model="Codeform.packageLevel" placeholder="请输入码等级" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品名称" prop="physicName">
-              <el-input v-model="Codeform.physicName" placeholder="请输入药品名称" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="有效期" prop="exprie">
-              <el-input v-model="Codeform.exprie" placeholder="请输入有效期" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品id" prop="drugEntBaseInfoId">
-              <el-input v-model="Codeform.drugEntBaseInfoId" placeholder="请输入药品id" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="批准文号" prop="approvalLicenceNo">
-              <el-input v-model="Codeform.approvalLicenceNo" placeholder="请输入批准文号" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="包装规格" prop="pkgSpecCrit">
-              <el-input v-model="Codeform.pkgSpecCrit" placeholder="请输入包装规格" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="制剂规格" prop="prepnSpec">
-              <el-input v-model="Codeform.prepnSpec" placeholder="请输入制剂规格" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="剂型描述" prop="prepnTypeDesc">
-              <el-input v-model="Codeform.prepnTypeDesc" placeholder="请输入剂型描述" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="生产日期" prop="produceDateStr">
-              <el-input v-model="Codeform.produceDateStr" placeholder="请输入生产日期" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="最小包装数量" prop="pkgAmount">
-              <el-input v-model="Codeform.pkgAmount" placeholder="请输入最小包装数量" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="有效期至" prop="expireDate">
-              <el-input v-model="Codeform.expireDate" placeholder="请输入有效期至" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="批次号" prop="batchNo">
-              <el-input v-model="Codeform.batchNo" placeholder="请输入批次号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer v-if="Codeopertype != 3">
-        <el-button text @click="Codecancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="CodesubmitForm">{{ $t('btn.submit') }}</el-button>
-      </template>
-    </el-dialog>
   </div>
+  <el-dialog :title="Codetitle" :lock-scroll="false" v-model="Codeopen">
+    <el-form ref="CodeformRef" :model="Codeform" :rules="Coderules" label-width="100px">
+      <el-row :gutter="20">
+
+        <el-col :lg="12">
+          <el-form-item label="Id" prop="id">
+            <el-input v-model.number="Codeform.id" placeholder="请输入Id" :disabled="Codeopertype != 1" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="入库单id" prop="receiptid">
+            <el-input v-model.number="Codeform.receiptid" placeholder="请输入入库单id" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="药品id" prop="drugId">
+            <el-input v-model.number="Codeform.drugId" placeholder="请输入药品id" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="追溯码" prop="code">
+            <el-input v-model="Codeform.code" placeholder="请输入追溯码" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="药品类型描述" prop="physicTypeDesc">
+            <el-input v-model="Codeform.physicTypeDesc" placeholder="请输入药品类型描述" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="企业id" prop="refEntId">
+            <el-input v-model="Codeform.refEntId" placeholder="请输入企业id" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="企业名称" prop="entName">
+            <el-input v-model="Codeform.entName" placeholder="请输入企业名称" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="码等级" prop="packageLevel">
+            <el-input v-model="Codeform.packageLevel" placeholder="请输入码等级" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="药品名称" prop="physicName">
+            <el-input v-model="Codeform.physicName" placeholder="请输入药品名称" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="有效期" prop="exprie">
+            <el-input v-model="Codeform.exprie" placeholder="请输入有效期" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="药品id" prop="drugEntBaseInfoId">
+            <el-input v-model="Codeform.drugEntBaseInfoId" placeholder="请输入药品id" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="批准文号" prop="approvalLicenceNo">
+            <el-input v-model="Codeform.approvalLicenceNo" placeholder="请输入批准文号" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="包装规格" prop="pkgSpecCrit">
+            <el-input v-model="Codeform.pkgSpecCrit" placeholder="请输入包装规格" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="制剂规格" prop="prepnSpec">
+            <el-input v-model="Codeform.prepnSpec" placeholder="请输入制剂规格" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="剂型描述" prop="prepnTypeDesc">
+            <el-input v-model="Codeform.prepnTypeDesc" placeholder="请输入剂型描述" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="生产日期" prop="produceDateStr">
+            <el-input v-model="Codeform.produceDateStr" placeholder="请输入生产日期" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="最小包装数量" prop="pkgAmount">
+            <el-input v-model="Codeform.pkgAmount" placeholder="请输入最小包装数量" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="有效期至" prop="expireDate">
+            <el-input v-model="Codeform.expireDate" placeholder="请输入有效期至" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="批次号" prop="batchNo">
+            <el-input v-model="Codeform.batchNo" placeholder="请输入批次号" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <template #footer v-if="Codeopertype != 3">
+      <el-button text @click="Codecancel">{{ $t('btn.cancel') }}</el-button>
+      <el-button type="primary" @click="CodesubmitForm">{{ $t('btn.submit') }}</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup name="codedetails">

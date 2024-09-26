@@ -105,86 +105,6 @@
       @pagination="getList" />
 
 
-    <el-dialog :title="title" :lock-scroll="false" v-model="open">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-        <el-row :gutter="20">
-
-          <el-col :lg="12">
-            <el-form-item label="Id" prop="id">
-              <el-input v-model.number="form.id" placeholder="请输入Id" :disabled="opertype != 1" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="备货单" prop="stockId">
-              <el-input v-model="form.stockId" placeholder="请输入备货单" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品id" prop="drugId">
-              <el-input v-model="form.drugId" placeholder="请输入药品id" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="送货药品" prop="deliveryTime">
-              <el-input v-model="form.deliveryTime" placeholder="请输入送货药品" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="单据详情" prop="deliveryDetails">
-              <el-input v-model="form.deliveryDetails" placeholder="请输入单据详情" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="配送医院" prop="deliveryHospital">
-              <el-input v-model="form.deliveryHospital" placeholder="请输入配送医院" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="配送地址" prop="deliveryAddress">
-              <el-input v-model="form.deliveryAddress" placeholder="请输入配送地址" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="配送人" prop="deliveryPerson">
-              <el-input v-model="form.deliveryPerson" placeholder="请输入配送人" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="备注" prop="remarks">
-              <el-input v-model="form.remarks" placeholder="请输入备注" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="状态" prop="states">
-              <el-radio-group v-model="form.states">
-                <el-radio v-for="item in options.statesOptions" :key="item.dictValue" :value="item.dictValue">
-                  {{ item.dictLabel }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="创建时间" prop="createTime">
-              <el-input v-model="form.createTime" placeholder="请输入创建时间" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer v-if="opertype != 3">
-        <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
-      </template>
-    </el-dialog>
   </div>
   <div>
     <el-form :model="DeliveryDrugqueryParams" label-position="right" inline ref="DeliveryDrugqueryRef"
@@ -286,55 +206,136 @@
       v-model:limit="DeliveryDrugqueryParams.pageSize" @pagination="DeliveryDruggetList" />
 
 
-    <el-dialog :title="DeliveryDrugtitle" :lock-scroll="false" v-model="DeliveryDrugopen">
-      <el-form ref="DeliveryDrugformRef" :model="DeliveryDrugform" :rules="DeliveryDrugrules" label-width="100px">
-        <el-row :gutter="20">
 
-          <el-col :lg="12">
-            <el-form-item label="Id" prop="id">
-              <el-input v-model.number="DeliveryDrugform.id" placeholder="请输入Id"
-                :disabled="DeliveryDrugopertype != 1" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="DeliveryId" prop="deliveryId">
-              <el-input v-model="DeliveryDrugform.deliveryId" placeholder="请输入DeliveryId" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品id" prop="drugId">
-              <el-input v-model="DeliveryDrugform.drugId" placeholder="请输入药品id" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品信息" prop="drugDetails">
-              <el-input v-model="DeliveryDrugform.drugDetails" placeholder="请输入药品信息" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="数量" prop="drugQuantity">
-              <el-input v-model="DeliveryDrugform.drugQuantity" placeholder="请输入数量" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="备注" prop="remarks">
-              <el-input v-model="DeliveryDrugform.remarks" placeholder="请输入备注" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer v-if="DeliveryDrugopertype != 3">
-        <el-button text @click="DeliveryDrugcancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="DeliveryDrugsubmitForm">{{ $t('btn.submit') }}</el-button>
-      </template>
-    </el-dialog>
   </div>
 
+  <el-dialog :title="title" :lock-scroll="false" v-model="open">
+    <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+      <el-row :gutter="20">
+
+        <el-col :lg="12">
+          <el-form-item label="Id" prop="id">
+            <el-input v-model.number="form.id" placeholder="请输入Id" :disabled="opertype != 1" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="备货单" prop="stockId">
+            <el-input v-model="form.stockId" placeholder="请输入备货单" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="药品id" prop="drugId">
+            <el-input v-model="form.drugId" placeholder="请输入药品id" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="送货药品" prop="deliveryTime">
+            <el-input v-model="form.deliveryTime" placeholder="请输入送货药品" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="单据详情" prop="deliveryDetails">
+            <el-input v-model="form.deliveryDetails" placeholder="请输入单据详情" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="配送医院" prop="deliveryHospital">
+            <el-input v-model="form.deliveryHospital" placeholder="请输入配送医院" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="配送地址" prop="deliveryAddress">
+            <el-input v-model="form.deliveryAddress" placeholder="请输入配送地址" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="配送人" prop="deliveryPerson">
+            <el-input v-model="form.deliveryPerson" placeholder="请输入配送人" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="备注" prop="remarks">
+            <el-input v-model="form.remarks" placeholder="请输入备注" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="状态" prop="states">
+            <el-radio-group v-model="form.states">
+              <el-radio v-for="item in options.statesOptions" :key="item.dictValue" :value="item.dictValue">
+                {{ item.dictLabel }}
+              </el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="创建时间" prop="createTime">
+            <el-input v-model="form.createTime" placeholder="请输入创建时间" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <template #footer v-if="opertype != 3">
+      <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
+      <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
+    </template>
+  </el-dialog>
+
+  <el-dialog :title="DeliveryDrugtitle" :lock-scroll="false" v-model="DeliveryDrugopen">
+    <el-form ref="DeliveryDrugformRef" :model="DeliveryDrugform" :rules="DeliveryDrugrules" label-width="100px">
+      <el-row :gutter="20">
+
+        <el-col :lg="12">
+          <el-form-item label="Id" prop="id">
+            <el-input v-model.number="DeliveryDrugform.id" placeholder="请输入Id" :disabled="DeliveryDrugopertype != 1" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="DeliveryId" prop="deliveryId">
+            <el-input v-model="DeliveryDrugform.deliveryId" placeholder="请输入DeliveryId" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="药品id" prop="drugId">
+            <el-input v-model="DeliveryDrugform.drugId" placeholder="请输入药品id" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="药品信息" prop="drugDetails">
+            <el-input v-model="DeliveryDrugform.drugDetails" placeholder="请输入药品信息" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="数量" prop="drugQuantity">
+            <el-input v-model="DeliveryDrugform.drugQuantity" placeholder="请输入数量" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="备注" prop="remarks">
+            <el-input v-model="DeliveryDrugform.remarks" placeholder="请输入备注" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <template #footer v-if="DeliveryDrugopertype != 3">
+      <el-button text @click="DeliveryDrugcancel">{{ $t('btn.cancel') }}</el-button>
+      <el-button type="primary" @click="DeliveryDrugsubmitForm">{{ $t('btn.submit') }}</el-button>
+    </template>
+  </el-dialog>
   <!-- 药品选择 -->
   <el-dialog :title="title" :lock-scroll="false" v-model="Drugopen">
     <el-form :model="DrugqueryParams" label-position="right" inline ref="DrugqueryRef" v-show="DrugshowSearch"

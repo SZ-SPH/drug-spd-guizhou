@@ -107,7 +107,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <template #footer v-if="opertype != 3">
+      <template #footer v-if="Receiptopertype != 3">
         <el-button text @click="Receiptcancel">{{ $t('btn.cancel') }}</el-button>
         <el-button type="primary" @click="ReceiptsubmitForm">{{ $t('btn.submit') }}</el-button>
       </template>

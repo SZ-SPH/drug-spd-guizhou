@@ -71,7 +71,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/index',
-        component: () => import('@/views/index'),
+        component: () => import('@/views/business/Basic/Drug.vue'),
         name: 'Index',
         meta: { title: '首页', icon: 'index', affix: true, titleKey: 'menu.home' }
       }

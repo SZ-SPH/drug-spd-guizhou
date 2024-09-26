@@ -1,4 +1,4 @@
-<h2 align="center"> ZRAdmin.NET后台管理系统</h2>
+<!-- <h2 align="center"> ZRAdmin.NET后台管理系统</h2>
 
 <p align="center">
 	<a href="https://gitee.com/izory/ZrAdminNetCore"><img src="https://gitee.com/izory/ZrAdminNetCore/badge/star.svg?theme=dark"></a>
@@ -100,4 +100,4 @@ yarn dev
 ## 源码地址
 
 - [Gitee](https://gitee.com/izory/ZrAdminNetCore/)
-- [Github](https://github.com/izhaorui/ZrAdmin.NET/)
+- [Github](https://github.com/izhaorui/ZrAdmin.NET/) -->

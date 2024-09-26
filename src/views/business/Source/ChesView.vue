@@ -35,7 +35,7 @@
 				</el-button>
 			</el-col>
 			<el-col :span="1.5">
-				<el-button type="success" :disabled="single" v-hasPermi="['ChesView:edit']" plain icon="edit"
+				<el-button type="success" :disabled="Codesingle" v-hasPermi="['ChesView:edit']" plain icon="edit"
 					@click="CodehandleUpdate">
 					{{ $t('btn.edit') }}
 				</el-button>
@@ -145,8 +145,9 @@
 			@pagination="CodegetList" />
 
 
-		<el-table :data="tabe2Data" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
-			highlight-current-row :height="300" @sort-change="sortChange">
+		<el-table :data="tabe2Data" v-loading="Codeloading" ref="table" border
+			header-cell-class-name="el-table-header-cell" highlight-current-row :height="300"
+			@sort-change="CodesortChange">
 			<el-table-column prop="drugName" label="操作人" align="center" :show-overflow-tooltip="true">
 				<!-- <template #default="scope">
 					<el-link type="primary">{{ scope.row.operator }}</el-link>
@@ -290,6 +291,7 @@
 			</template>
 		</el-dialog>
 	</div>
+
 </template>
 
 <script setup name="ChesView">

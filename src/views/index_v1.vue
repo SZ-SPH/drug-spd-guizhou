@@ -31,7 +31,8 @@
         <el-card style="height: 100%">
           <div class="text-warning mb10">{{ currentTime }} {{ weekName }}</div>
           <div class="work-wrap">
-            <el-statistic :title="$t('layout.workTime')" :formatter="workTimeFormatter" :value="onlineInfo.todayOnlineTime" />
+            <el-statistic :title="$t('layout.workTime')" :formatter="workTimeFormatter"
+              :value="onlineInfo.todayOnlineTime" />
             <el-statistic :title="$t('layout.onlineClientNum')" :value="onlineInfo.clientNum" />
           </div>
         </el-card>
@@ -48,7 +49,9 @@
             </div>
           </template>
           <div>
-            <el-scrollbar wrap-class="scrollbar-wrapper"> <CommonMenu v-model="showEdit"></CommonMenu></el-scrollbar>
+            <el-scrollbar wrap-class="scrollbar-wrapper">
+              <CommonMenu v-model="showEdit"></CommonMenu>
+            </el-scrollbar>
           </div>
         </el-card>
       </el-col>
@@ -165,19 +168,23 @@ function workTimeFormatter(val) {
     // height: 198px;
     display: flex;
     align-items: center;
+
     .user-item-left {
       width: 60px;
       height: 60px;
       overflow: hidden;
       margin-right: 10px;
     }
+
     .user-item-right {
       flex: 1;
+
       .right-title {
         font-size: 20px;
       }
     }
   }
+
   .info {
     height: 200px;
     // overflow-y: scroll;
@@ -196,6 +203,7 @@ function workTimeFormatter(val) {
     }
   }
 }
+
 .chart-wrapper {
   background: var(--base-bg-main);
   padding: 16px 16px 0;
