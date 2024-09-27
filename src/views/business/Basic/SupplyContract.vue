@@ -34,12 +34,14 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" :disabled="single" v-hasPermi="['supplycontract:edit']" plain icon="edit" @click="handleUpdate">
+        <el-button type="success" :disabled="single" v-hasPermi="['supplycontract:edit']" plain icon="edit"
+          @click="handleUpdate">
           {{ $t('btn.edit') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" :disabled="multiple" v-hasPermi="['supplycontract:delete']" plain icon="delete" @click="handleDelete">
+        <el-button type="danger" :disabled="multiple" v-hasPermi="['supplycontract:delete']" plain icon="delete"
+          @click="handleDelete">
           {{ $t('btn.delete') }}
         </el-button>
       </el-col>
@@ -56,10 +58,8 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="upload">
-                <importData
-                  templateUrl="business/SupplyContract/importTemplate"
-                  importUrl="/business/SupplyContract/importData"
-                  @success="handleFileSuccess"></importData>
+                <importData templateUrl="business/SupplyContract/importTemplate"
+                  importUrl="/business/SupplyContract/importData" @success="handleFileSuccess"></importData>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -73,43 +73,45 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
-    <el-table
-      :data="dataList"
-      v-loading="loading"
-      ref="table"
-      border
-      header-cell-class-name="el-table-header-cell"
-      highlight-current-row
-      @sort-change="sortChange"
-      @selection-change="handleSelectionChange"
-      >
-      <el-table-column type="selection" width="50" align="center"/>
-      <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')"/>
-      <el-table-column prop="contractCode" label="合同编号" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('contractCode')"/>
-      <el-table-column prop="contractContent" label="合同内容" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('contractContent')"/>
-      <el-table-column prop="contractDate" label="合同日期" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('contractDate')"/>
-      <el-table-column prop="drugId" label="合同药品" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugId')"/>
-      <el-table-column prop="hospitalId" label="合同医院" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('hospitalId')"/>
-      <el-table-column prop="supplierId" label="合同供应商" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('supplierId')"/>
-      <el-table-column prop="states" label="状态" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('states')"/>
+    <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
+      highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="50" align="center" />
+      <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')" />
+      <el-table-column prop="contractCode" label="合同编号" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('contractCode')" />
+      <el-table-column prop="contractContent" label="合同内容" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('contractContent')" />
+      <el-table-column prop="contractDate" label="合同日期" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('contractDate')" />
+      <el-table-column prop="drugId" label="合同药品" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugId')" />
+      <el-table-column prop="hospitalId" label="合同医院" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('hospitalId')" />
+      <el-table-column prop="supplierId" label="合同供应商" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('supplierId')" />
+      <el-table-column prop="states" label="状态" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('states')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['supplycontract:edit']" @click="handleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['supplycontract:delete']" @click="handleDelete(scope.row)"></el-button>
+          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['supplycontract:edit']"
+            @click="handleUpdate(scope.row)"></el-button>
+          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['supplycontract:delete']"
+            @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+      @pagination="getList" />
 
 
-    <el-dialog :title="title" :lock-scroll="false" v-model="open" >
+    <el-dialog :title="title" :lock-scroll="false" v-model="open">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
-            
+
           <el-col :lg="12">
             <el-form-item label="Id" prop="id">
-              <el-input v-model.number="form.id" placeholder="请输入Id" :disabled="opertype != 1"/>
+              <el-input v-model.number="form.id" placeholder="请输入Id" :disabled="opertype != 1" />
             </el-form-item>
           </el-col>
 
@@ -165,11 +167,13 @@
 </template>
 
 <script setup name="supplycontract">
-import { listSupplyContract,
- addSupplyContract, delSupplyContract, 
- updateSupplyContract,getSupplyContract, 
- clearSupplyContract,  } 
-from '@/api/business/supplycontract.js'
+import {
+  listSupplyContract,
+  addSupplyContract, delSupplyContract,
+  updateSupplyContract, getSupplyContract,
+  clearSupplyContract,
+}
+  from '@/api/business/supplycontract.js'
 import importData from '@/components/ImportData'
 const { proxy } = getCurrentInstance()
 const ids = ref([])
@@ -187,14 +191,14 @@ const queryParams = reactive({
   states: undefined,
 })
 const columns = ref([
-  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id'   },
-  { visible: true, align: 'center', type: '', prop: 'contractCode', label: '合同编号'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'contractContent', label: '合同内容'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'contractDate', label: '合同日期'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'drugId', label: '合同药品'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'hospitalId', label: '合同医院'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'supplierId', label: '合同供应商'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'states', label: '状态'  ,showOverflowTooltip: true  },
+  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
+  { visible: true, align: 'center', type: '', prop: 'contractCode', label: '合同编号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'contractContent', label: '合同内容', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'contractDate', label: '合同日期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugId', label: '合同药品', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'hospitalId', label: '合同医院', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'supplierId', label: '合同供应商', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'states', label: '状态', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
@@ -207,7 +211,7 @@ var dictParams = [
 ]
 
 
-function getList(){
+function getList() {
   loading.value = true
   listSupplyContract(queryParams).then(res => {
     const { code, data } = res
@@ -226,7 +230,7 @@ function handleQuery() {
 }
 
 // 重置查询操作
-function resetQuery(){
+function resetQuery() {
   proxy.resetForm("queryRef")
   handleQuery()
 }
@@ -262,7 +266,7 @@ const state = reactive({
   multiple: true,
   form: {},
   rules: {
-    id: [{ required: true, message: "Id不能为空", trigger: "blur"    , type: "number"  }],
+    id: [{ required: true, message: "Id不能为空", trigger: "blur", type: "number" }],
   },
   options: {
   }
@@ -271,7 +275,7 @@ const state = reactive({
 const { form, rules, options, single, multiple } = toRefs(state)
 
 // 关闭dialog
-function cancel(){
+function cancel() {
   open.value = false
   reset()
 }
@@ -297,8 +301,8 @@ function reset() {
  */
 function handlePreview(row) {
   reset()
-    const id = row.id
-    getSupplyContract(id).then((res) => {
+  const id = row.id
+  getSupplyContract(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
       open.value = true
@@ -349,10 +353,10 @@ function submitForm() {
         })
       } else {
         addSupplyContract(form.value).then((res) => {
-            proxy.$modal.msgSuccess("新增成功")
-            open.value = false
-            getList()
-          })
+          proxy.$modal.msgSuccess("新增成功")
+          open.value = false
+          getList()
+        })
       }
     }
   })

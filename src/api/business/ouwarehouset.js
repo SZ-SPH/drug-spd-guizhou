@@ -24,6 +24,17 @@ export function addOuWarehouset(data) {
     data: data,
   })
 }
+
+
+
+export function aLLADDplanStock(ids) {
+  return request({
+    url: 'business/OuWarehouset/stockAdd',
+    method: 'post',
+    data: ids,
+
+  })
+}
 /**
  * 修改出库
  * @param data

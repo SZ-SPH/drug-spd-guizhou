@@ -12,7 +12,8 @@
       <el-form-item label="状态" prop="state">
         <el-radio-group v-model="queryParams.state">
           <el-radio>全部</el-radio>
-          <el-radio v-for="item in  options.stateOptions" :key="item.dictValue" :value="item.dictValue">{{item.dictLabel}}</el-radio>
+          <el-radio v-for="item in options.stateOptions" :key="item.dictValue" :value="item.dictValue">{{ item.dictLabel
+            }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item>
@@ -28,12 +29,14 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" :disabled="single" v-hasPermi="['pharmacy:edit']" plain icon="edit" @click="handleUpdate">
+        <el-button type="success" :disabled="single" v-hasPermi="['pharmacy:edit']" plain icon="edit"
+          @click="handleUpdate">
           {{ $t('btn.edit') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" :disabled="multiple" v-hasPermi="['pharmacy:delete']" plain icon="delete" @click="handleDelete">
+        <el-button type="danger" :disabled="multiple" v-hasPermi="['pharmacy:delete']" plain icon="delete"
+          @click="handleDelete">
           {{ $t('btn.delete') }}
         </el-button>
       </el-col>
@@ -50,9 +53,7 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="upload">
-                <importData
-                  templateUrl="business/Pharmacy/importTemplate"
-                  importUrl="/business/Pharmacy/importData"
+                <importData templateUrl="business/Pharmacy/importTemplate" importUrl="/business/Pharmacy/importData"
                   @success="handleFileSuccess"></importData>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -67,42 +68,39 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
-    <el-table
-      :data="dataList"
-      v-loading="loading"
-      ref="table"
-      border
-      header-cell-class-name="el-table-header-cell"
-      highlight-current-row
-      @sort-change="sortChange"
-      @selection-change="handleSelectionChange"
-      >
-      <el-table-column type="selection" width="50" align="center"/>
-      <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')"/>
-      <el-table-column prop="pharmacyName" label="药房名称" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('pharmacyName')"/>
+    <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
+      highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="50" align="center" />
+      <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')" />
+      <el-table-column prop="pharmacyName" label="药房名称" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('pharmacyName')" />
       <el-table-column prop="state" label="状态" align="center" v-if="columns.showColumn('state')">
         <template #default="scope">
-          <dict-tag :options=" options.stateOptions" :value="scope.row.state"  />
+          <dict-tag :options="options.stateOptions" :value="scope.row.state" />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['pharmacy:edit']" @click="handleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['pharmacy:delete']" @click="handleDelete(scope.row)"></el-button>
+          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['pharmacy:edit']"
+            @click="handleUpdate(scope.row)"></el-button>
+          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['pharmacy:delete']"
+            @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+      @pagination="getList" />
 
 
-    <el-dialog :title="title" :lock-scroll="false" v-model="open" >
+    <el-dialog :title="title" :lock-scroll="false" v-model="open">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
-            
+
           <el-col :lg="12" v-if="opertype != 1">
             <el-form-item label="Id" prop="id">
-              <el-input-number v-model.number="form.id" controls-position="right" placeholder="请输入Id" :disabled="true"/>
+              <el-input-number v-model.number="form.id" controls-position="right" placeholder="请输入Id"
+                :disabled="true" />
             </el-form-item>
           </el-col>
 
@@ -116,7 +114,7 @@
             <el-form-item label="状态" prop="state">
               <el-radio-group v-model="form.state">
                 <el-radio v-for="item in options.stateOptions" :key="item.dictValue" :value="item.dictValue">
-                  {{item.dictLabel}}
+                  {{ item.dictLabel }}
                 </el-radio>
               </el-radio-group>
             </el-form-item>
@@ -132,11 +130,13 @@
 </template>
 
 <script setup name="pharmacy">
-import { listPharmacy,
- addPharmacy, delPharmacy, 
- updatePharmacy,getPharmacy, 
- clearPharmacy,  } 
-from '@/api/business/pharmacy.js'
+import {
+  listPharmacy,
+  addPharmacy, delPharmacy,
+  updatePharmacy, getPharmacy,
+  clearPharmacy,
+}
+  from '@/api/business/pharmacy.js'
 import importData from '@/components/ImportData'
 const { proxy } = getCurrentInstance()
 const ids = ref([])
@@ -151,9 +151,9 @@ const queryParams = reactive({
   state: undefined,
 })
 const columns = ref([
-  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id'   },
-  { visible: true, align: 'center', type: '', prop: 'pharmacyName', label: '药房名称'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: 'dict', prop: 'state', label: '状态'  ,showOverflowTooltip: true  },
+  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
+  { visible: true, align: 'center', type: '', prop: 'pharmacyName', label: '药房名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: 'dict', prop: 'state', label: '状态', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
@@ -166,7 +166,7 @@ var dictParams = [
 ]
 
 
-function getList(){
+function getList() {
   loading.value = true
   listPharmacy(queryParams).then(res => {
     const { code, data } = res
@@ -185,7 +185,7 @@ function handleQuery() {
 }
 
 // 重置查询操作
-function resetQuery(){
+function resetQuery() {
   proxy.resetForm("queryRef")
   handleQuery()
 }
@@ -224,14 +224,14 @@ const state = reactive({
   },
   options: {
     // 状态 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-stateOptions: [],
+    stateOptions: [],
   }
 })
 
 const { form, rules, options, single, multiple } = toRefs(state)
 
 // 关闭dialog
-function cancel(){
+function cancel() {
   open.value = false
   reset()
 }
@@ -252,8 +252,8 @@ function reset() {
  */
 function handlePreview(row) {
   reset()
-    const id = row.id
-    getPharmacy(id).then((res) => {
+  const id = row.id
+  getPharmacy(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
       open.value = true
@@ -304,10 +304,10 @@ function submitForm() {
         })
       } else {
         addPharmacy(form.value).then((res) => {
-            proxy.$modal.msgSuccess("新增成功")
-            open.value = false
-            getList()
-          })
+          proxy.$modal.msgSuccess("新增成功")
+          open.value = false
+          getList()
+        })
       }
     }
   })

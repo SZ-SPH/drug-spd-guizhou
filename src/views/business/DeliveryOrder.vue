@@ -5,389 +5,393 @@
 -->
 <template>
   <div>
-    <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
-      <el-form-item label="备货单" prop="stockId">
-        <el-input v-model="queryParams.stockId" placeholder="请输入备货单" />
-      </el-form-item>
-      <el-form-item label="药品id" prop="drugId">
-        <el-input v-model="queryParams.drugId" placeholder="请输入药品id" />
-      </el-form-item>
-      <el-form-item>
-        <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
-        <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 工具区域 -->
-    <el-row :gutter="15" class="mb10">
-      <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['deliveryorder:add']" plain icon="plus" @click="handleAdd">
-          {{ $t('btn.add') }}
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" :disabled="single" v-hasPermi="['deliveryorder:edit']" plain icon="edit"
-          @click="handleUpdate">
-          {{ $t('btn.edit') }}
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" :disabled="multiple" v-hasPermi="['deliveryorder:delete']" plain icon="delete"
-          @click="handleDelete">
-          {{ $t('btn.delete') }}
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" v-hasPermi="['deliveryorder:delete']" plain icon="delete" @click="handleClear">
-          {{ $t('btn.clean') }}
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-dropdown trigger="click" v-hasPermi="['deliveryorder:import']">
-          <el-button type="primary" plain icon="Upload">
-            {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="upload">
-                <importData templateUrl="business/DeliveryOrder/importTemplate"
-                  importUrl="/business/DeliveryOrder/importData" @success="handleFileSuccess"></importData>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['deliveryorder:export']">
-          {{ $t('btn.export') }}
-        </el-button>
-      </el-col>
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
-    </el-row>
 
-    <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
-      highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')" />
-      <el-table-column prop="stockId" label="备货单" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('stockId')" />
-      <el-table-column prop="drugId" label="药品id" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('drugId')" />
-      <el-table-column prop="deliveryTime" label="送货药品" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('deliveryTime')" />
-      <el-table-column prop="deliveryDetails" label="单据详情" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('deliveryDetails')" />
-      <el-table-column prop="deliveryHospital" label="配送医院" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('deliveryHospital')" />
-      <el-table-column prop="deliveryAddress" label="配送地址" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('deliveryAddress')" />
-      <el-table-column prop="deliveryPerson" label="配送人" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('deliveryPerson')" />
-      <el-table-column prop="remarks" label="备注" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('remarks')" />
-      <el-table-column prop="states" label="状态" align="center" v-if="columns.showColumn('states')">
-        <template #default="scope">
-          <dict-tag :options="options.statesOptions" :value="scope.row.states" />
+    <div>
+      <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
+        <el-form-item label="备货单" prop="stockId">
+          <el-input v-model="queryParams.stockId" placeholder="请输入备货单" />
+        </el-form-item>
+        <el-form-item label="药品id" prop="drugId">
+          <el-input v-model="queryParams.drugId" placeholder="请输入药品id" />
+        </el-form-item>
+        <el-form-item>
+          <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+          <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
+        </el-form-item>
+      </el-form>
+      <!-- 工具区域 -->
+      <el-row :gutter="15" class="mb10">
+        <el-col :span="1.5">
+          <el-button type="primary" v-hasPermi="['deliveryorder:add']" plain icon="plus" @click="handleAdd">
+            {{ $t('btn.add') }}
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="success" :disabled="single" v-hasPermi="['deliveryorder:edit']" plain icon="edit"
+            @click="handleUpdate">
+            {{ $t('btn.edit') }}
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="danger" :disabled="multiple" v-hasPermi="['deliveryorder:delete']" plain icon="delete"
+            @click="handleDelete">
+            {{ $t('btn.delete') }}
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="danger" v-hasPermi="['deliveryorder:delete']" plain icon="delete" @click="handleClear">
+            {{ $t('btn.clean') }}
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-dropdown trigger="click" v-hasPermi="['deliveryorder:import']">
+            <el-button type="primary" plain icon="Upload">
+              {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="upload">
+                  <importData templateUrl="business/DeliveryOrder/importTemplate"
+                    importUrl="/business/DeliveryOrder/importData" @success="handleFileSuccess"></importData>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['deliveryorder:export']">
+            {{ $t('btn.export') }}
+          </el-button>
+        </el-col>
+        <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
+      </el-row>
+
+      <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
+        highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="50" align="center" />
+        <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')" />
+        <el-table-column prop="stockId" label="备货单" align="center" :show-overflow-tooltip="true"
+          v-if="columns.showColumn('stockId')" />
+        <el-table-column prop="drugId" label="药品id" align="center" :show-overflow-tooltip="true"
+          v-if="columns.showColumn('drugId')" />
+        <el-table-column prop="deliveryTime" label="送货药品" align="center" :show-overflow-tooltip="true"
+          v-if="columns.showColumn('deliveryTime')" />
+        <el-table-column prop="deliveryDetails" label="单据详情" align="center" :show-overflow-tooltip="true"
+          v-if="columns.showColumn('deliveryDetails')" />
+        <el-table-column prop="deliveryHospital" label="配送医院" align="center" :show-overflow-tooltip="true"
+          v-if="columns.showColumn('deliveryHospital')" />
+        <el-table-column prop="deliveryAddress" label="配送地址" align="center" :show-overflow-tooltip="true"
+          v-if="columns.showColumn('deliveryAddress')" />
+        <el-table-column prop="deliveryPerson" label="配送人" align="center" :show-overflow-tooltip="true"
+          v-if="columns.showColumn('deliveryPerson')" />
+        <el-table-column prop="remarks" label="备注" align="center" :show-overflow-tooltip="true"
+          v-if="columns.showColumn('remarks')" />
+        <el-table-column prop="states" label="状态" align="center" v-if="columns.showColumn('states')">
+          <template #default="scope">
+            <dict-tag :options="options.statesOptions" :value="scope.row.states" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" align="center" :show-overflow-tooltip="true"
+          v-if="columns.showColumn('createTime')" />
+        <el-table-column label="操作" width="160">
+          <template #default="scope">
+            <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
+            <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['deliveryorder:edit']"
+              @click="handleUpdate(scope.row)"></el-button>
+            <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['deliveryorder:delete']"
+              @click="handleDelete(scope.row)"></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+        @pagination="getList" />
+
+
+    </div>
+    <div>
+      <el-form :model="DeliveryDrugqueryParams" label-position="right" inline ref="DeliveryDrugqueryRef"
+        v-show="DeliveryDrugshowSearch" @submit.prevent>
+        <el-form-item label="DeliveryId" prop="deliveryId">
+          <el-input v-model="DeliveryDrugqueryParams.deliveryId" placeholder="请输入DeliveryId" />
+        </el-form-item>
+        <el-form-item label="药品id" prop="drugId">
+          <el-input v-model="DeliveryDrugqueryParams.drugId" placeholder="请输入药品id" />
+        </el-form-item>
+        <el-form-item>
+          <el-button :disabled="queryParams.receiptId == 0" type="primary" v-hasPermi="['inwarehousing:add']" plain
+            icon="plus" @click="OpenDrughandleAdd">
+            添加明细
+          </el-button>
+          <el-button icon="search" type="primary" @click="DeliveryDrughandleQuery">{{ $t('btn.search') }}</el-button>
+          <el-button icon="refresh" @click="DeliveryDrugresetQuery">{{ $t('btn.reset') }}</el-button>
+        </el-form-item>
+      </el-form>
+      <!-- 工具区域 -->
+      <el-row :gutter="15" class="mb10">
+        <el-col :span="1.5">
+          <el-button type="primary" v-hasPermi="['deliveryorderdrug:add']" plain icon="plus"
+            @click="DeliveryDrughandleAdd">
+            {{ $t('btn.add') }}
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="success" :disabled="DeliveryDrugsingle" v-hasPermi="['deliveryorderdrug:edit']" plain
+            icon="edit" @click="DeliveryDrughandleUpdate">
+            {{ $t('btn.edit') }}
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="danger" :disabled="DeliveryDrugmultiple" v-hasPermi="['deliveryorderdrug:delete']" plain
+            icon="delete" @click="DeliveryDrughandleDelete">
+            {{ $t('btn.delete') }}
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="danger" v-hasPermi="['deliveryorderdrug:delete']" plain icon="delete"
+            @click="DeliveryDrughandleClear">
+            {{ $t('btn.clean') }}
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-dropdown trigger="click" v-hasPermi="['deliveryorderdrug:import']">
+            <el-button type="primary" plain icon="Upload">
+              {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="upload">
+                  <importData templateUrl="business/DeliveryOrderDrug/importTemplate"
+                    importUrl="/business/DeliveryOrderDrug/importData" @success="DeliveryDrughandleFileSuccess">
+                  </importData>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="warning" plain icon="download" @click="DeliveryDrughandleExport"
+            v-hasPermi="['deliveryorderdrug:export']">
+            {{ $t('btn.export') }}
+          </el-button>
+        </el-col>
+        <right-toolbar v-model:showSearch="DeliveryDrugshowSearch" @queryTable="DeliveryDruggetList"
+          :columns="DeliveryDrugcolumns"></right-toolbar>
+      </el-row>
+
+      <el-table :data="DeliveryDrugdataList" v-loading="DeliveryDrugloading" ref="DeliveryDrugtable" border
+        header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="DeliveryDrugsortChange"
+        @selection-change="DeliveryDrughandleSelectionChange">
+        <el-table-column type="selection" width="50" align="center" />
+        <el-table-column prop="id" label="Id" align="center" v-if="DeliveryDrugcolumns.showColumn('id')" />
+        <el-table-column prop="deliveryId" label="DeliveryId" align="center" :show-overflow-tooltip="true"
+          v-if="DeliveryDrugcolumns.showColumn('deliveryId')" />
+        <el-table-column prop="drugId" label="药品id" align="center" :show-overflow-tooltip="true"
+          v-if="DeliveryDrugcolumns.showColumn('drugId')" />
+        <el-table-column prop="drugDetails" label="药品信息" align="center" :show-overflow-tooltip="true"
+          v-if="DeliveryDrugcolumns.showColumn('drugDetails')" />
+        <el-table-column prop="drugQuantity" label="数量" align="center" :show-overflow-tooltip="true"
+          v-if="DeliveryDrugcolumns.showColumn('drugQuantity')" />
+        <el-table-column prop="remarks" label="备注" align="center" :show-overflow-tooltip="true"
+          v-if="DeliveryDrugcolumns.showColumn('remarks')" />
+        <el-table-column label="操作" width="160">
+          <template #default="scope">
+            <el-button type="primary" size="small" icon="view" title="详情"
+              @click="DeliveryDrughandlePreview(scope.row)"></el-button>
+            <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['deliveryorderdrug:edit']"
+              @click="DeliveryDrughandleUpdate(scope.row)"></el-button>
+            <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['deliveryorderdrug:delete']"
+              @click="DeliveryDrughandleDelete(scope.row)"></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination :total="DeliveryDrugtotal" v-model:page="DeliveryDrugqueryParams.pageNum"
+        v-model:limit="DeliveryDrugqueryParams.pageSize" @pagination="DeliveryDruggetList" />
+
+      <el-dialog :title="title" :lock-scroll="false" v-model="open">
+        <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+          <el-row :gutter="20">
+
+            <el-col :lg="12">
+              <el-form-item label="Id" prop="id">
+                <el-input v-model.number="form.id" placeholder="请输入Id" :disabled="opertype != 1" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="备货单" prop="stockId">
+                <el-input v-model="form.stockId" placeholder="请输入备货单" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="药品id" prop="drugId">
+                <el-input v-model="form.drugId" placeholder="请输入药品id" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="送货药品" prop="deliveryTime">
+                <el-input v-model="form.deliveryTime" placeholder="请输入送货药品" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="单据详情" prop="deliveryDetails">
+                <el-input v-model="form.deliveryDetails" placeholder="请输入单据详情" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="配送医院" prop="deliveryHospital">
+                <el-input v-model="form.deliveryHospital" placeholder="请输入配送医院" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="配送地址" prop="deliveryAddress">
+                <el-input v-model="form.deliveryAddress" placeholder="请输入配送地址" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="配送人" prop="deliveryPerson">
+                <el-input v-model="form.deliveryPerson" placeholder="请输入配送人" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="备注" prop="remarks">
+                <el-input v-model="form.remarks" placeholder="请输入备注" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="状态" prop="states">
+                <el-radio-group v-model="form.states">
+                  <el-radio v-for="item in options.statesOptions" :key="item.dictValue" :value="item.dictValue">
+                    {{ item.dictLabel }}
+                  </el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="创建时间" prop="createTime">
+                <el-input v-model="form.createTime" placeholder="请输入创建时间" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <template #footer v-if="opertype != 3">
+          <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
         </template>
-      </el-table-column>
-      <el-table-column prop="createTime" label="创建时间" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('createTime')" />
-      <el-table-column label="操作" width="160">
-        <template #default="scope">
-          <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['deliveryorder:edit']"
-            @click="handleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['deliveryorder:delete']"
-            @click="handleDelete(scope.row)"></el-button>
+      </el-dialog>
+
+      <el-dialog :title="DeliveryDrugtitle" :lock-scroll="false" v-model="DeliveryDrugopen">
+        <el-form ref="DeliveryDrugformRef" :model="DeliveryDrugform" :rules="DeliveryDrugrules" label-width="100px">
+          <el-row :gutter="20">
+
+            <el-col :lg="12">
+              <el-form-item label="Id" prop="id">
+                <el-input v-model.number="DeliveryDrugform.id" placeholder="请输入Id"
+                  :disabled="DeliveryDrugopertype != 1" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="DeliveryId" prop="deliveryId">
+                <el-input v-model="DeliveryDrugform.deliveryId" placeholder="请输入DeliveryId" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="药品id" prop="drugId">
+                <el-input v-model="DeliveryDrugform.drugId" placeholder="请输入药品id" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="药品信息" prop="drugDetails">
+                <el-input v-model="DeliveryDrugform.drugDetails" placeholder="请输入药品信息" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="数量" prop="drugQuantity">
+                <el-input v-model="DeliveryDrugform.drugQuantity" placeholder="请输入数量" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="备注" prop="remarks">
+                <el-input v-model="DeliveryDrugform.remarks" placeholder="请输入备注" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <template #footer v-if="DeliveryDrugopertype != 3">
+          <el-button text @click="DeliveryDrugcancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button type="primary" @click="DeliveryDrugsubmitForm">{{ $t('btn.submit') }}</el-button>
         </template>
-      </el-table-column>
-    </el-table>
-    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+      </el-dialog>
+      <!-- 药品选择 -->
+      <el-dialog :title="title" :lock-scroll="false" v-model="Drugopen">
+        <el-form :model="DrugqueryParams" label-position="right" inline ref="DrugqueryRef" v-show="DrugshowSearch"
+          @submit.prevent>
+          <el-form-item label="药品名称" prop="drugName">
+            <el-input v-model="DrugqueryParams.drugName" placeholder="请输入药品名称" />
+          </el-form-item>
+          <el-form-item label="药品编号" prop="drugCode">
+            <el-input v-model="DrugqueryParams.drugCode" placeholder="请输入药品编号" />
+          </el-form-item>
+          <el-form-item label="药品助记码" prop="drugMnemonicCode">
+            <el-input v-model="DrugqueryParams.drugMnemonicCode" placeholder="请输入药品助记码" />
+          </el-form-item>
+          <el-form-item>
+            <el-button icon="search" type="primary" @click="DrughandleQuery">{{ $t('btn.search') }}</el-button>
+            <el-button icon="refresh" @click="DrugresetQuery">{{ $t('btn.reset') }}</el-button>
+          </el-form-item>
+        </el-form>
+
+        <el-table :data="DrugdataList" v-loading="Drugloading" ref="Drugtable" border
+          header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="DrugsortChange"
+          @selection-change="DrughandleSelectionChange">
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column prop="drugId" label="drugId" align="center" v-if="Drugcolumns.showColumn('drugId')" />
+          <el-table-column prop="drugName" label="药品名称" align="center" :show-overflow-tooltip="true"
+            v-if="Drugcolumns.showColumn('drugName')" />
+          <el-table-column prop="drugCode" label="药品编号" align="center" :show-overflow-tooltip="true"
+            v-if="Drugcolumns.showColumn('drugCode')" />
+          <el-table-column prop="drugMnemonicCode" label="药品助记码" align="center" :show-overflow-tooltip="true"
+            v-if="Drugcolumns.showColumn('drugMnemonicCode')" />
+          <el-table-column prop="drugSpecifications" label="药品规格" align="center" :show-overflow-tooltip="true"
+            v-if="Drugcolumns.showColumn('drugSpecifications')" />
+          <el-table-column prop="drugCategory" label="药品类别" align="center" :show-overflow-tooltip="true"
+            v-if="Drugcolumns.showColumn('drugCategory')" />
+          <el-table-column prop="drugVarietyName" label="药品品种名称" align="center" :show-overflow-tooltip="true"
+            v-if="Drugcolumns.showColumn('drugVarietyName')" />
+          <el-table-column prop="drugClassification" label="药物分类" align="center" :show-overflow-tooltip="true"
+            v-if="Drugcolumns.showColumn('drugClassification')" />
+          <el-table-column prop="tracingSourceCode" label="溯源码" align="center" :show-overflow-tooltip="true"
+            v-if="Drugcolumns.showColumn('tracingSourceCode')" />
+          <el-table-column prop="drugBatchNumber" label="批号" align="center" :show-overflow-tooltip="true"
+            v-if="Drugcolumns.showColumn('drugBatchNumber')" />
+
+        </el-table>
+        <pagination :total="Drugtotal" v-model:page="DrugqueryParams.pageNum" v-model:limit="DrugqueryParams.pageSize"
+          @pagination="DruggetList" />
+        <template #footer v-if="Drugopertype != 3">
+          <el-button text @click="Drugcancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button type="primary" @click="DrugsubmitForm">{{ $t('btn.submit') }}</el-button>
+        </template>
+
+      </el-dialog>
+
+    </div>
 
 
   </div>
-  <div>
-    <el-form :model="DeliveryDrugqueryParams" label-position="right" inline ref="DeliveryDrugqueryRef"
-      v-show="DeliveryDrugshowSearch" @submit.prevent>
-      <el-form-item label="DeliveryId" prop="deliveryId">
-        <el-input v-model="DeliveryDrugqueryParams.deliveryId" placeholder="请输入DeliveryId" />
-      </el-form-item>
-      <el-form-item label="药品id" prop="drugId">
-        <el-input v-model="DeliveryDrugqueryParams.drugId" placeholder="请输入药品id" />
-      </el-form-item>
-      <el-form-item>
-        <el-button :disabled="queryParams.receiptId == 0" type="primary" v-hasPermi="['inwarehousing:add']" plain
-          icon="plus" @click="OpenDrughandleAdd">
-          添加明细
-        </el-button>
-        <el-button icon="search" type="primary" @click="DeliveryDrughandleQuery">{{ $t('btn.search') }}</el-button>
-        <el-button icon="refresh" @click="DeliveryDrugresetQuery">{{ $t('btn.reset') }}</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 工具区域 -->
-    <el-row :gutter="15" class="mb10">
-      <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['deliveryorderdrug:add']" plain icon="plus"
-          @click="DeliveryDrughandleAdd">
-          {{ $t('btn.add') }}
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" :disabled="DeliveryDrugsingle" v-hasPermi="['deliveryorderdrug:edit']" plain
-          icon="edit" @click="DeliveryDrughandleUpdate">
-          {{ $t('btn.edit') }}
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" :disabled="DeliveryDrugmultiple" v-hasPermi="['deliveryorderdrug:delete']" plain
-          icon="delete" @click="DeliveryDrughandleDelete">
-          {{ $t('btn.delete') }}
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" v-hasPermi="['deliveryorderdrug:delete']" plain icon="delete"
-          @click="DeliveryDrughandleClear">
-          {{ $t('btn.clean') }}
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-dropdown trigger="click" v-hasPermi="['deliveryorderdrug:import']">
-          <el-button type="primary" plain icon="Upload">
-            {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="upload">
-                <importData templateUrl="business/DeliveryOrderDrug/importTemplate"
-                  importUrl="/business/DeliveryOrderDrug/importData" @success="DeliveryDrughandleFileSuccess">
-                </importData>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="DeliveryDrughandleExport"
-          v-hasPermi="['deliveryorderdrug:export']">
-          {{ $t('btn.export') }}
-        </el-button>
-      </el-col>
-      <right-toolbar v-model:showSearch="DeliveryDrugshowSearch" @queryTable="DeliveryDruggetList"
-        :columns="DeliveryDrugcolumns"></right-toolbar>
-    </el-row>
-
-    <el-table :data="DeliveryDrugdataList" v-loading="DeliveryDrugloading" ref="DeliveryDrugtable" border
-      header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="DeliveryDrugsortChange"
-      @selection-change="DeliveryDrughandleSelectionChange">
-      <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="id" label="Id" align="center" v-if="DeliveryDrugcolumns.showColumn('id')" />
-      <el-table-column prop="deliveryId" label="DeliveryId" align="center" :show-overflow-tooltip="true"
-        v-if="DeliveryDrugcolumns.showColumn('deliveryId')" />
-      <el-table-column prop="drugId" label="药品id" align="center" :show-overflow-tooltip="true"
-        v-if="DeliveryDrugcolumns.showColumn('drugId')" />
-      <el-table-column prop="drugDetails" label="药品信息" align="center" :show-overflow-tooltip="true"
-        v-if="DeliveryDrugcolumns.showColumn('drugDetails')" />
-      <el-table-column prop="drugQuantity" label="数量" align="center" :show-overflow-tooltip="true"
-        v-if="DeliveryDrugcolumns.showColumn('drugQuantity')" />
-      <el-table-column prop="remarks" label="备注" align="center" :show-overflow-tooltip="true"
-        v-if="DeliveryDrugcolumns.showColumn('remarks')" />
-      <el-table-column label="操作" width="160">
-        <template #default="scope">
-          <el-button type="primary" size="small" icon="view" title="详情"
-            @click="DeliveryDrughandlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['deliveryorderdrug:edit']"
-            @click="DeliveryDrughandleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['deliveryorderdrug:delete']"
-            @click="DeliveryDrughandleDelete(scope.row)"></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <pagination :total="DeliveryDrugtotal" v-model:page="DeliveryDrugqueryParams.pageNum"
-      v-model:limit="DeliveryDrugqueryParams.pageSize" @pagination="DeliveryDruggetList" />
-
-
-
-  </div>
-
-  <el-dialog :title="title" :lock-scroll="false" v-model="open">
-    <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-      <el-row :gutter="20">
-
-        <el-col :lg="12">
-          <el-form-item label="Id" prop="id">
-            <el-input v-model.number="form.id" placeholder="请输入Id" :disabled="opertype != 1" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="备货单" prop="stockId">
-            <el-input v-model="form.stockId" placeholder="请输入备货单" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="药品id" prop="drugId">
-            <el-input v-model="form.drugId" placeholder="请输入药品id" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="送货药品" prop="deliveryTime">
-            <el-input v-model="form.deliveryTime" placeholder="请输入送货药品" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="单据详情" prop="deliveryDetails">
-            <el-input v-model="form.deliveryDetails" placeholder="请输入单据详情" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="配送医院" prop="deliveryHospital">
-            <el-input v-model="form.deliveryHospital" placeholder="请输入配送医院" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="配送地址" prop="deliveryAddress">
-            <el-input v-model="form.deliveryAddress" placeholder="请输入配送地址" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="配送人" prop="deliveryPerson">
-            <el-input v-model="form.deliveryPerson" placeholder="请输入配送人" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="备注" prop="remarks">
-            <el-input v-model="form.remarks" placeholder="请输入备注" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="状态" prop="states">
-            <el-radio-group v-model="form.states">
-              <el-radio v-for="item in options.statesOptions" :key="item.dictValue" :value="item.dictValue">
-                {{ item.dictLabel }}
-              </el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="创建时间" prop="createTime">
-            <el-input v-model="form.createTime" placeholder="请输入创建时间" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-    <template #footer v-if="opertype != 3">
-      <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
-      <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
-    </template>
-  </el-dialog>
-
-  <el-dialog :title="DeliveryDrugtitle" :lock-scroll="false" v-model="DeliveryDrugopen">
-    <el-form ref="DeliveryDrugformRef" :model="DeliveryDrugform" :rules="DeliveryDrugrules" label-width="100px">
-      <el-row :gutter="20">
-
-        <el-col :lg="12">
-          <el-form-item label="Id" prop="id">
-            <el-input v-model.number="DeliveryDrugform.id" placeholder="请输入Id" :disabled="DeliveryDrugopertype != 1" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="DeliveryId" prop="deliveryId">
-            <el-input v-model="DeliveryDrugform.deliveryId" placeholder="请输入DeliveryId" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="药品id" prop="drugId">
-            <el-input v-model="DeliveryDrugform.drugId" placeholder="请输入药品id" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="药品信息" prop="drugDetails">
-            <el-input v-model="DeliveryDrugform.drugDetails" placeholder="请输入药品信息" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="数量" prop="drugQuantity">
-            <el-input v-model="DeliveryDrugform.drugQuantity" placeholder="请输入数量" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :lg="12">
-          <el-form-item label="备注" prop="remarks">
-            <el-input v-model="DeliveryDrugform.remarks" placeholder="请输入备注" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-    <template #footer v-if="DeliveryDrugopertype != 3">
-      <el-button text @click="DeliveryDrugcancel">{{ $t('btn.cancel') }}</el-button>
-      <el-button type="primary" @click="DeliveryDrugsubmitForm">{{ $t('btn.submit') }}</el-button>
-    </template>
-  </el-dialog>
-  <!-- 药品选择 -->
-  <el-dialog :title="title" :lock-scroll="false" v-model="Drugopen">
-    <el-form :model="DrugqueryParams" label-position="right" inline ref="DrugqueryRef" v-show="DrugshowSearch"
-      @submit.prevent>
-      <el-form-item label="药品名称" prop="drugName">
-        <el-input v-model="DrugqueryParams.drugName" placeholder="请输入药品名称" />
-      </el-form-item>
-      <el-form-item label="药品编号" prop="drugCode">
-        <el-input v-model="DrugqueryParams.drugCode" placeholder="请输入药品编号" />
-      </el-form-item>
-      <el-form-item label="药品助记码" prop="drugMnemonicCode">
-        <el-input v-model="DrugqueryParams.drugMnemonicCode" placeholder="请输入药品助记码" />
-      </el-form-item>
-      <el-form-item>
-        <el-button icon="search" type="primary" @click="DrughandleQuery">{{ $t('btn.search') }}</el-button>
-        <el-button icon="refresh" @click="DrugresetQuery">{{ $t('btn.reset') }}</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-table :data="DrugdataList" v-loading="Drugloading" ref="Drugtable" border
-      header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="DrugsortChange"
-      @selection-change="DrughandleSelectionChange">
-      <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="drugId" label="drugId" align="center" v-if="Drugcolumns.showColumn('drugId')" />
-      <el-table-column prop="drugName" label="药品名称" align="center" :show-overflow-tooltip="true"
-        v-if="Drugcolumns.showColumn('drugName')" />
-      <el-table-column prop="drugCode" label="药品编号" align="center" :show-overflow-tooltip="true"
-        v-if="Drugcolumns.showColumn('drugCode')" />
-      <el-table-column prop="drugMnemonicCode" label="药品助记码" align="center" :show-overflow-tooltip="true"
-        v-if="Drugcolumns.showColumn('drugMnemonicCode')" />
-      <el-table-column prop="drugSpecifications" label="药品规格" align="center" :show-overflow-tooltip="true"
-        v-if="Drugcolumns.showColumn('drugSpecifications')" />
-      <el-table-column prop="drugCategory" label="药品类别" align="center" :show-overflow-tooltip="true"
-        v-if="Drugcolumns.showColumn('drugCategory')" />
-      <el-table-column prop="drugVarietyName" label="药品品种名称" align="center" :show-overflow-tooltip="true"
-        v-if="Drugcolumns.showColumn('drugVarietyName')" />
-      <el-table-column prop="drugClassification" label="药物分类" align="center" :show-overflow-tooltip="true"
-        v-if="Drugcolumns.showColumn('drugClassification')" />
-      <el-table-column prop="tracingSourceCode" label="溯源码" align="center" :show-overflow-tooltip="true"
-        v-if="Drugcolumns.showColumn('tracingSourceCode')" />
-      <el-table-column prop="drugBatchNumber" label="批号" align="center" :show-overflow-tooltip="true"
-        v-if="Drugcolumns.showColumn('drugBatchNumber')" />
-
-    </el-table>
-    <pagination :total="Drugtotal" v-model:page="DrugqueryParams.pageNum" v-model:limit="DrugqueryParams.pageSize"
-      @pagination="DruggetList" />
-    <template #footer v-if="Drugopertype != 3">
-      <el-button text @click="Drugcancel">{{ $t('btn.cancel') }}</el-button>
-      <el-button type="primary" @click="DrugsubmitForm">{{ $t('btn.submit') }}</el-button>
-    </template>
-
-  </el-dialog>
 
 </template>
 

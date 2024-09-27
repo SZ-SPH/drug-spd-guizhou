@@ -13,6 +13,16 @@ export function listStock(query) {
   })
 }
 
+
+export function AllGetliststock(ids) {
+  return request({
+    url: 'business/Stock/AllGetlist',
+    method: 'post',
+    data: ids,
+
+  })
+}
+// params: ids,
 /**
  * 新增库存
  * @param data

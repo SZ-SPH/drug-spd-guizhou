@@ -26,60 +26,67 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
-    <el-table
-      :data="dataList"
-      v-loading="loading"
-      ref="table"
-      border
-      header-cell-class-name="el-table-header-cell"
-      highlight-current-row
-      @sort-change="sortChange"
-      >
-      <el-table-column prop="drugId" label="id" align="center" v-if="columns.showColumn('drugId')"/>
-      <el-table-column prop="drugName" label="药品名称" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugName')"/>
-      <el-table-column prop="drugCode" label="药品编号" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugCode')"/>
-      <el-table-column prop="drugMnemonicCode" label="药品助记码" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugMnemonicCode')"/>
-      <el-table-column prop="drugSpecifications" label="药品规格" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugSpecifications')"/>
-      <el-table-column prop="drugCategory" label="药品类别" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugCategory')"/>
-      <el-table-column prop="drugVarietyName" label="药品品种名称" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugVarietyName')"/>
-      <el-table-column prop="drugClassification" label="药物分类" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugClassification')"/>
-      <el-table-column prop="tracingSourceCode" label="溯源码" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('tracingSourceCode')"/>
-      <el-table-column prop="drugBatchNumber" label="批号" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugBatchNumber')"/>
+    <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
+      highlight-current-row @sort-change="sortChange">
+      <el-table-column prop="drugId" label="id" align="center" v-if="columns.showColumn('drugId')" />
+      <el-table-column prop="drugName" label="药品名称" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugName')" />
+      <el-table-column prop="drugCode" label="药品编号" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugCode')" />
+      <el-table-column prop="drugMnemonicCode" label="药品助记码" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugMnemonicCode')" />
+      <el-table-column prop="drugSpecifications" label="药品规格" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugSpecifications')" />
+      <el-table-column prop="drugCategory" label="药品类别" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugCategory')" />
+      <el-table-column prop="drugVarietyName" label="药品品种名称" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugVarietyName')" />
+      <el-table-column prop="drugClassification" label="药物分类" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugClassification')" />
+      <el-table-column prop="tracingSourceCode" label="溯源码" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('tracingSourceCode')" />
+      <el-table-column prop="drugBatchNumber" label="批号" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugBatchNumber')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['drug:edit']" @click="handleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['drug:delete']" @click="handleDelete(scope.row)"></el-button>
+          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['drug:edit']"
+            @click="handleUpdate(scope.row)"></el-button>
+          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['drug:delete']"
+            @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+      @pagination="getList" />
     <!-- 联动数据 -->
-  <el-table :data="tabe2Data" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
-    highlight-current-row :height="300" @sort-change="sortChange">
-    <el-table-column prop="drugName" label="操作人" align="center" :show-overflow-tooltip="true" >
-      <template #default="scope">
-        <el-link type="primary">{{ scope.row.operator}}</el-link>
-      </template>
-    </el-table-column>
-    <el-table-column prop="date" label="时间" align="center" :show-overflow-tooltip="true" />
-    <el-table-column prop="drugMnemonicCode" label="作业跟踪" align="center" :show-overflow-tooltip="true" >
-      <template #default="scope">
-        <div class="action">
-          <div class="state" :class="scope.row.state == 0 ? 'bg-info': scope.row.state == 1 ? 'bg-success': 'bg-error'"></div>
-          <el-link type="primary">{{ scope.row.action}}</el-link>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column prop="detail" label="详细信息" :show-overflow-tooltip="true" />
-  </el-table>
- 
-    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <el-table :data="tabe2Data" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
+      highlight-current-row :height="300" @sort-change="sortChange">
+      <el-table-column prop="drugName" label="操作人" align="center" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <el-link type="primary">{{ scope.row.operator }}</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column prop="date" label="时间" align="center" :show-overflow-tooltip="true" />
+      <el-table-column prop="drugMnemonicCode" label="作业跟踪" align="center" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <div class="action">
+            <div class="state"
+              :class="scope.row.state == 0 ? 'bg-info' : scope.row.state == 1 ? 'bg-success' : 'bg-error'"></div>
+            <el-link type="primary">{{ scope.row.action }}</el-link>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="detail" label="详细信息" :show-overflow-tooltip="true" />
+    </el-table>
 
-    <el-dialog :title="title" :lock-scroll="false" v-model="open" >
+    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+      @pagination="getList" />
+
+    <el-dialog :title="title" :lock-scroll="false" v-model="open">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
-            
+
           <el-col :lg="12">
             <el-form-item label="id" prop="drugId">
               <el-input v-model.number="form.drugId" placeholder="请输入id" />
@@ -150,11 +157,12 @@
 </template>
 
 <script setup name="drug">
-import { listDrug,
- addDrug, delDrug, 
- updateDrug,getDrug, 
- } 
-from '@/api/business/drug.js'
+import {
+  listDrug,
+  addDrug, delDrug,
+  updateDrug, getDrug,
+}
+  from '@/api/business/drug.js'
 const { proxy } = getCurrentInstance()
 const ids = ref([])
 const loading = ref(false)
@@ -166,16 +174,16 @@ const queryParams = reactive({
   sortType: 'asc',
 })
 const columns = ref([
-  { visible: true, align: 'center', type: '', prop: 'drugId', label: 'id'   },
-  { visible: true, align: 'center', type: '', prop: 'drugName', label: '药品名称'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'drugCode', label: '药品编号'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'drugMnemonicCode', label: '药品助记码'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '药品规格'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'drugCategory', label: '药品类别'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'drugVarietyName', label: '药品品种名称'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'drugClassification', label: '药物分类'  ,showOverflowTooltip: true  },
-  { visible: false, align: 'center', type: '', prop: 'tracingSourceCode', label: '溯源码'  ,showOverflowTooltip: true  },
-  { visible: false, align: 'center', type: '', prop: 'drugBatchNumber', label: '批号'  ,showOverflowTooltip: true  },
+  { visible: true, align: 'center', type: '', prop: 'drugId', label: 'id' },
+  { visible: true, align: 'center', type: '', prop: 'drugName', label: '药品名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugCode', label: '药品编号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugMnemonicCode', label: '药品助记码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '药品规格', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugCategory', label: '药品类别', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugVarietyName', label: '药品品种名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugClassification', label: '药物分类', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'tracingSourceCode', label: '溯源码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'drugBatchNumber', label: '批号', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
@@ -188,7 +196,7 @@ var dictParams = [
 ]
 
 
-function getList(){
+function getList() {
   loading.value = true
   listDrug(queryParams).then(res => {
     const { code, data } = res
@@ -207,7 +215,7 @@ function handleQuery() {
 }
 
 // 重置查询操作
-function resetQuery(){
+function resetQuery() {
   proxy.resetForm("queryRef")
   handleQuery()
 }
@@ -245,7 +253,7 @@ const state = reactive({
 const { form, rules, options, single, multiple } = toRefs(state)
 
 // 关闭dialog
-function cancel(){
+function cancel() {
   open.value = false
   reset()
 }
@@ -273,8 +281,8 @@ function reset() {
  */
 function handlePreview(row) {
   reset()
-    const id = row.id
-    getDrug(id).then((res) => {
+  const id = row.id
+  getDrug(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
       open.value = true
@@ -325,10 +333,10 @@ function submitForm() {
         })
       } else {
         addDrug(form.value).then((res) => {
-            proxy.$modal.msgSuccess("新增成功")
-            open.value = false
-            getList()
-          })
+          proxy.$modal.msgSuccess("新增成功")
+          open.value = false
+          getList()
+        })
       }
     }
   })
