@@ -27,11 +27,11 @@ export function addOuWarehouset(data) {
 
 
 
-export function aLLADDplanStock(ids) {
+export function aLLADDplanStock(data) {
   return request({
     url: 'business/OuWarehouset/stockAdd',
     method: 'post',
-    data: ids,
+    data: data,
 
   })
 }

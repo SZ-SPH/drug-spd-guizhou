@@ -22,6 +22,9 @@
       <el-form-item label="申请计划" prop="pharmacyId">
         <el-input v-model.number="OutqueryParams.pharmacyId" placeholder="请输入申请计划" />
       </el-form-item>
+      <el-form-item label="出库单" prop="outorderID">
+        <el-input v-model.number="OutqueryParams.outorderID" placeholder="请输入出库单" />
+      </el-form-item>
       <el-form-item label="时间">
         <el-date-picker v-model="OutdateRangeTimes" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"
           value-format="YYYY-MM-DD HH:mm:ss" :default-time="OutdefaultTime" :shortcuts="dateOptions">
@@ -76,8 +79,7 @@
           {{ $t('btn.export') }}
         </el-button>
       </el-col>
-      <right-toolbar v-model:showSearch="OutshowSearch" @queryTable="OutgetList"
-        :Outcolumns="Outcolumns"></right-toolbar>
+      <right-toolbar v-model:showSearch="OutshowSearch" @queryTable="OutgetList" :columns="Outcolumns"></right-toolbar>
     </el-row>
 
     <el-table :data="OutdataList" v-loading="Outloading" ref="Outtable" border
@@ -88,10 +90,30 @@
       <el-table-column prop="drugId" label="药品" align="center" v-if="Outcolumns.showColumn('drugId')" />
       <el-table-column prop="outWarehouseID" label="出库房" align="center"
         v-if="Outcolumns.showColumn('outWarehouseID')" />
+      <el-table-column prop="outorderID" label="出库单" align="center" v-if="Outcolumns.showColumn('outorderID')" />
       <el-table-column prop="inpharmacyId" label="入药房" align="center" v-if="Outcolumns.showColumn('inpharmacyId')" />
       <el-table-column prop="qty" label="数量" align="center" v-if="Outcolumns.showColumn('qty')" />
       <el-table-column prop="pharmacyId" label="申请计划" align="center" v-if="Outcolumns.showColumn('pharmacyId')" />
       <el-table-column prop="times" label="时间" :show-overflow-tooltip="true" v-if="Outcolumns.showColumn('times')" />
+      <el-table-column prop="drugname" label="药品名称" align="center" :show-overflow-tooltip="true"
+        v-if="Outcolumns.showColumn('drugname')" />
+      <el-table-column prop="drugSpecifications" label="规格" align="center" :show-overflow-tooltip="true"
+        v-if="Outcolumns.showColumn('drugSpecifications')" />
+      <el-table-column prop="minunit" label="最小单位" align="center" :show-overflow-tooltip="true"
+        v-if="Outcolumns.showColumn('minunit')" />
+      <el-table-column prop="buyprice" label="购入价" align="center" v-if="Outcolumns.showColumn('buyprice')" />
+      <el-table-column prop="allbuyprice" label="购入金额" align="center" v-if="Outcolumns.showColumn('allbuyprice')" />
+      <el-table-column prop="retailPrice" label="零售价" align="center" v-if="Outcolumns.showColumn('retailPrice')" />
+      <el-table-column prop="allRetailPrice" label="售价金额" align="center"
+        v-if="Outcolumns.showColumn('allRetailPrice')" />
+      <el-table-column prop="manufacturerId" label="生产厂家" align="center"
+        v-if="Outcolumns.showColumn('manufacturerId')" />
+      <el-table-column prop="batchNumber" label="批号" align="center" :show-overflow-tooltip="true"
+        v-if="Outcolumns.showColumn('batchNumber')" />
+      <el-table-column prop="exprie" label="有效期" align="center" :show-overflow-tooltip="true"
+        v-if="Outcolumns.showColumn('exprie')" />
+      <el-table-column prop="locationNumber" label="货位号" align="center" :show-overflow-tooltip="true"
+        v-if="Outcolumns.showColumn('locationNumber')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" Outtitle="详情"
@@ -108,12 +130,12 @@
 
 
     <el-dialog :Outtitle="Outtitle" :lock-scroll="false" v-model="Outopen">
-      <el-form ref="OutformRef" :model="Outform" :Outrules="Outrules" label-width="100px">
+      <el-form ref="OutformRef" :model="Outform" :rules="Outrules" label-width="100px">
         <el-row :gutter="20">
 
           <el-col :lg="12">
             <el-form-item label="Id" prop="id">
-              <el-input v-model.number="Outform.id" placeholder="请输入Id" :disabled="Outopertype != 1" />
+              <el-input v-model.number="Outform.id" placeholder="请输入Id" :disabled="opertype != 1" />
             </el-form-item>
           </el-col>
 
@@ -154,6 +176,76 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="药品名称" prop="drugname">
+              <el-input v-model="Outform.drugname" placeholder="请输入药品名称" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="规格" prop="drugSpecifications">
+              <el-input v-model="Outform.drugSpecifications" placeholder="请输入规格" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="最小单位" prop="minunit">
+              <el-input v-model="Outform.minunit" placeholder="请输入最小单位" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="购入价" prop="buyprice">
+              <el-input v-model="Outform.buyprice" placeholder="请输入购入价" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="购入金额" prop="allbuyprice">
+              <el-input v-model="Outform.allbuyprice" placeholder="请输入购入金额" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="零售价" prop="retailPrice">
+              <el-input v-model="Outform.retailPrice" placeholder="请输入零售价" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="售价金额" prop="allRetailPrice">
+              <el-input v-model="Outform.allRetailPrice" placeholder="请输入售价金额" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12">
+            <el-form-item label="出库单" prop="outorderID">
+              <el-input v-model="Outform.outorderID" placeholder="请输入出库单" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12">
+            <el-form-item label="生产厂家" prop="manufacturerId">
+              <el-input v-model.number="Outform.manufacturerId" placeholder="请输入生产厂家" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="批号" prop="batchNumber">
+              <el-input v-model="Outform.batchNumber" placeholder="请输入批号" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="有效期" prop="exprie">
+              <el-input v-model="Outform.exprie" placeholder="请输入有效期" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="货位号" prop="locationNumber">
+              <el-input v-model="Outform.locationNumber" placeholder="请输入货位号" />
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <template #footer v-if="Outopertype != 3">
@@ -188,6 +280,7 @@ const OutqueryParams = reactive({
   qty: undefined,
   pharmacyId: undefined,
   times: undefined,
+  outorderID: undefined,
 })
 const Outcolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
@@ -197,6 +290,19 @@ const Outcolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'qty', label: '数量' },
   { visible: true, align: 'center', type: '', prop: 'pharmacyId', label: '申请计划' },
   { visible: true, align: 'center', type: '', prop: 'times', label: '时间', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugname', label: '药品名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '规格', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'minunit', label: '最小单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'buyprice', label: '购入价' },
+  { visible: true, align: 'center', type: '', prop: 'allbuyprice', label: '购入金额' },
+  { visible: true, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
+  { visible: true, align: 'center', type: '', prop: 'allRetailPrice', label: '售价金额' },
+  { visible: true, align: 'center', type: '', prop: 'manufacturerId', label: '生产厂家' },
+  { visible: true, align: 'center', type: '', prop: 'batchNumber', label: '批号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'exprie', label: '有效期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'locationNumber', laboel: '货位号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'outorderID', label: '出库单', showOverflowTooltip: true },
+
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const Outtotal = ref(0)
@@ -208,7 +314,7 @@ const OutdefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 
 const OutdateRangeTimes = ref([])
 
 
-var dictParams = [
+var OutdictParams = [
 ]
 
 
@@ -265,28 +371,28 @@ const Outtitle = ref('')
 // 操作类型 1、add 2、edit 3、view
 const Outopertype = ref(0)
 const Outopen = ref(false)
-const state = reactive({
+const Outstate = reactive({
   Outsingle: true,
   Outmultiple: true,
-  form: {},
+  Outform: {},
   Outrules: {
     id: [{ required: true, message: "Id不能为空", trigger: "blur", type: "number" }],
   },
-  options: {
+  Outoptions: {
   }
 })
 
-const { form, Outrules, options, Outsingle, Outmultiple } = toRefs(state)
+const { Outform, Outrules, Outoptions, Outsingle, Outmultiple } = toRefs(Outstate)
 
 // 关闭dialog
 function Outcancel() {
   Outopen.value = false
-  reset()
+  Outreset()
 }
 
 // 重置表单
-function reset() {
-  form.value = {
+function Outreset() {
+  Outform.value = {
     id: null,
     drugId: null,
     outWarehouseID: null,
@@ -294,6 +400,18 @@ function reset() {
     qty: null,
     pharmacyId: null,
     times: null,
+    drugname: null,
+    drugSpecifications: null,
+    minunit: null,
+    buyprice: null,
+    allbuyprice: null,
+    retailPrice: null,
+    allRetailPrice: null,
+    manufacturerId: null,
+    batchNumber: null,
+    exprie: null,
+    locationNumber: null,
+    outorderID: null,
   };
   proxy.resetForm("OutformRef")
 }
@@ -311,7 +429,7 @@ function OuthandlePreview(row) {
       Outopen.value = true
       Outtitle.value = '查看'
       Outopertype.value = 3
-      form.value = {
+      Outform.value = {
         ...data,
       }
     }
@@ -336,7 +454,7 @@ function OuthandleUpdate(row) {
       Outtitle.value = '修改出库'
       Outopertype.value = 2
 
-      form.value = {
+      Outform.value = {
         ...data,
       }
     }
@@ -348,14 +466,14 @@ function OutsubmitForm() {
   proxy.$refs["OutformRef"].validate((valid) => {
     if (valid) {
 
-      if (form.value.id != undefined && Outopertype.value === 2) {
-        updateOuWarehouset(form.value).then((res) => {
+      if (Outform.value.id != undefined && Outopertype.value === 2) {
+        updateOuWarehouset(Outform.value).then((res) => {
           proxy.$modal.msgSuccess("修改成功")
           Outopen.value = false
           OutgetList()
         })
       } else {
-        addOuWarehouset(form.value).then((res) => {
+        addOuWarehouset(Outform.value).then((res) => {
           proxy.$modal.msgSuccess("新增成功")
           Outopen.value = false
           OutgetList()

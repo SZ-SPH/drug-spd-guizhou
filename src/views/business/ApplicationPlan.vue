@@ -384,167 +384,439 @@
 
 
     </div>
+    <div class="table-content">
 
-    <div>
-      <el-form :model="OutqueryParams" label-position="right" inline ref="OutqueryRef" v-show="OutshowSearch"
-        @submit.prevent>
-        <el-form-item label="药品" prop="drugId">
-          <el-input v-model.number="OutqueryParams.drugId" placeholder="请输入药品" />
-        </el-form-item>
-        <el-form-item label="出库房" prop="outWarehouseID">
-          <el-input v-model.number="OutqueryParams.outWarehouseID" placeholder="请输入出库房" />
-        </el-form-item>
-        <el-form-item label="入药房" prop="inpharmacyId">
-          <el-input v-model.number="OutqueryParams.inpharmacyId" placeholder="请输入入药房" />
-        </el-form-item>
-        <el-form-item label="数量" prop="qty">
-          <el-input v-model="OutqueryParams.qty" placeholder="请输入数量" />
-        </el-form-item>
-        <el-form-item label="申请计划" prop="pharmacyId">
-          <el-input v-model.number="OutqueryParams.pharmacyId" placeholder="请输入申请计划" />
-        </el-form-item>
-        <el-form-item label="时间">
-          <el-date-picker v-model="OutdateRangeTimes" type="datetimerange" start-placeholder="开始日期"
-            end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="OutdefaultTime"
-            :shortcuts="dateOptions">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item>
-          <el-button icon="search" type="primary" @click="OuthandleQuery">{{ $t('btn.search') }}</el-button>
-          <el-button icon="refresh" @click="OutresetQuery">{{ $t('btn.reset') }}</el-button>
-        </el-form-item>
-      </el-form>
-      <!-- 工具区域 -->
-      <el-row :gutter="15" class="mb10">
-        <el-col :span="1.5">
-          <el-button type="primary" v-hasPermi="['ouwarehouset:add']" plain icon="plus" @click="OuthandleAdd">
-            {{ $t('btn.add') }}
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button type="success" :disabled="Outsingle" v-hasPermi="['ouwarehouset:edit']" plain icon="edit"
-            @click="OuthandleUpdate">
-            {{ $t('btn.edit') }}
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button type="danger" :disabled="Outmultiple" v-hasPermi="['ouwarehouset:delete']" plain icon="delete"
-            @click="OuthandleDelete">
-            {{ $t('btn.delete') }}
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button type="danger" v-hasPermi="['ouwarehouset:delete']" plain icon="delete" @click="OuthandleClear">
-            {{ $t('btn.clean') }}
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-dropdown trigger="click" v-hasPermi="['ouwarehouset:import']">
-            <el-button type="primary" plain icon="Upload">
-              {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
-            </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="upload">
-                  <importData templateUrl="business/OuWarehouset/importTemplate"
-                    importUrl="/business/OuWarehouset/importData" @success="OuthandleFileSuccess"></importData>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button type="warning" plain icon="download" @click="OuthandleExport" v-hasPermi="['ouwarehouset:export']">
-            {{ $t('btn.export') }}
-          </el-button>
-        </el-col>
-        <right-toolbar v-model:showSearch="OutshowSearch" @queryTable="OutgetList"
-          :Outcolumns="Outcolumns"></right-toolbar>
-      </el-row>
-
-      <el-table :data="OutdataList" v-loading="Outloading" ref="Outtable" border
-        header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutsortChange"
-        @selection-change="OuthandleSelectionChange">
-        <el-table-column type="selection" width="50" align="center" />
-        <el-table-column prop="id" label="Id" align="center" v-if="Outcolumns.showColumn('id')" />
-        <el-table-column prop="drugId" label="药品" align="center" v-if="Outcolumns.showColumn('drugId')" />
-        <el-table-column prop="outWarehouseID" label="出库房" align="center"
-          v-if="Outcolumns.showColumn('outWarehouseID')" />
-        <el-table-column prop="inpharmacyId" label="入药房" align="center" v-if="Outcolumns.showColumn('inpharmacyId')" />
-        <el-table-column prop="qty" label="数量" align="center" v-if="Outcolumns.showColumn('qty')" />
-        <el-table-column prop="pharmacyId" label="申请计划" align="center" v-if="Outcolumns.showColumn('pharmacyId')" />
-        <el-table-column prop="times" label="时间" :show-overflow-tooltip="true" v-if="Outcolumns.showColumn('times')" />
-        <el-table-column label="操作" width="160">
-          <template #default="scope">
-            <el-button type="primary" size="small" icon="view" Outtitle="详情"
-              @click="OuthandlePreview(scope.row)"></el-button>
-            <el-button type="success" size="small" icon="edit" Outtitle="编辑" v-hasPermi="['ouwarehouset:edit']"
-              @click="OuthandleUpdate(scope.row)"></el-button>
-            <el-button type="danger" size="small" icon="delete" Outtitle="删除" v-hasPermi="['ouwarehouset:delete']"
-              @click="OuthandleDelete(scope.row)"></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination :total="Outtotal" v-model:page="OutqueryParams.pageNum" v-model:limit="OutqueryParams.pageSize"
-        @pagination="OutgetList" />
-
-
-      <el-dialog :Outtitle="Outtitle" :lock-scroll="false" v-model="Outopen">
-        <el-form ref="OutformRef" :model="Outform" :Outrules="Outrules" label-width="100px">
-          <el-row :gutter="20">
-
-            <el-col :lg="12">
-              <el-form-item label="Id" prop="id">
-                <el-input v-model.number="Outform.id" placeholder="请输入Id" :disabled="Outopertype != 1" />
-              </el-form-item>
+      <div class="table-item1">
+        <div>
+          <el-form :model="OutOrderqueryParams" label-position="right" inline ref="OutOrderqueryRef"
+            v-show="OutOrderhandleshowSearch" @submit.prevent>
+            <el-form-item label="出库单据" prop="outOrderCode">
+              <el-input v-model="OutOrderqueryParams.outOrderCode" placeholder="请输入出库单据" />
+            </el-form-item>
+            <el-form-item label="领取部门" prop="inpharmacyId">
+              <el-input v-model.number="OutOrderqueryParams.inpharmacyId" placeholder="请输入领取部门" />
+            </el-form-item>
+            <el-form-item label="领取人" prop="useReceive">
+              <el-input v-model="OutOrderqueryParams.useReceive" placeholder="请输入领取人" />
+            </el-form-item>
+            <el-form-item label="发出出库" prop="outWarehouseID">
+              <el-input v-model.number="OutOrderqueryParams.outWarehouseID" placeholder="请输入发出出库" />
+            </el-form-item>
+            <el-form-item label="时间">
+              <el-date-picker v-model="OutOrderdateRangeTimes" type="datetimerange" start-placeholder="开始日期"
+                end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="OutOrderdefaultTime"
+                :shortcuts="dateOptions">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="备注" prop="remarks">
+              <el-input v-model="OutOrderqueryParams.remarks" placeholder="请输入备注" />
+            </el-form-item>
+            <el-form-item>
+              <el-button icon="search" type="primary" @click="OutOrderhandleQuery">{{ $t('btn.search') }}</el-button>
+              <el-button icon="refresh" @click="OutOrderhandleresetQuery">{{ $t('btn.reset') }}</el-button>
+            </el-form-item>
+          </el-form>
+          <!-- 工具区域 -->
+          <el-row :gutter="15" class="mb10">
+            <el-col :span="1.5">
+              <el-button type="primary" v-hasPermi="['outorder:add']" plain icon="plus" @click="OutOrderhandleAdd">
+                {{ $t('btn.add') }}
+              </el-button>
             </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="药品" prop="drugId">
-                <el-input v-model.number="Outform.drugId" placeholder="请输入药品" />
-              </el-form-item>
+            <el-col :span="1.5">
+              <el-button type="success" :disabled="OutOrdersingle" v-hasPermi="['outorder:edit']" plain icon="edit"
+                @click="OutOrderhandleUpdate">
+                {{ $t('btn.edit') }}
+              </el-button>
             </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="出库房" prop="outWarehouseID">
-                <el-input v-model.number="Outform.outWarehouseID" placeholder="请输入出库房" />
-              </el-form-item>
+            <el-col :span="1.5">
+              <el-button type="danger" :disabled="OutOrdermultiple" v-hasPermi="['outorder:delete']" plain icon="delete"
+                @click="OutOrderhandleDelete">
+                {{ $t('btn.delete') }}
+              </el-button>
             </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="入药房" prop="inpharmacyId">
-                <el-input v-model.number="Outform.inpharmacyId" placeholder="请输入入药房" />
-              </el-form-item>
+            <el-col :span="1.5">
+              <el-button type="danger" v-hasPermi="['outorder:delete']" plain icon="delete"
+                @click="OutOrderhandleClear">
+                {{ $t('btn.clean') }}
+              </el-button>
             </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="数量" prop="qty">
-                <el-input v-model="Outform.qty" placeholder="请输入数量" />
-              </el-form-item>
+            <el-col :span="1.5">
+              <el-dropdown trigger="click" v-hasPermi="['outorder:import']">
+                <el-button type="primary" plain icon="Upload">
+                  {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item command="upload">
+                      <importData templateUrl="business/OutOrder/importTemplate"
+                        importUrl="/business/OutOrder/importData" @success="OutOrderhandleFileSuccess"></importData>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="申请计划" prop="pharmacyId">
-                <el-input v-model.number="Outform.pharmacyId" placeholder="请输入申请计划" />
-              </el-form-item>
+            <el-col :span="1.5">
+              <el-button type="warning" plain icon="download" @click="OutOrderhandleExport"
+                v-hasPermi="['outorder:export']">
+                {{ $t('btn.export') }}
+              </el-button>
             </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="时间" prop="times">
-                <el-date-picker v-model="Outform.times" type="datetime" placeholder="选择日期时间"
-                  value-format="YYYY-MM-DD HH:mm:ss">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
+            <right-toolbar v-model:showSearch="OutOrderhandleshowSearch" @queryTable="OutOrdergetList"
+              :columns="OutOrdercolumns"></right-toolbar>
           </el-row>
-        </el-form>
-        <template #footer v-if="Outopertype != 3">
-          <el-button text @click="Outcancel">{{ $t('btn.cancel') }}</el-button>
-          <el-button type="primary" @click="OutsubmitForm">{{ $t('btn.submit') }}</el-button>
-        </template>
-      </el-dialog>
+
+          <el-table @row-click="outOfdatalist" :data="OutOrderdataList" v-loading="OutOrderloading" ref="OutOrdertable"
+            border header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutOrdersortChange"
+            @selection-change="OutOrderhandleSelectionChange">
+            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column prop="id" label="Id" align="center" v-if="OutOrdercolumns.showColumn('id')" />
+            <el-table-column prop="outOrderCode" label="出库单据" align="center" :show-overflow-tooltip="true"
+              v-if="OutOrdercolumns.showColumn('outOrderCode')" />
+            <el-table-column prop="inpharmacyId" label="领取部门" align="center"
+              v-if="OutOrdercolumns.showColumn('inpharmacyId')" />
+            <el-table-column prop="useReceive" label="领取人" align="center" :show-overflow-tooltip="true"
+              v-if="OutOrdercolumns.showColumn('useReceive')" />
+            <el-table-column prop="outWarehouseID" label="发出出库" align="center"
+              v-if="OutOrdercolumns.showColumn('outWarehouseID')" />
+            <el-table-column prop="times" label="时间" :show-overflow-tooltip="true"
+              v-if="OutOrdercolumns.showColumn('times')" />
+            <el-table-column prop="remarks" label="备注" align="center" :show-overflow-tooltip="true"
+              v-if="OutOrdercolumns.showColumn('remarks')" />
+            <el-table-column label="操作" width="160">
+              <template #default="scope">
+                <el-button type="primary" size="small" icon="view" OutOrdertitle="详情"
+                  @click="OutOrderhandlePreview(scope.row)"></el-button>
+                <el-button type="success" size="small" icon="edit" OutOrdertitle="编辑" v-hasPermi="['outorder:edit']"
+                  @click="OutOrderhandleUpdate(scope.row)"></el-button>
+                <el-button type="danger" size="small" icon="delete" OutOrdertitle="删除" v-hasPermi="['outorder:delete']"
+                  @click="OutOrderhandleDelete(scope.row)"></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination :total="OutOrdertotal" v-model:page="OutOrderqueryParams.pageNum"
+            v-model:limit="OutOrderqueryParams.pageSize" @pagination="OutOrdergetList" />
+
+
+          <el-dialog :title="OutOrdertitle" :lock-scroll="false" v-model="OutOrderOutOrder">
+            <el-form ref="OutOrderformRef" :model="OutOrderform" :rules="OutOrderrules" label-width="100px">
+              <el-row :gutter="20">
+
+                <el-col :lg="12" v-if="OutOrderopertype != 1">
+                  <el-form-item label="Id" prop="id">
+                    <el-input-number v-model.number="OutOrderform.id" controls-position="right" placeholder="请输入Id"
+                      :disabled="true" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="出库单据" prop="outOrderCode">
+                    <el-input v-model="OutOrderform.outOrderCode" placeholder="请输入出库单据" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="领取部门" prop="inpharmacyId">
+                    <el-input v-model.number="OutOrderform.inpharmacyId" placeholder="请输入领取部门" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="领取人" prop="useReceive">
+                    <el-input v-model="OutOrderform.useReceive" placeholder="请输入领取人" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="发出出库" prop="outWarehouseID">
+                    <el-input v-model.number="OutOrderform.outWarehouseID" placeholder="请输入发出出库" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="时间" prop="times">
+                    <el-date-picker v-model="OutOrderform.times" type="datetime" placeholder="选择日期时间"
+                      value-format="YYYY-MM-DD HH:mm:ss">
+                    </el-date-picker>
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="备注" prop="remarks">
+                    <el-input v-model="OutOrderform.remarks" placeholder="请输入备注" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+            <template #footer v-if="OutOrderopertype != 3">
+              <el-button text @click="OutOrdercancel">{{ $t('btn.cancel') }}</el-button>
+              <el-button type="primary" @click="OutOrdersubmitForm">{{ $t('btn.submit') }}</el-button>
+            </template>
+          </el-dialog>
+        </div>
+      </div>
+      <div class="table-item2">
+        <div>
+          <el-form :model="OutqueryParams" label-position="right" inline ref="OutqueryRef" v-show="OutshowSearch"
+            @submit.prevent>
+            <el-form-item label="药品" prop="drugId">
+              <el-input v-model.number="OutqueryParams.drugId" placeholder="请输入药品" />
+            </el-form-item>
+            <el-form-item label="出库房" prop="outWarehouseID">
+              <el-input v-model.number="OutqueryParams.outWarehouseID" placeholder="请输入出库房" />
+            </el-form-item>
+            <el-form-item label="入药房" prop="inpharmacyId">
+              <el-input v-model.number="OutqueryParams.inpharmacyId" placeholder="请输入入药房" />
+            </el-form-item>
+            <el-form-item label="数量" prop="qty">
+              <el-input v-model="OutqueryParams.qty" placeholder="请输入数量" />
+            </el-form-item>
+            <el-form-item label="申请计划" prop="pharmacyId">
+              <el-input v-model.number="OutqueryParams.pharmacyId" placeholder="请输入申请计划" />
+            </el-form-item>
+            <el-form-item label="出库单" prop="outorderID">
+              <el-input v-model.number="OutqueryParams.outorderID" placeholder="请输入出库单" />
+            </el-form-item>
+            <el-form-item label="时间">
+              <el-date-picker v-model="OutdateRangeTimes" type="datetimerange" start-placeholder="开始日期"
+                end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="OutdefaultTime"
+                :shortcuts="dateOptions">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button icon="search" type="primary" @click="OuthandleQuery">{{ $t('btn.search') }}</el-button>
+              <el-button icon="refresh" @click="OutresetQuery">{{ $t('btn.reset') }}</el-button>
+            </el-form-item>
+          </el-form>
+          <!-- 工具区域 -->
+          <el-row :gutter="15" class="mb10">
+            <el-col :span="1.5">
+              <el-button type="primary" v-hasPermi="['ouwarehouset:add']" plain icon="plus" @click="OuthandleAdd">
+                {{ $t('btn.add') }}
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button type="success" :disabled="Outsingle" v-hasPermi="['ouwarehouset:edit']" plain icon="edit"
+                @click="OuthandleUpdate">
+                {{ $t('btn.edit') }}
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button type="danger" :disabled="Outmultiple" v-hasPermi="['ouwarehouset:delete']" plain icon="delete"
+                @click="OuthandleDelete">
+                {{ $t('btn.delete') }}
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button type="danger" v-hasPermi="['ouwarehouset:delete']" plain icon="delete" @click="OuthandleClear">
+                {{ $t('btn.clean') }}
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-dropdown trigger="click" v-hasPermi="['ouwarehouset:import']">
+                <el-button type="primary" plain icon="Upload">
+                  {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item command="upload">
+                      <importData templateUrl="business/OuWarehouset/importTemplate"
+                        importUrl="/business/OuWarehouset/importData" @success="OuthandleFileSuccess"></importData>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button type="warning" plain icon="download" @click="OuthandleExport"
+                v-hasPermi="['ouwarehouset:export']">
+                {{ $t('btn.export') }}
+              </el-button>
+            </el-col>
+            <right-toolbar v-model:showSearch="OutshowSearch" @queryTable="OutgetList"
+              :columns="Outcolumns"></right-toolbar>
+          </el-row>
+
+          <el-table :data="OutdataList" v-loading="Outloading" ref="Outtable" border
+            header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutsortChange"
+            @selection-change="OuthandleSelectionChange">
+            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column prop="id" label="Id" align="center" v-if="Outcolumns.showColumn('id')" />
+            <el-table-column prop="drugId" label="药品" align="center" v-if="Outcolumns.showColumn('drugId')" />
+            <el-table-column prop="outWarehouseID" label="出库房" align="center"
+              v-if="Outcolumns.showColumn('outWarehouseID')" />
+            <el-table-column prop="outorderID" label="出库单" align="center" v-if="Outcolumns.showColumn('outorderID')" />
+            <el-table-column prop="inpharmacyId" label="入药房" align="center"
+              v-if="Outcolumns.showColumn('inpharmacyId')" />
+            <el-table-column prop="qty" label="数量" align="center" v-if="Outcolumns.showColumn('qty')" />
+            <el-table-column prop="pharmacyId" label="申请计划" align="center" v-if="Outcolumns.showColumn('pharmacyId')" />
+            <el-table-column prop="times" label="时间" :show-overflow-tooltip="true"
+              v-if="Outcolumns.showColumn('times')" />
+            <el-table-column prop="drugname" label="药品名称" align="center" :show-overflow-tooltip="true"
+              v-if="Outcolumns.showColumn('drugname')" />
+            <el-table-column prop="drugSpecifications" label="规格" align="center" :show-overflow-tooltip="true"
+              v-if="Outcolumns.showColumn('drugSpecifications')" />
+            <el-table-column prop="minunit" label="最小单位" align="center" :show-overflow-tooltip="true"
+              v-if="Outcolumns.showColumn('minunit')" />
+            <el-table-column prop="buyprice" label="购入价" align="center" v-if="Outcolumns.showColumn('buyprice')" />
+            <el-table-column prop="allbuyprice" label="购入金额" align="center"
+              v-if="Outcolumns.showColumn('allbuyprice')" />
+            <el-table-column prop="retailPrice" label="零售价" align="center"
+              v-if="Outcolumns.showColumn('retailPrice')" />
+            <el-table-column prop="allRetailPrice" label="售价金额" align="center"
+              v-if="Outcolumns.showColumn('allRetailPrice')" />
+            <el-table-column prop="manufacturerId" label="生产厂家" align="center"
+              v-if="Outcolumns.showColumn('manufacturerId')" />
+            <el-table-column prop="batchNumber" label="批号" align="center" :show-overflow-tooltip="true"
+              v-if="Outcolumns.showColumn('batchNumber')" />
+            <el-table-column prop="exprie" label="有效期" align="center" :show-overflow-tooltip="true"
+              v-if="Outcolumns.showColumn('exprie')" />
+            <el-table-column prop="locationNumber" label="货位号" align="center" :show-overflow-tooltip="true"
+              v-if="Outcolumns.showColumn('locationNumber')" />
+            <el-table-column label="操作" width="160">
+              <template #default="scope">
+                <el-button type="primary" size="small" icon="view" Outtitle="详情"
+                  @click="OuthandlePreview(scope.row)"></el-button>
+                <el-button type="success" size="small" icon="edit" Outtitle="编辑" v-hasPermi="['ouwarehouset:edit']"
+                  @click="OuthandleUpdate(scope.row)"></el-button>
+                <el-button type="danger" size="small" icon="delete" Outtitle="删除" v-hasPermi="['ouwarehouset:delete']"
+                  @click="OuthandleDelete(scope.row)"></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination :total="Outtotal" v-model:page="OutqueryParams.pageNum" v-model:limit="OutqueryParams.pageSize"
+            @pagination="OutgetList" />
+
+
+          <el-dialog :Outtitle="Outtitle" :lock-scroll="false" v-model="Outopen">
+            <el-form ref="OutformRef" :model="Outform" :rules="Outrules" label-width="100px">
+              <el-row :gutter="20">
+
+                <el-col :lg="12">
+                  <el-form-item label="Id" prop="id">
+                    <el-input v-model.number="Outform.id" placeholder="请输入Id" :disabled="opertype != 1" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="药品" prop="drugId">
+                    <el-input v-model.number="Outform.drugId" placeholder="请输入药品" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="出库房" prop="outWarehouseID">
+                    <el-input v-model.number="Outform.outWarehouseID" placeholder="请输入出库房" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="入药房" prop="inpharmacyId">
+                    <el-input v-model.number="Outform.inpharmacyId" placeholder="请输入入药房" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="数量" prop="qty">
+                    <el-input v-model="Outform.qty" placeholder="请输入数量" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="申请计划" prop="pharmacyId">
+                    <el-input v-model.number="Outform.pharmacyId" placeholder="请输入申请计划" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="时间" prop="times">
+                    <el-date-picker v-model="Outform.times" type="datetime" placeholder="选择日期时间"
+                      value-format="YYYY-MM-DD HH:mm:ss">
+                    </el-date-picker>
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="药品名称" prop="drugname">
+                    <el-input v-model="Outform.drugname" placeholder="请输入药品名称" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="规格" prop="drugSpecifications">
+                    <el-input v-model="Outform.drugSpecifications" placeholder="请输入规格" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="最小单位" prop="minunit">
+                    <el-input v-model="Outform.minunit" placeholder="请输入最小单位" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="购入价" prop="buyprice">
+                    <el-input v-model="Outform.buyprice" placeholder="请输入购入价" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="购入金额" prop="allbuyprice">
+                    <el-input v-model="Outform.allbuyprice" placeholder="请输入购入金额" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="零售价" prop="retailPrice">
+                    <el-input v-model="Outform.retailPrice" placeholder="请输入零售价" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="售价金额" prop="allRetailPrice">
+                    <el-input v-model="Outform.allRetailPrice" placeholder="请输入售价金额" />
+                  </el-form-item>
+                </el-col>
+                <el-col :lg="12">
+                  <el-form-item label="出库单" prop="outorderID">
+                    <el-input v-model="Outform.outorderID" placeholder="请输入出库单" />
+                  </el-form-item>
+                </el-col>
+                <el-col :lg="12">
+                  <el-form-item label="生产厂家" prop="manufacturerId">
+                    <el-input v-model.number="Outform.manufacturerId" placeholder="请输入生产厂家" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="批号" prop="batchNumber">
+                    <el-input v-model="Outform.batchNumber" placeholder="请输入批号" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="有效期" prop="exprie">
+                    <el-input v-model="Outform.exprie" placeholder="请输入有效期" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :lg="12">
+                  <el-form-item label="货位号" prop="locationNumber">
+                    <el-input v-model="Outform.locationNumber" placeholder="请输入货位号" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+            <template #footer v-if="Outopertype != 3">
+              <el-button text @click="Outcancel">{{ $t('btn.cancel') }}</el-button>
+              <el-button type="primary" @click="OutsubmitForm">{{ $t('btn.submit') }}</el-button>
+            </template>
+          </el-dialog>
+        </div>
+      </div>
     </div>
   </div>
+
 
 </template>
 
@@ -836,15 +1108,29 @@ const OutqueryParams = reactive({
   qty: undefined,
   pharmacyId: undefined,
   times: undefined,
+  outorderID: undefined,
 })
 const Outcolumns = ref([
-  { visible: false, align: 'center', type: '', prop: 'id', label: 'Id' },
+  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
   { visible: true, align: 'center', type: '', prop: 'drugId', label: '药品' },
   { visible: true, align: 'center', type: '', prop: 'outWarehouseID', label: '出库房' },
   { visible: true, align: 'center', type: '', prop: 'inpharmacyId', label: '入药房' },
   { visible: true, align: 'center', type: '', prop: 'qty', label: '数量' },
   { visible: true, align: 'center', type: '', prop: 'pharmacyId', label: '申请计划' },
   { visible: true, align: 'center', type: '', prop: 'times', label: '时间', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugname', label: '药品名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '规格', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'minunit', label: '最小单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'buyprice', label: '购入价' },
+  { visible: true, align: 'center', type: '', prop: 'allbuyprice', label: '购入金额' },
+  { visible: true, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
+  { visible: true, align: 'center', type: '', prop: 'allRetailPrice', label: '售价金额' },
+  { visible: true, align: 'center', type: '', prop: 'manufacturerId', label: '生产厂家' },
+  { visible: true, align: 'center', type: '', prop: 'batchNumber', label: '批号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'exprie', label: '有效期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'locationNumber', laboel: '货位号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'outorderID', label: '出库单', showOverflowTooltip: true },
+
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const Outtotal = ref(0)
@@ -856,7 +1142,7 @@ const OutdefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 
 const OutdateRangeTimes = ref([])
 
 
-var dictParams = [
+var OutdictParams = [
 ]
 
 
@@ -934,7 +1220,7 @@ function Outcancel() {
 
 // 重置表单
 function Outreset() {
-  form.value = {
+  Outform.value = {
     id: null,
     drugId: null,
     outWarehouseID: null,
@@ -942,6 +1228,18 @@ function Outreset() {
     qty: null,
     pharmacyId: null,
     times: null,
+    drugname: null,
+    drugSpecifications: null,
+    minunit: null,
+    buyprice: null,
+    allbuyprice: null,
+    retailPrice: null,
+    allRetailPrice: null,
+    manufacturerId: null,
+    batchNumber: null,
+    exprie: null,
+    locationNumber: null,
+    outorderID: null,
   };
   proxy.resetForm("OutformRef")
 }
@@ -1097,12 +1395,24 @@ function handaddOut() {
   //出现相关药品库存信息、
 
 }
+import useUserStore from "@/store/modules/user";
+
+var userId = useUserStore().userId;
+var userInfo = useUserStore().userInfo;
+//{"userId":1,"userName":"admin","nickName":"管理员","userType":"0","avatar":"","email":"","phonenumber":"","sex":0,"status":0,"delFlag":0,"loginIP":"127.0.0.1","loginDate":"2023-07-25 16:58:43","deptId":0,"deptName":null,"roleIds":[1],"postIds":null,"roles":[{"roleId":1,"roleName":"超级管理员","roleKey":"admin","roleSort":1,"status":0,"delFlag":0,"dataScope":1,"menuCheckStrictly":true,"deptCheckStrictly":false,"menuIds":null,"deptIds":null,"userNum":0,"createBy":"admin","createTime":"2023-07-12 18:19:06","updateTime":null,"remark":"超级管理员"}],"welcomeMessage":"早上好","welcomeContent":"忙碌了一周，停一停脚步！","createBy":"","createTime":"2023-07-26 09:59:39","updateTime":null,"remark":"管理员"}
+
+// 昵称
+var nickName = useUserStore().name;
+const pm = ref({})
 function WarsesubmitForm() {
   // 获取 库存存在的药品
   // 申请计划 ids.value  后端查询接口 后 添加
+  pm.value = {
+    username: nickName,
+    ids: ids.value
+  };
 
-
-  aLLADDplanStock(ids.value).then((res) => {
+  aLLADDplanStock(pm.value).then((res) => {
     // proxy.$modal.msgSuccess("新增成功")
     Warseopen.value = false;
     OutgetList()
@@ -1381,5 +1691,303 @@ function stockhandleExport() {
 
 stockhandleQuery()
 
+import {
+  listOutOrder,
+  addOutOrder, delOutOrder,
+  updateOutOrder, getOutOrder,
+  clearOutOrder,
+}
+  from '@/api/business/outorder.js'
+const OutOrderids = ref([])
+const OutOrderloading = ref(false)
+const OutOrderhandleshowSearch = ref(true)
+const OutOrderqueryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  sort: 'Id',
+  sortType: 'asc',
+  outOrderCode: undefined,
+  inpharmacyId: undefined,
+  useReceive: undefined,
+  outWarehouseID: undefined,
+  times: undefined,
+  remarks: undefined,
+})
+const OutOrdercolumns = ref([
+  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
+  { visible: true, align: 'center', type: '', prop: 'outOrderCode', label: '出库单据', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'inpharmacyId', label: '领取部门' },
+  { visible: true, align: 'center', type: '', prop: 'useReceive', label: '领取人', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'outWarehouseID', label: '发出出库' },
+  { visible: true, align: 'center', type: '', prop: 'times', label: '时间', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'remarks', label: '备注', showOverflowTooltip: true },
+  //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
+])
+const OutOrdertotal = ref(0)
+const OutOrderdataList = ref([])
+const OutOrderqueryRef = ref()
+const OutOrderdefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
+// 时间时间范围
+const OutOrderdateRangeTimes = ref([])
+
+
+var OutOrderdictParams = [
+]
+
+
+function OutOrdergetList() {
+  proxy.addDateRange(OutOrderqueryParams, OutOrderdateRangeTimes.value, 'Times');
+  OutOrderloading.value = true
+  listOutOrder(OutOrderqueryParams).then(res => {
+    const { code, data } = res
+    if (code == 200) {
+      OutOrderdataList.value = data.result
+      OutOrdertotal.value = data.OutOrdertotalNum
+      OutOrderloading.value = false
+    }
+  })
+}
+
+// 查询
+function OutOrderhandleQuery() {
+  OutOrderqueryParams.pageNum = 1
+  OutOrdergetList()
+}
+
+// 重置查询操作
+function OutOrderhandleresetQuery() {
+  // 时间时间范围
+  OutOrderdateRangeTimes.value = []
+  proxy.resetForm("OutOrderqueryRef")
+  OutOrderhandleQuery()
+}
+// 多选框选中数据
+function OutOrderhandleSelectionChange(selection) {
+  OutOrderids.value = selection.map((item) => item.id);
+  OutOrdersingle.value = selection.length != 1
+  OutOrdermultiple.value = !selection.length;
+}
+// 自定义排序
+function OutOrdersortChange(column) {
+  var sort = undefined
+  var sortType = undefined
+
+  if (column.prop != null && column.order != null) {
+    sort = column.prop
+    sortType = column.order
+
+  }
+  OutOrderqueryParams.sort = sort
+  OutOrderqueryParams.sortType = sortType
+  OutOrderhandleQuery()
+}
+
+/*************** form操作 ***************/
+const OutOrderformRef = ref()
+const OutOrdertitle = ref('')
+// 操作类型 1、add 2、edit 3、view
+const OutOrderopertype = ref(0)
+const OutOrderOutOrder = ref(false)
+const OutOrderstate = reactive({
+  OutOrdersingle: true,
+  OutOrdermultiple: true,
+  OutOrderform: {},
+  OutOrderrules: {
+  },
+  OutOrderoptions: {
+  }
+})
+
+const { OutOrderform, OutOrderrules, OutOrderoptions, OutOrdersingle, OutOrdermultiple } = toRefs(OutOrderstate)
+
+// 关闭dialog
+function OutOrdercancel() {
+  OutOrderOutOrder.value = false
+  OutOrderreset()
+}
+
+// 重置表单
+function OutOrderreset() {
+  OutOrderform.value = {
+    id: null,
+    outOrderCode: null,
+    inpharmacyId: null,
+    useReceive: null,
+    outWarehouseID: null,
+    times: null,
+    remarks: null,
+  };
+  proxy.resetForm("OutOrderformRef")
+}
+
+/**
+ * 查看
+ * @param {*} row
+ */
+function OutOrderhandlePreview(row) {
+  OutOrderreset()
+  const id = row.id
+  getOutOrder(id).then((res) => {
+    const { code, data } = res
+    if (code == 200) {
+      OutOrderOutOrder.value = true
+      OutOrdertitle.value = '查看'
+      OutOrderopertype.value = 3
+      OutOrderform.value = {
+        ...data,
+      }
+    }
+  })
+}
+
+// 添加按钮操作
+function OutOrderhandleAdd() {
+  OutOrderreset();
+  OutOrderOutOrder.value = true
+  OutOrdertitle.value = '添加出库单'
+  OutOrderopertype.value = 1
+}
+// 修改按钮操作
+function OutOrderhandleUpdate(row) {
+  OutOrderreset()
+  const id = row.id || OutOrderids.value
+  getOutOrder(id).then((res) => {
+    const { code, data } = res
+    if (code == 200) {
+      OutOrderOutOrder.value = true
+      OutOrdertitle.value = '修改出库单'
+      OutOrderopertype.value = 2
+
+      OutOrderform.value = {
+        ...data,
+      }
+    }
+  })
+}
+
+// 添加&修改 表单提交
+function OutOrdersubmitForm() {
+  proxy.$refs["OutOrderformRef"].validate((valid) => {
+    if (valid) {
+
+      if (OutOrderform.value.id != undefined && OutOrderopertype.value === 2) {
+        updateOutOrder(OutOrderform.value).then((res) => {
+          proxy.$modal.msgSuccess("修改成功")
+          OutOrderOutOrder.value = false
+          OutOrdergetList()
+        })
+      } else {
+        addOutOrder(OutOrderform.value).then((res) => {
+          proxy.$modal.msgSuccess("新增成功")
+          OutOrderOutOrder.value = false
+          OutOrdergetList()
+        })
+      }
+    }
+  })
+}
+
+// 删除按钮操作
+function OutOrderhandleDelete(row) {
+  const OutOrderids = row.id || OutOrderids.value
+
+  proxy
+    .$confirm('是否确认删除参数编号为"' + OutOrderids + '"的数据项？', "警告", {
+      confirmButtonText: proxy.$t('common.ok'),
+      OutOrdercancelButtonText: proxy.$t('common.OutOrdercancel'),
+      type: "warning",
+    })
+    .then(function () {
+      return delOutOrder(OutOrderids)
+    })
+    .then(() => {
+      OutOrdergetList()
+      proxy.$modal.msgSuccess("删除成功")
+    })
+}
+
+// 清空
+function OutOrderhandleClear() {
+  proxy
+    .$confirm("是否确认清空所有数据项?", "警告", {
+      confirmButtonText: proxy.$t('common.ok'),
+      OutOrdercancelButtonText: proxy.$t('common.OutOrdercancel'),
+      type: "warning",
+    })
+    .then(function () {
+      return clearOutOrder()
+    })
+    .then(() => {
+      OutOrderhandleQuery()
+      proxy.$modal.msgSuccess('清空成功')
+    })
+}
+
+// 导入数据成功处理
+const OutOrderhandleFileSuccess = (response) => {
+  const { item1, item2 } = response.data
+  var error = ''
+  item2.forEach((item) => {
+    error += item.storageMessage + ','
+  })
+  proxy.$alert(item1 + '<p>' + error + '</p>', '导入结果', {
+    dangerouslyUseHTMLString: true
+  })
+  OutOrdergetList()
+}
+
+// 导出按钮操作
+function OutOrderhandleExport() {
+  proxy
+    .$confirm("是否确认导出出库单数据项?", "警告", {
+      confirmButtonText: "确定",
+      OutOrdercancelButtonText: "取消",
+      type: "warning",
+    })
+    .then(async () => {
+      await proxy.downFile('/business/OutOrder/export', { ...OutOrderqueryParams })
+    })
+}
+
+OutOrderhandleQuery()
+
+// function outOfdatalist(row) {
+//   selectedcodeRow.value = row;
+
+//   CodequeryParams.receiptid = outqueryParams.receiptId
+//   CodequeryParams.drugId = row.drugId
+//   CodequeryParams.inWarehouseId = row.id
+//   CodegetList()
+// }
 </script>
+
+<style>
+.table-content {
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.table-item1 {
+  width: 70%;
+  flex: 1;
+}
+
+.table-item2 {
+  width: 30%;
+  flex: 1;
+}
+
+.tb3 {
+  margin-top: 42px;
+}
+
+/* 定义选中行的背景颜色 */
+.selectedrow {
+  /* background-color: #65c332 !important; */
+  background-color: hsl(119, 67%, 70%) !important;
+  /* 自定义的背景色 */
+}
+</style>
