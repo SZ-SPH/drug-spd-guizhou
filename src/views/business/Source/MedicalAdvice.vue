@@ -79,7 +79,7 @@
       <el-table-column prop="orderId" label="id" align="center" v-if="columns.showColumn('orderId')" />
       <el-table-column prop="ipiRegistrationId" label="病患号" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('ipiRegistrationId')" />
-      <el-table-column prop="drugId" label="药品id" align="center" v-if="columns.showColumn('drugId')" />
+      <el-table-column prop="drugName" label="药品id" align="center" v-if="columns.showColumn('drugName')" />
       <el-table-column prop="totalQty" label="药品数量" align="center" v-if="columns.showColumn('totalQty')" />
       <el-table-column prop="orderedDoctorId" label="开单医生id" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('orderedDoctorId')" />
@@ -207,7 +207,7 @@ const queryParams = reactive({
 const columns = ref([
   { visible: true, align: 'center', type: '', prop: 'orderId', label: 'id' },
   { visible: true, align: 'center', type: '', prop: 'ipiRegistrationId', label: '病患号', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugId', label: '药品id' },
+  { visible: true, align: 'center', type: '', prop: 'drugName', label: '药品id' },
   { visible: true, align: 'center', type: '', prop: 'totalQty', label: '药品数量' },
   { visible: true, align: 'center', type: '', prop: 'orderedDoctorId', label: '开单医生id', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'employeeName', label: '开单医生', showOverflowTooltip: true },

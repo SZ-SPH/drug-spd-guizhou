@@ -86,34 +86,14 @@
       header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutsortChange"
       @selection-change="OuthandleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="id" label="Id" align="center" v-if="Outcolumns.showColumn('id')" />
-      <el-table-column prop="drugId" label="药品" align="center" v-if="Outcolumns.showColumn('drugId')" />
-      <el-table-column prop="outWarehouseID" label="出库房" align="center"
-        v-if="Outcolumns.showColumn('outWarehouseID')" />
-      <el-table-column prop="outorderID" label="出库单" align="center" v-if="Outcolumns.showColumn('outorderID')" />
-      <el-table-column prop="inpharmacyId" label="入药房" align="center" v-if="Outcolumns.showColumn('inpharmacyId')" />
-      <el-table-column prop="qty" label="数量" align="center" v-if="Outcolumns.showColumn('qty')" />
-      <el-table-column prop="pharmacyId" label="申请计划" align="center" v-if="Outcolumns.showColumn('pharmacyId')" />
-      <el-table-column prop="times" label="时间" :show-overflow-tooltip="true" v-if="Outcolumns.showColumn('times')" />
-      <el-table-column prop="drugname" label="药品名称" align="center" :show-overflow-tooltip="true"
-        v-if="Outcolumns.showColumn('drugname')" />
-      <el-table-column prop="drugSpecifications" label="规格" align="center" :show-overflow-tooltip="true"
-        v-if="Outcolumns.showColumn('drugSpecifications')" />
-      <el-table-column prop="minunit" label="最小单位" align="center" :show-overflow-tooltip="true"
-        v-if="Outcolumns.showColumn('minunit')" />
-      <el-table-column prop="buyprice" label="购入价" align="center" v-if="Outcolumns.showColumn('buyprice')" />
-      <el-table-column prop="allbuyprice" label="购入金额" align="center" v-if="Outcolumns.showColumn('allbuyprice')" />
-      <el-table-column prop="retailPrice" label="零售价" align="center" v-if="Outcolumns.showColumn('retailPrice')" />
-      <el-table-column prop="allRetailPrice" label="售价金额" align="center"
-        v-if="Outcolumns.showColumn('allRetailPrice')" />
-      <el-table-column prop="manufacturerId" label="生产厂家" align="center"
-        v-if="Outcolumns.showColumn('manufacturerId')" />
-      <el-table-column prop="batchNumber" label="批号" align="center" :show-overflow-tooltip="true"
-        v-if="Outcolumns.showColumn('batchNumber')" />
-      <el-table-column prop="exprie" label="有效期" align="center" :show-overflow-tooltip="true"
-        v-if="Outcolumns.showColumn('exprie')" />
-      <el-table-column prop="locationNumber" label="货位号" align="center" :show-overflow-tooltip="true"
-        v-if="Outcolumns.showColumn('locationNumber')" />
+      <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')" />
+      <el-table-column prop="drugName" label="药品" align="center" v-if="columns.showColumn('drugName')" />
+      <el-table-column prop="outWarehouseName" label="出库房" align="center"
+        v-if="columns.showColumn('outWarehouseName')" />
+      <el-table-column prop="inpharmacyName" label="入药房" align="center" v-if="columns.showColumn('inpharmacyName')" />
+      <el-table-column prop="qty" label="数量" align="center" v-if="columns.showColumn('qty')" />
+      <el-table-column prop="pharmacyId" label="申请计划" align="center" v-if="columns.showColumn('pharmacyId')" />
+      <el-table-column prop="times" label="时间" :show-overflow-tooltip="true" v-if="columns.showColumn('times')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" Outtitle="详情"
@@ -284,9 +264,9 @@ const OutqueryParams = reactive({
 })
 const Outcolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
-  { visible: true, align: 'center', type: '', prop: 'drugId', label: '药品' },
-  { visible: true, align: 'center', type: '', prop: 'outWarehouseID', label: '出库房' },
-  { visible: true, align: 'center', type: '', prop: 'inpharmacyId', label: '入药房' },
+  { visible: true, align: 'center', type: '', prop: 'drugName', label: '药品' },
+  { visible: true, align: 'center', type: '', prop: 'outWarehouseName', label: '出库房' },
+  { visible: true, align: 'center', type: '', prop: 'inpharmacyName', label: '入药房' },
   { visible: true, align: 'center', type: '', prop: 'qty', label: '数量' },
   { visible: true, align: 'center', type: '', prop: 'pharmacyId', label: '申请计划' },
   { visible: true, align: 'center', type: '', prop: 'times', label: '时间', showOverflowTooltip: true },
