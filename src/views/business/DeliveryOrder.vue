@@ -915,6 +915,7 @@ DeliveryDrughandleQuery()
 
 
 function OpenDrughandleAdd() {
+
   if (ids.value.length == 1) {
     Drugreset();
     Drugopen.value = true
@@ -926,4 +927,236 @@ function OpenDrughandleAdd() {
     alert("请选择一个送货单")
   }
 }
+
+
+
+
+
+
+
+
+
+import {
+  listInWarehousing,
+  addInWarehousing, delInWarehousing,
+  updateInWarehousing, getInWarehousing,
+  getcodedetail
+}
+  from '@/api/business/inwarehousing.js'
+const Drugids = ref([])
+const Drugloading = ref(false)
+const DrugshowSearch = ref(true)
+const DrugqueryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  sort: '',
+  sortType: 'asc',
+  drugId: undefined,
+  drugCode: undefined,
+  tracingSourceCode: undefined,
+  batchNumber: undefined,
+  receiptId: 0,
+})
+const Drugcolumns = ref([
+  { visible: false, align: 'center', type: '', prop: 'id', label: 'id' },
+  { visible: false, align: 'center', type: '', prop: 'drugId', label: '药品id', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugName', label: '入库药品名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'codeCount', label: '药品数量', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'tracingSourceCode', label: '药品溯源码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'batchNumber', label: '药品批号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'inventoryQuantity', label: '药品入库数量', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '药品规格', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'receiptId', label: '入库单据id' },
+  { visible: true, align: 'center', type: '', prop: 'manufacturerId', label: '生产厂家' },
+  { visible: true, align: 'center', type: '', prop: 'exprie', label: '有效期' },
+  { visible: true, align: 'center', type: '', prop: 'price', label: '价格' },
+  { visible: true, align: 'center', type: '', prop: 'locationNumber', label: '货位号' },
+  { visible: true, align: 'center', type: '', prop: 'dateOfManufacture', label: '生产日期' },
+  { visible: true, align: 'center', type: '', prop: 'minunit', label: '最小单位' },
+
+  //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
+])
+const Drugtotal = ref(0)
+const DrugdataList = ref([])
+const DrugdrugdataList = ref([])
+
+const DrugqueryRef = ref()
+const DrugdefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
+
+var DrugdictParams = [
+]
+
+function DruggetList() {
+  Drugloading.value = true
+  listInWarehousing(DrugqueryParams).then(res => {
+    const { code, data } = res
+    if (code == 200) {
+      DrugdataList.value = data.result
+      Drugtotal.value = data.totalNum
+      Drugloading.value = false
+    }
+  })
+}
+
+// 查询
+function DrughandleQuery() {
+  DrugqueryParams.pageNum = 1
+  DruggetList()
+}
+
+// 重置查询操作
+function DrugresetQuery() {
+  proxy.resetForm("DrugqueryRef")
+  DrughandleQuery()
+}
+// 自定义排序
+function DrugsortChange(column) {
+  var sort = undefined
+  var sortType = undefined
+
+  if (column.prop != null && column.order != null) {
+    sort = column.prop
+    sortType = column.order
+
+  }
+  DrugqueryParams.sort = sort
+  DrugqueryParams.sortType = sortType
+  DrughandleQuery()
+}
+
+/*************** form操作 ***************/
+const DrugformRef = ref()
+const Drugtitle = ref('')
+// 操作类型 1、add 2、edit 3、view
+const Drugopertype = ref(0)
+const Drugopen = ref(false)
+const Drugstate = reactive({
+  Drugsingle: true,
+  Drugmultiple: true,
+  Drugform: {},
+  Drugrules: {
+    // id: [{ required: true, message: "id不能为空", trigger: "blur", type: "number" }],
+  },
+  Drugoptions: {
+  }
+})
+
+const { Drugform, Drugrules, Drugoptions, Drugsingle, Drugmultiple } = toRefs(Drugstate)
+
+// 关闭dialog
+function Drugcancel() {
+  Drugopen.value = false
+  Drugreset()
+}
+
+// 重置表单
+function Drugreset() {
+  Drugform.value = {
+    id: null,
+    drugId: null,
+    drugCode: null,
+    tracingSourceCode: null,
+    batchNumber: null,
+    inventoryQuantity: null,
+    drugSpecifications: null,
+    receiptId: null,
+    manufacturerId: null,
+    exprie: null,
+    price: null,
+    locationNumber: null,
+    dateOfManufacture: null,
+    minunit: null,
+  }
+  proxy.resetForm("DrugformRef")
+}
+
+/**
+ * 查看
+ * @param {*} row
+ */
+function DrughandlePreview(row) {
+  Drugreset()
+  const id = row.id
+  getInWarehousing(id).then((res) => {
+    const { code, data } = res
+    if (code == 200) {
+      Drugopen.value = true
+      Drugtitle.value = '查看'
+      Drugopertype.value = 3
+      Drugform.value = {
+        ...data,
+      }
+    }
+  })
+}
+
+// 添加按钮操作
+function DrughandleAdd() {
+  Drugreset();
+  Drugopen.value = true
+  Drugtitle.value = '添加入库信息'
+  Drugopertype.value = 1
+  DrugresetQuery()
+
+}
+
+function Drughandleopenadd(row) {
+  //打开界面
+}
+
+
+// 修改按钮操作
+function DrughandleUpdate(row) {
+  Drugreset()
+  const id = row.id || ids.value
+  getInWarehousing(id).then((res) => {
+    const { code, data } = res
+    if (code == 200) {
+      Drugopen.value = true
+      Drugtitle.value = '修改入库信息'
+      Drugopertype.value = 2
+
+      Drugform.value = {
+        ...data,
+      }
+    }
+  })
+}
+
+
+// 删除按钮操作
+function DrughandleDelete(row) {
+  const Ids = row.id || Drugids.value
+  proxy
+    .$confirm('是否确认删除参数编号为"' + Ids + '"的数据项？', "警告", {
+      confirmButtonText: proxy.$t('common.ok'),
+      cancelButtonText: proxy.$t('common.cancel'),
+      type: "warning",
+    })
+    .then(function () {
+      return delInWarehousing(Ids)
+    })
+    .then(() => {
+      DruggetList()
+      proxy.$modal.msgSuccess("删除成功")
+    })
+}
+
+
+
+// 导出按钮操作
+function DrughandleExport() {
+  proxy
+    .$confirm("是否确认导出入库信息数据项?", "警告", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    })
+    .then(async () => {
+      await proxy.downFile('/business/InWarehousing/export', { ...DrugqueryParams })
+    })
+}
+
+DrughandleQuery()
 </script>

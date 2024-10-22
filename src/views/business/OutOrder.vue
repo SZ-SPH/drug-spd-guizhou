@@ -226,7 +226,7 @@ function OutOrdergetList() {
     const { code, data } = res
     if (code == 200) {
       OutOrderdataList.value = data.result
-      OutOrdertotal.value = data.OutOrdertotalNum
+      OutOrdertotal.value = data.totalNum
       OutOrderloading.value = false
     }
   })

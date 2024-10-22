@@ -104,11 +104,10 @@
 
       <el-table-column label="操作" width="160">
         <template #default="scope">
-          <el-button type="primary" size="small" icon="view" title="详情"
-            @click="DrughandlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['drug:edit']"
+          <el-button type="primary" small icon="view" title="详情" @click="DrughandlePreview(scope.row)"></el-button>
+          <el-button type="success" small icon="edit" title="编辑" v-hasPermi="['drug:edit']"
             @click="DrughandleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['drug:delete']"
+          <el-button type="danger" small icon="delete" title="删除" v-hasPermi="['drug:delete']"
             @click="DrughandleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>

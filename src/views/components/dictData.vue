@@ -7,7 +7,8 @@
     </el-form-item>
     <el-form-item label="状态" prop="status">
       <el-select v-model="queryParams.status" placeholder="数据状态" clearable>
-        <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+        <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel"
+          :value="dict.dictValue" />
       </el-select>
     </el-form-item>
     <el-form-item>
@@ -26,9 +27,10 @@
     <el-table-column label="字典编码" align="center" prop="dictCode" />
     <el-table-column label="字典标签" align="center" prop="dictLabel">
       <template #default="scope">
-        <span v-if="scope.row.listClass == '' || scope.row.listClass == 'default'" :class="scope.row.cssClass">{{ scope.row.dictLabel }}</span>
-        <el-tag v-else :type="scope.row.listClass == 'primary' ? '' : scope.row.listClass" :class="scope.row.cssClass"
-          >{{ scope.row.dictLabel }}
+        <span v-if="scope.row.listClass == '' || scope.row.listClass == 'default'" :class="scope.row.cssClass">{{
+          scope.row.dictLabel }}</span>
+        <el-tag v-else :type="scope.row.listClass == 'primary' ? '' : scope.row.listClass"
+          :class="scope.row.cssClass">{{ scope.row.dictLabel }}
         </el-tag>
       </template>
     </el-table-column>
@@ -44,13 +46,16 @@
     <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130px">
       <template #default="scope">
         <div v-if="scope.row.dictCode > 0">
-          <el-button text size="default" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dict:edit']"></el-button>
-          <el-button text size="default" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dict:remove']"> </el-button>
+          <el-button text size="default" icon="edit" @click="handleUpdate(scope.row)"
+            v-hasPermi="['system:dict:edit']"></el-button>
+          <el-button text size="default" icon="delete" @click="handleDelete(scope.row)"
+            v-hasPermi="['system:dict:remove']"> </el-button>
         </div>
       </template>
     </el-table-column>
   </el-table>
-  <pagination :total="total" v-show="total > 0" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+  <pagination :total="total" v-show="total > 0" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+    @pagination="getList" />
 
   <!-- 添加或修改参数配置对话框 -->
   <el-dialog :title="title" v-model="open" draggable width="500px" append-to-body>
@@ -80,7 +85,8 @@
         <el-col :lg="12">
           <el-form-item label="样式属性" prop="cssClass">
             <el-select v-model="form.cssClass" allow-create filterable clearable="">
-              <el-option v-for="dict in cssClassOptions" :class="dict.value" :key="dict.value" :label="dict.label" :value="dict.value">
+              <el-option v-for="dict in cssClassOptions" :class="dict.value" :key="dict.value" :label="dict.label"
+                :value="dict.value">
                 <span style="float: left" :class="dict.value">{{ dict.label }}</span>
                 <span style="float: right">{{ dict.value }}</span>
               </el-option>
@@ -90,7 +96,8 @@
         <el-col :lg="12">
           <el-form-item label="回显样式" prop="listClass">
             <el-select v-model="form.listClass">
-              <el-option v-for="item in listClassOptions" :key="item.value" :label="item.label + '(' + item.value + ')'" :value="item.value">
+              <el-option v-for="item in listClassOptions" :key="item.value" :label="item.label + '(' + item.value + ')'"
+                :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
@@ -103,7 +110,8 @@
         <el-col :lg="12">
           <el-form-item label="状态" prop="status">
             <el-radio-group v-model="form.status">
-              <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+              <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :value="dict.dictValue"
+                :label="dict.dictLabel"> </el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>

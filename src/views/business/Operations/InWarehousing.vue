@@ -463,92 +463,109 @@
 
     </el-dialog>
     <!-- 扫码入库 -->
-    <el-dialog :title="FUllcodetitle" :lock-scroll="false" v-model="FUllcodeopen">
-      <el-form ref="FUllcodeformRef" :model="FUllcodeform" :rules="FUllcoderules" label-width="100px">
-        <el-row :gutter="20">
-          <el-col :lg="12">
-            <el-form-item label="溯源码" prop="Code">
-              <el-input v-model="FUllcodeform.Code" placeholder="请输入溯源码" ref="refInput" @input="handleInput"
-                @blur="handleBlur" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="入库时间" prop="storageTime">
-              <el-input v-model="FUllcodeform.storageTime" placeholder="请输入入库时间" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="药品类型描述" prop="physicTypeDesc">
-              <el-input v-model="FUllcodeform.physicTypeDesc" placeholder="请输入药品类型描述" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="企业id" prop="refEntId">
-              <el-input v-model="FUllcodeform.refEntId" placeholder="请输入企业id" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="企业名称" prop="entName">
-              <el-input v-model="FUllcodeform.entName" placeholder="请输入企业名称" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="码等级" prop="packageLevel">
-              <el-input v-model="FUllcodeform.packageLevel" placeholder="请输入码等级" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="药品名称" prop="physicName">
-              <el-input v-model="FUllcodeform.physicName" placeholder="请输入药品名称" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="有效期" prop="exprie">
-              <el-input v-model="FUllcodeform.exprie" placeholder="请输入药品有效期" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="药品ID" prop="drugEntBaseInfoId">
-              <el-input v-model="FUllcodeform.drugEntBaseInfoId" placeholder="请输入药品ID" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="批准文号" prop="approvalLicenceNo">
-              <el-input v-model="FUllcodeform.approvalLicenceNo" placeholder="请输入批准文号" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="包装规格" prop="pkgSpecCrit">
-              <el-input v-model="FUllcodeform.pkgSpecCrit" placeholder="请输入包装规格" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="制剂规格" prop="prepnSpec">
-              <el-input v-model="FUllcodeform.prepnSpec" placeholder="请输入制剂规格" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="剂型描述" prop="prepnTypeDesc">
-              <el-input v-model="FUllcodeform.prepnTypeDesc" placeholder="请输入剂型描述" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="最小包装数量" prop="pkgAmount">
-              <el-input v-model="FUllcodeform.pkgAmount" placeholder="请输入最小包装数量" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="有效期至" prop="expireDate">
-              <el-input v-model="FUllcodeform.expireDate" placeholder="请输入有效期至" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="批次号" prop="batchNo">
-              <el-input v-model="FUllcodeform.batchNo" placeholder="请输入批次号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
+    <el-dialog :title="FUllcodetitle" :lock-scroll="false" v-model="FUllcodeopen" width="90%">
+      <div class="table-content">
+        <div class="table-item1">
+          <el-form ref="FUllcodeformRef" :model="FUllcodeform" :rules="FUllcoderules" label-width="100px">
+            <el-row :gutter="20">
+              <el-col :lg="12">
+                <el-form-item label="溯源码" prop="Code">
+                  <el-input v-model="FUllcodeform.Code" placeholder="请输入溯源码" ref="refInput" @input="handleInput"
+                    @blur="handleBlur" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="入库时间" prop="storageTime">
+                  <el-input v-model="FUllcodeform.storageTime" placeholder="请输入入库时间" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="药品类型描述" prop="physicTypeDesc">
+                  <el-input v-model="FUllcodeform.physicTypeDesc" placeholder="请输入药品类型描述" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="企业id" prop="refEntId">
+                  <el-input v-model="FUllcodeform.refEntId" placeholder="请输入企业id" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="企业名称" prop="entName">
+                  <el-input v-model="FUllcodeform.entName" placeholder="请输入企业名称" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="码等级" prop="packageLevel">
+                  <el-input v-model="FUllcodeform.packageLevel" placeholder="请输入码等级" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="药品名称" prop="physicName">
+                  <el-input v-model="FUllcodeform.physicName" placeholder="请输入药品名称" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="有效期" prop="exprie">
+                  <el-input v-model="FUllcodeform.exprie" placeholder="请输入药品有效期" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="药品ID" prop="drugEntBaseInfoId">
+                  <el-input v-model="FUllcodeform.drugEntBaseInfoId" placeholder="请输入药品ID" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="批准文号" prop="approvalLicenceNo">
+                  <el-input v-model="FUllcodeform.approvalLicenceNo" placeholder="请输入批准文号" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="包装规格" prop="pkgSpecCrit">
+                  <el-input v-model="FUllcodeform.pkgSpecCrit" placeholder="请输入包装规格" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="制剂规格" prop="prepnSpec">
+                  <el-input v-model="FUllcodeform.prepnSpec" placeholder="请输入制剂规格" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="剂型描述" prop="prepnTypeDesc">
+                  <el-input v-model="FUllcodeform.prepnTypeDesc" placeholder="请输入剂型描述" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="最小包装数量" prop="pkgAmount">
+                  <el-input v-model="FUllcodeform.pkgAmount" placeholder="请输入最小包装数量" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="有效期至" prop="expireDate">
+                  <el-input v-model="FUllcodeform.expireDate" placeholder="请输入有效期至" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
+                <el-form-item label="批次号" prop="batchNo">
+                  <el-input v-model="FUllcodeform.batchNo" placeholder="请输入批次号" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+        </div>
+        <div class="table-item2">
+          <el-table :data="AllMixCodelistM" ref="table" border header-cell-class-name="el-table-header-cell"
+            highlight-current-row :row-class-name="rowClassName">
+            <el-table-column prop="code" label="溯源码" align="center" v-if="AllMixCodecolumns.showColumn('code')" />
+            <el-table-column prop="packageLevel" label="码等级" align="center" :show-overflow-tooltip="true"
+              v-if="AllMixCodecolumns.showColumn('packageLevel')" />
+            <!-- <el-table-column prop="storageTime" label="父编码" align="center" :show-overflow-tooltip="true"
+              v-if="AllMixCodecolumns.showColumn('storageTime')" /> -->
+          </el-table>
+          <pagination :total="AllMixCodetotal" v-model:page="AllMixCodeParams.pageNum"
+            v-model:limit="AllMixCodeParams.pageSize" @pagination="AllMixCodegetList" />
+        </div>
+      </div>
+
       <template #footer>
         <el-button text @click="FUllcodecancel">{{ $t('btn.cancel') }}</el-button>
         <el-button type="primary" @click="FUllcodesubmitForm">{{ $t('btn.submit') }}</el-button>
@@ -1133,6 +1150,7 @@ const CodequeryParams = reactive({
   receiptid: 0,
   drugId: 0,
   inWarehouseId: 0,
+  MedicalAdviceId: 0,
   code: undefined,
   refEntId: undefined,
   entName: undefined,
@@ -1181,6 +1199,7 @@ function CodegetList() {
       Codeloading.value = false
     }
   })
+  console.log(CodedataList)
 }
 
 // 查询
@@ -1318,6 +1337,8 @@ function CodehandlePreview(row) {
 import { ref, nextTick } from 'vue';
 const refInput = ref()
 function CodeScreenAdd(row) {
+  codesreset()
+
   FUllcodeopen.value = true
   FUllcodetitle.value = '扫码添加'
   // FUllcodeopertype.value = 1
@@ -1350,9 +1371,10 @@ const handleInput = () => {
     console.log('输入结束值：', FUllcodeform.value.Code);
     //调用本地方法
     fetchData(FUllcodeform.value.Code)
+    getAllMixCodedataList(FUllcodeform.value.Code)
+    console.log('接口返回数据2：', AllMixCodedataList.value);
 
-  }, 300); // 延迟时间（300ms），可以根据需要调整
-
+  }, 200); // 延迟时间（300ms），可以根据需要调整
 };
 
 // 处理失去焦点
@@ -1370,10 +1392,10 @@ const fetchData = async (code) => {
     const response = await axios.get('http://120.79.135.98:8888/Mtaobo/codedetail', {
       params: { codes: code }
     });
-    console.log('接口返回数据：', response.data.data.models);
+    console.log('接口返回数据：', response.data.data.models[0]);
 
     // FUllcodeform = response.data
-    FUllcodeform.Code = response.data.data.models.code
+    FUllcodeform.Code = response.data.data.models[0].code
     // console.log(response.data.models[0].drugEntBaseDTO.approvalLicenceNo)
     FUllcodeform.value.codeStatus = response.data.data.models[0].codeStatusTypeDTO.codeStatus
     FUllcodeform.value.approvalLicenceNo = response.data.data.models[0].drugEntBaseDTO.approvalLicenceNo
@@ -1405,6 +1427,7 @@ const fetchData = async (code) => {
 // 添加按钮操作
 function CodehandleAdd(row) {
   Codereset();
+
   Codeopen.value = true
 
   Codetitle.value = '添加码信息'
@@ -1453,32 +1476,44 @@ function CodesubmitForm() {
     }
   })
 }
+const codelist = ref([])
 // 添加&修改 表单提交
 function FUllcodesubmitForm() {
+  codelist.value = [];
   FUllcodeform.value.Receiptid = queryParams.receiptId
   FUllcodeform.value.DrugId = CodequeryParams.drugId
   FUllcodeform.value.InWarehouseId = CodequeryParams.inWarehouseId
-
-  proxy.$refs["FUllcodeformRef"].validate((valid) => {
-    if (valid) {
-      if (FUllcodeform.value.id != undefined) {
-        updateCodeDetails(FUllcodeform.value).then((res) => {
-          proxy.$modal.msgSuccess("修改成功")
-          Codeopen.value = false
-          CodegetList()
-        })
-      } else {
-        addCodeDetails(FUllcodeform.value).then((res) => {
-          proxy.$modal.msgSuccess("新增成功")
-          Codeopen.value = false
-          CodegetList()
-        })
-      }
-    }
+  FUllcodeform.value.code = AllMixCodedataList.value.code
+  AllMixCodedataList.value.forEach(e => {
+    const formCopy = { ...FUllcodeform.value, code: e.code };
+    codelist.value.push(formCopy);
+  });
+  addCodeDetails(codelist.value).then((res) => {
+    proxy.$modal.msgSuccess("新增成功")
+    Codeopen.value = false
+    CodegetList()
   })
+  // proxy.$refs["FUllcodeformRef"].validate((valid) => {
+  //   if (valid) {
+  //     if (FUllcodeform.value.id != undefined) {
+  //       updateCodeDetails(FUllcodeform.value).then((res) => {
+  //         proxy.$modal.msgSuccess("修改成功")
+  //         Codeopen.value = false
+  //         CodegetList()
+  //       })
+  //     } else {
+  //       addCodeDetails(FUllcodeform.value).then((res) => {
+  //         proxy.$modal.msgSuccess("新增成功")
+  //         Codeopen.value = false
+  //         CodegetList()
+  //       })
+  //     }
+  //   }
+  // })
 
 
 }
+
 
 
 
@@ -2020,6 +2055,83 @@ function rowClassName({ row }) {
 // 动态为行绑定类
 function rowcodeClassName({ row }) {
   return row === selectedcodeRow.value ? 'selectedrow' : '';
+}
+
+
+const AllMixCodedataList = ref([])
+const AllMixCodecolumns = ref([
+  { visible: true, align: 'center', type: '', prop: 'code', label: '溯源码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'packageLevel', label: '码等级', showOverflowTooltip: true },
+  // { visible: true, align: 'center', type: '', prop: 'creationTime', label: '父编号', showOverflowTooltip: true },
+
+])
+
+const getAllMixCodedataList = async (code) => {
+  try {
+    const response = await axios.get('http://120.79.135.98:8888/Mtaobo/AllMIXcode', {
+
+      // const response = await axios.get('http://localhost:8888/Mtaobo/AllMIXcode', {
+      params: { codes: code }
+    });
+    console.log('接口返回数据2：', response.data);
+    AllMixCodedataList.value = response.data
+    AllMixCodegetList()
+  } catch (error) {
+    console.log(error)
+  }
+}
+const AllMixCodelistM = ref([])
+
+const AllMixCodetotal = ref(0)
+const AllMixCodeParams = ref({
+  pageNum: 1,
+  pageSize: 10
+})
+
+function AllMixCodegetList() {
+  AllMixCodetotal.value = AllMixCodedataList.value.length
+  // AllMixCodedataList.value
+  // const response =  api.getMixCodeList(AllMixCodeParams.value);
+  // AllMixCodedataList.value = response.data; // 假设数据在response.data中
+  // AllMixCodetotal.value = response.total; // 假设总数在response.total中
+  const start = (AllMixCodeParams.value.pageNum - 1) * AllMixCodeParams.value.pageSize;
+  const end = start + AllMixCodeParams.value.pageSize;
+  console.log("start", start)
+  console.log("end", end)
+
+  AllMixCodelistM.value = AllMixCodedataList.value.slice(start, end);
+}
+
+
+// 重置表单
+function codesreset() {
+  FUllcodeform.value = {
+    id: null,
+    receiptid: null,
+    drugId: null,
+    code: null,
+    physicTypeDesc: null,
+    refEntId: null,
+    entName: null,
+    packageLevel: null,
+    physicName: null,
+    exprie: null,
+    drugEntBaseInfoId: null,
+    approvalLicenceNo: null,
+    pkgSpecCrit: null,
+    prepnSpec: null,
+    prepnTypeDesc: null,
+    produceDateStr: null,
+    pkgAmount: null,
+    expireDate: null,
+    batchNo: null,
+    inWarehouseId: null,
+  };
+  AllMixCodedataList.value = null
+  AllMixCodelistM.value = null
+  // AllMixCodedataList.value = null
+
+  proxy.resetForm("FUllcodeformRef")
 }
 
 </script>

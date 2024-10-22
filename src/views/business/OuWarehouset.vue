@@ -86,14 +86,15 @@
       header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutsortChange"
       @selection-change="OuthandleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')" />
-      <el-table-column prop="drugName" label="药品" align="center" v-if="columns.showColumn('drugName')" />
+      <el-table-column prop="id" label="Id" align="center" v-if="Outcolumns.showColumn('id')" />
+      <el-table-column prop="drugName" label="药品" align="center" v-if="Outcolumns.showColumn('drugName')" />
       <el-table-column prop="outWarehouseName" label="出库房" align="center"
-        v-if="columns.showColumn('outWarehouseName')" />
-      <el-table-column prop="inpharmacyName" label="入药房" align="center" v-if="columns.showColumn('inpharmacyName')" />
-      <el-table-column prop="qty" label="数量" align="center" v-if="columns.showColumn('qty')" />
-      <el-table-column prop="pharmacyId" label="申请计划" align="center" v-if="columns.showColumn('pharmacyId')" />
-      <el-table-column prop="times" label="时间" :show-overflow-tooltip="true" v-if="columns.showColumn('times')" />
+        v-if="Outcolumns.showColumn('outWarehouseName')" />
+      <el-table-column prop="inpharmacyName" label="入药房" align="center"
+        v-if="Outcolumns.showColumn('inpharmacyName')" />
+      <el-table-column prop="qty" label="数量" align="center" v-if="Outcolumns.showColumn('qty')" />
+      <el-table-column prop="pharmacyId" label="申请计划" align="center" v-if="Outcolumns.showColumn('pharmacyId')" />
+      <el-table-column prop="times" label="时间" :show-overflow-tooltip="true" v-if="Outcolumns.showColumn('times')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" Outtitle="详情"

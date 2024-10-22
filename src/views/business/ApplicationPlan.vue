@@ -465,9 +465,9 @@
             <right-toolbar v-model:showSearch="OutOrderhandleshowSearch" @queryTable="OutOrdergetList"
               :columns="OutOrdercolumns"></right-toolbar>
           </el-row>
-
-          <el-table @row-click="outOfdatalist" :data="OutOrderdataList" v-loading="OutOrderloading" ref="OutOrdertable"
-            border header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutOrdersortChange"
+          <!-- @row-click="outOfdatalist"  -->
+          <el-table :data="OutOrderdataList" v-loading="OutOrderloading" ref="OutOrdertable" border
+            header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutOrdersortChange"
             @selection-change="OutOrderhandleSelectionChange">
             <el-table-column type="selection" width="50" align="center" />
             <el-table-column prop="id" label="Id" align="center" v-if="OutOrdercolumns.showColumn('id')" />
@@ -1743,7 +1743,7 @@ function OutOrdergetList() {
     const { code, data } = res
     if (code == 200) {
       OutOrderdataList.value = data.result
-      OutOrdertotal.value = data.OutOrdertotalNum
+      OutOrdertotal.value = data.totalNum
       OutOrderloading.value = false
     }
   })
