@@ -126,7 +126,14 @@
             <el-table-column prop="manufacturerId" label="生产厂家" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('manufacturerId')" />
             <el-table-column prop="exprie" label="有效期" align="center" :show-overflow-tooltip="true"
-              v-if="columns.showColumn('exprie')" />
+              v-if="columns.showColumn('exprie')">
+              <template #default="{ row }">
+                <el-input :disabled="Rstate.value == '已推送'" v-model="row.exprie" size="small"
+                  @blur="DrugQuantityChange(row)" />
+              </template>
+
+            </el-table-column>
+
             <el-table-column prop="price" label="价格" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('price')">
               <template #default="{ row }">
@@ -135,9 +142,21 @@
               <!-- @blur="DrugQuantityChange(row)" -->
             </el-table-column>
             <el-table-column prop="locationNumber" label="货位号" align="center" :show-overflow-tooltip="true"
-              v-if="columns.showColumn('locationNumber')" />
+              v-if="columns.showColumn('locationNumber')">
+              <template #default="{ row }">
+                <el-input :disabled="Rstate.value == '已推送'" v-model="row.locationNumber" size="small"
+                  @blur="DrugQuantityChange(row)" />
+              </template>
+
+            </el-table-column>
             <el-table-column prop="dateOfManufacture" label="生产日期" align="center" :show-overflow-tooltip="true"
-              v-if="columns.showColumn('dateOfManufacture')" />
+              v-if="columns.showColumn('dateOfManufacture')">
+              <template #default="{ row }">
+                <el-input :disabled="Rstate.value == '已推送'" v-model="row.dateOfManufacture" size="small"
+                  @blur="DrugQuantityChange(row)" />
+              </template>
+
+            </el-table-column>
             <el-table-column prop="minunit" label="最小单位" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('minunit')" />
 
@@ -167,6 +186,10 @@
               <el-form-item>
                 <el-button icon="search" type="primary" @click="CodehandleQuery">{{ $t('btn.search') }}</el-button>
                 <el-button icon="refresh" @click="CoderesetQuery">{{ $t('btn.reset') }}</el-button>
+                <el-button type="warning" plain icon="download" @click="CodehandleExport"
+                  v-hasPermi="['codedetails:export']">
+                  {{ $t('btn.export') }}
+                </el-button>
               </el-form-item>
             </el-form>
           </el-row>
@@ -341,9 +364,6 @@
     <el-dialog :title="Receipttitle" :lock-scroll="false" v-model="Receiptopen">
       <el-form ref="ReceiptformRef" :model="Receiptform" :rules="Receiptrules" label-width="100px">
         <el-row :gutter="20">
-
-
-
           <el-col :lg="12">
             <el-form-item label="入库单编号" prop="receiptCode">
               <el-input v-model="Receiptform.receiptCode" placeholder="请输入入库单编号" />
@@ -356,7 +376,13 @@
           </el-col>
           <el-col :lg="12">
             <el-form-item label="供应商" prop="supplierId">
-              <el-input v-model="Receiptform.supplierId" placeholder="请输入供应商" />
+              <!-- <el-input v-model="Receiptform.supplierId" placeholder="请输入供应商" /> -->
+              <el-select v-model="Receiptform.supplierId" placeholder="请选择供应商" filterable clearable>
+                <!-- 备注 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'} -->
+                <el-option v-for="item in Receiptoptions.ReceiptoptionsSupllid" :key="item.dictValue"
+                  :label="item.dictLabel" :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
 
@@ -638,7 +664,6 @@ import {
   listInWarehousing,
   addInWarehousing, delInWarehousing,
   updateInWarehousing, getInWarehousing,
-  getcodedetail
 }
   from '@/api/business/inwarehousing.js'
 const { proxy } = getCurrentInstance()
@@ -985,6 +1010,7 @@ const Receiptstate = reactive({
     // receiptId: [{ required: true, message: "入库单id不能为空", trigger: "blur", type: "number" }],
   },
   Receiptoptions: {
+    ReceiptoptionsSupllid: []
   }
 })
 
@@ -1483,12 +1509,14 @@ function FUllcodesubmitForm() {
   FUllcodeform.value.Receiptid = queryParams.receiptId
   FUllcodeform.value.DrugId = CodequeryParams.drugId
   FUllcodeform.value.InWarehouseId = CodequeryParams.inWarehouseId
-  FUllcodeform.value.code = AllMixCodedataList.value.code
+  // FUllcodeform.value.code = AllMixCodedataList.value.code
   AllMixCodedataList.value.forEach(e => {
-    const formCopy = { ...FUllcodeform.value, code: e.code };
+    FUllcodeform.value.Code = e.code;
+    const formCopy = { ...FUllcodeform.value };
     codelist.value.push(formCopy);
   });
-  addCodeDetails(codelist.value).then((res) => {
+  console.log(codelist.value)
+  addCodeDetails(codelist.value, receiptIds.value).then((res) => {
     proxy.$modal.msgSuccess("新增成功")
     Codeopen.value = false
     CodegetList()
@@ -1952,7 +1980,6 @@ const sendOutData = ref({
 
 // 添加&修改 表单提交
 function WarehousesubmitForm() {
-
   //选择一个单据
   if (Warehouseids.value.length == 1 && Receiptids.value.length > 0) {
     proxy
@@ -2068,9 +2095,9 @@ const AllMixCodecolumns = ref([
 
 const getAllMixCodedataList = async (code) => {
   try {
-    const response = await axios.get('http://120.79.135.98:8888/Mtaobo/AllMIXcode', {
+    // const response = await axios.get('http://120.79.135.98:8888/Mtaobo/AllMIXcode', {
 
-      // const response = await axios.get('http://localhost:8888/Mtaobo/AllMIXcode', {
+    const response = await axios.get('http://localhost:8888/Mtaobo/AllMIXcode', {
       params: { codes: code }
     });
     console.log('接口返回数据2：', response.data);
@@ -2129,10 +2156,32 @@ function codesreset() {
   };
   AllMixCodedataList.value = null
   AllMixCodelistM.value = null
+  // AllMixCodetotal = ref(0)
+  //  AllMixCodeParams.value = ref({
+  //   pageNum: 1,
+  //   pageSize: 10
+  // })
   // AllMixCodedataList.value = null
 
   proxy.resetForm("FUllcodeformRef")
 }
+//取出给options赋值
+import {
+  listSupplier,
+  addSupplier, delSupplier,
+  updateSupplier, getSupplier,
+  clearSupplier,
+}
+  from '@/api/business/supplier.js'
+function SuppliergetList() {
+  listSupplier(SupplierqueryParams).then(res => {
+    const { code, data } = res
+    if (code == 200) {
+    }
+  })
+}
+
+
 
 </script>
 <style>
