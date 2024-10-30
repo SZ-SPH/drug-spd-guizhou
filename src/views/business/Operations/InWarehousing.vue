@@ -381,8 +381,8 @@
               <!-- <el-input v-model="Receiptform.supplierId" placeholder="请输入供应商" /> -->
               <el-select v-model="Receiptform.supplierId" placeholder="请选择供应商" filterable clearable>
                 <!-- 备注 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'} -->
-                <el-option v-for="item in Receiptoptions.ReceiptoptionsSupllid" :key="item.dictValue"
-                  :label="item.dictLabel" :value="item.dictValue">
+                <el-option v-for="item in AReceipt.ReceiptoptionsSupllid" :key="item.dictValue" :label="item.dictLabel"
+                  :value="item.dictValue">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -1028,11 +1028,50 @@ const Receiptstate = reactive({
     // receiptId: [{ required: true, message: "入库单id不能为空", trigger: "blur", type: "number" }],
   },
   Receiptoptions: {
-    ReceiptoptionsSupllid: []
+
   }
 })
 
 const { Receiptform, Receiptrules, Receiptoptions, Receiptsingle, Receiptmultiple } = toRefs(Receiptstate)
+const AReceipt = ref({
+  ReceiptoptionsSupllid: [] // 初始化供应商选项列表
+});
+import {
+  listSupplier,
+  addSupplier, delSupplier,
+  updateSupplier, getSupplier,
+  clearSupplier,
+}
+  from '@/api/business/supplier.js'
+const SupplierqueryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  sort: '',
+  sortType: 'asc',
+  id: undefined,
+  supplierName: undefined,
+  socialCreditCode: undefined,
+  enterpriseAddress: undefined,
+  enterprisePhone: undefined,
+})
+SuppliergetList()
+function SuppliergetList() {
+  listSupplier(SupplierqueryParams).then(res => {
+    const { code, data } = res
+    if (code == 200) {
+      console.log(data.result)
+      // 假设 data 是供应商的数组
+      AReceipt.value.ReceiptoptionsSupllid = data.result.map(item => ({
+        dictLabel: item.supplierName,  // 根据实际数据结构修改
+        dictValue: item.id      // 根据实际数据结构修改
+      }));
+    }
+  })
+
+  console.log(AReceipt.value)
+
+}
+
 
 // 关闭dialog
 function Receiptcancel() {
@@ -2207,22 +2246,6 @@ function codesreset() {
 
   proxy.resetForm("FUllcodeformRef")
 }
-//取出给options赋值
-import {
-  listSupplier,
-  addSupplier, delSupplier,
-  updateSupplier, getSupplier,
-  clearSupplier,
-}
-  from '@/api/business/supplier.js'
-function SuppliergetList() {
-  listSupplier(SupplierqueryParams).then(res => {
-    const { code, data } = res
-    if (code == 200) {
-    }
-  })
-}
-
 
 
 </script>
