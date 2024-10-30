@@ -91,7 +91,11 @@
       <el-table-column prop="entName" label="企业名称" align="center" :show-overflow-tooltip="true"
         v-if="Codecolumns.showColumn('entName')" />
       <el-table-column prop="packageLevel" label="码等级" align="center" :show-overflow-tooltip="true"
-        v-if="Codecolumns.showColumn('packageLevel')" />
+        v-if="Codecolumns.showColumn('packageLevel')">
+        <template v-slot="scope">
+          <span>{{ levelMap[scope.row.packageLevel] || '未知等级' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="physicName" label="药品名称" align="center" :show-overflow-tooltip="true"
         v-if="Codecolumns.showColumn('physicName')" />
       <el-table-column prop="exprie" label="有效期" align="center" :show-overflow-tooltip="true"
@@ -308,7 +312,11 @@ const Codetotal = ref(0)
 const CodedataList = ref([])
 const CodequeryRef = ref()
 const CodedefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
-
+const levelMap = {
+  1: '小码',
+  2: '中码',
+  3: '大码',
+};
 
 var CodedictParams = [
 ]

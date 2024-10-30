@@ -94,7 +94,7 @@
             <el-table-column prop="id" label="id" align="center" v-if="columns.showColumn('id')" />
             <el-table-column prop="drugId" label="药品id" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('drugId')" />
-            <el-table-column prop="drugName" label="入库药品" align="center" :show-overflow-tooltip="true"
+            <el-table-column prop="drugName" width="100" label="入库药品" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('drugName')" />
             <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('drugCode')" />
@@ -125,7 +125,7 @@
             <!-- ManufacturerId -->
             <el-table-column prop="manufacturerId" label="生产厂家" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('manufacturerId')" />
-            <el-table-column prop="exprie" label="有效期" align="center" :show-overflow-tooltip="true"
+            <el-table-column prop="exprie" label="有效期至" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('exprie')">
               <template #default="{ row }">
                 <el-input :disabled="Rstate.value == '已推送'" v-model="row.exprie" size="small"
@@ -236,6 +236,8 @@
               v-if="Codecolumns.showColumn('expireDate')" />
             <el-table-column prop="batchNo" label="批次号" align="center" :show-overflow-tooltip="true"
               v-if="Codecolumns.showColumn('batchNo')" />
+            <el-table-column prop="parentCode" label="父码" align="center" :show-overflow-tooltip="true"
+              v-if="Codecolumns.showColumn('parentCode')" />
             <el-table-column label="操作" width="120" fixed="right">
               <template #default="scope">
                 <el-button type="primary" size="small" icon="view" title="详情"
@@ -551,6 +553,11 @@
                 </el-form-item>
               </el-col>
               <el-col :lg="12">
+                <el-form-item label="生产日期" prop="produceDateStr">
+                  <el-input v-model="FUllcodeform.produceDateStr" placeholder="请输入生产日期" />
+                </el-form-item>
+              </el-col>
+              <el-col :lg="12">
                 <el-form-item label="制剂规格" prop="prepnSpec">
                   <el-input v-model="FUllcodeform.prepnSpec" placeholder="请输入制剂规格" />
                 </el-form-item>
@@ -583,9 +590,13 @@
             highlight-current-row :row-class-name="rowClassName">
             <el-table-column prop="code" label="溯源码" align="center" v-if="AllMixCodecolumns.showColumn('code')" />
             <el-table-column prop="packageLevel" label="码等级" align="center" :show-overflow-tooltip="true"
-              v-if="AllMixCodecolumns.showColumn('packageLevel')" />
-            <!-- <el-table-column prop="storageTime" label="父编码" align="center" :show-overflow-tooltip="true"
-              v-if="AllMixCodecolumns.showColumn('storageTime')" /> -->
+              v-if="AllMixCodecolumns.showColumn('packageLevel')">
+              <template v-slot="scope">
+                <span>{{ levelMap[scope.row.packageLevel] || '未知等级' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="parentCode" label="父编码" align="center" :show-overflow-tooltip="true"
+              v-if="AllMixCodecolumns.showColumn('parentCode')" />
           </el-table>
           <pagination :total="AllMixCodetotal" v-model:page="AllMixCodeParams.pageNum"
             v-model:limit="AllMixCodeParams.pageSize" @pagination="AllMixCodegetList" />
@@ -681,6 +692,12 @@ const queryParams = reactive({
   batchNumber: undefined,
   receiptId: 0,
 })
+// 字典映射
+const levelMap = {
+  1: '小码',
+  2: '中码',
+  3: '大码',
+};
 const columns = ref([
   { visible: false, align: 'center', type: '', prop: 'id', label: 'id' },
   { visible: false, align: 'center', type: '', prop: 'drugId', label: '药品id', showOverflowTooltip: true },
@@ -710,6 +727,7 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 var dictParams = [
 ]
+
 
 function getList() {
   loading.value = true
@@ -1185,7 +1203,6 @@ const Codecolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'id', label: 'Id' },
   { visible: false, align: 'center', type: '', prop: 'receiptid', label: '入库单id' },
   { visible: false, align: 'center', type: '', prop: 'drugId', label: '药品id' },
-
   { visible: false, align: 'center', type: '', prop: 'inWarehouseId', label: '入库药品id' },
   { visible: true, align: 'center', type: '', prop: 'code', label: '追溯码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'physicTypeDesc', label: '药品类型描述', showOverflowTooltip: true },
@@ -1203,6 +1220,7 @@ const Codecolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'pkgAmount', label: '最小包装数量', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'expireDate', label: '有效期至', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'batchNo', label: '批次号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'parentCode', label: '父码', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const Codetotal = ref(0)
@@ -1310,6 +1328,7 @@ function FullCodereset() {
     pkgAmount: null,
     expireDate: null,
     batchNo: null,
+    parentCode: null,
     inWarehouseId: null,
   };
   proxy.resetForm("CodeformRef")
@@ -1336,6 +1355,8 @@ function Codereset() {
     pkgAmount: null,
     expireDate: null,
     batchNo: null,
+    batchNo: null,
+    parentCode: null,
     inWarehouseId: null,
   };
   proxy.resetForm("CodeformRef")
@@ -1512,15 +1533,35 @@ function FUllcodesubmitForm() {
   // FUllcodeform.value.code = AllMixCodedataList.value.code
   AllMixCodedataList.value.forEach(e => {
     FUllcodeform.value.Code = e.code;
+    FUllcodeform.value.ParentCode = e.parentCode;
     const formCopy = { ...FUllcodeform.value };
     codelist.value.push(formCopy);
   });
-  console.log(codelist.value)
-  addCodeDetails(codelist.value, receiptIds.value).then((res) => {
+
+  addCodeDetails(codelist.value).then((res) => {
     proxy.$modal.msgSuccess("新增成功")
     Codeopen.value = false
+    FUllcodeopen.value = false
+    selectedcodeRow.value.batchNumber = FUllcodeform.value.batchNo
+    selectedcodeRow.value.exprie = formattedDate(FUllcodeform.value.expireDate)
+    selectedcodeRow.value.dateOfManufacture = FUllcodeform.value.produceDateStr
+
+    if (selectedcodeRow.value.id != undefined) {
+      updateInWarehousing(selectedcodeRow.value).then((res) => {
+        // proxy.$modal.msgSuccess("修改成功")
+        // open.value = false
+        getList()
+      })
+    }
     CodegetList()
+    // getList()
   })
+  const formattedDate = (date) => {
+    // 确保日期为字符串
+    date = date.toString();
+    // 格式化为 YYYY-MM-DD
+    return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
+  };
   // proxy.$refs["FUllcodeformRef"].validate((valid) => {
   //   if (valid) {
   //     if (FUllcodeform.value.id != undefined) {
@@ -1715,7 +1756,8 @@ function DrughandleSelectionChange(selection) {
   FictitiousDrugData.value = selection.map((item, index) => {
     return {
       ...item,         // 保留原始对象的其他属性
-      ReceiptId: queryParams.receiptId // 添加 redid 属性，假设你要用索引值+1作为 redid
+      ReceiptId: queryParams.receiptId, // 添加 redid 属性，假设你要用索引值+1作为 redid
+      ManufacturerId: item.produceName
     };
   });
 }
@@ -2089,7 +2131,7 @@ const AllMixCodedataList = ref([])
 const AllMixCodecolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'code', label: '溯源码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'packageLevel', label: '码等级', showOverflowTooltip: true },
-  // { visible: true, align: 'center', type: '', prop: 'creationTime', label: '父编号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'parentCode', label: '父编号', showOverflowTooltip: true },
 
 ])
 
