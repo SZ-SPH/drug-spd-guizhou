@@ -98,14 +98,14 @@
               v-if="columns.showColumn('drugName')" />
             <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('drugCode')" />
-            <el-table-column prop="codeCount" label="药品有码数量" align="center" :show-overflow-tooltip="true"
+            <el-table-column prop="codeCount" label="药品小码数量" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('codeCount')">
             </el-table-column>
             <el-table-column prop="inventoryQuantity" label="药品入库数量" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('inventoryQuantity')">
-              <template #default="{ row }">
-                <el-input :disabled="Rstate.value == '已推送'" v-model="row.inventoryQuantity" size="small"
-                  @blur="DrugQuantityChange(row)" />
+              <template #default="{ row }" class="bnn">
+                <el-input :disabled="Rstate.value == '已推送'" v-model="row.inventoryQuantity" size="small" class="inputs"
+                  :style="{ color: 'red' }" @blur="DrugQuantityChange(row)" />
               </template>
 
             </el-table-column>
@@ -114,7 +114,7 @@
             <el-table-column prop="batchNumber" label="药品批号" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('batchNumber')">
               <template #default="{ row }">
-                <el-input :disabled="Rstate.value == '已推送'" v-model="row.batchNumber" size="small"
+                <el-input :disabled="Rstate.value == '已推送'" v-model="row.batchNumber" size="small" class="inputs"
                   @blur="DrugQuantityChange(row)" />
 
               </template>
@@ -128,7 +128,7 @@
             <el-table-column prop="exprie" label="有效期至" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('exprie')">
               <template #default="{ row }">
-                <el-input :disabled="Rstate.value == '已推送'" v-model="row.exprie" size="small"
+                <el-input :disabled="Rstate.value == '已推送'" v-model="row.exprie" size="small" class="inputs"
                   @blur="DrugQuantityChange(row)" />
               </template>
 
@@ -137,14 +137,14 @@
             <el-table-column prop="price" label="价格" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('price')">
               <template #default="{ row }">
-                <el-input v-model="row.price" size="small" @blur="DrugQuantityChange(row)" />
+                <el-input v-model="row.price" size="small" @blur="DrugQuantityChange(row)" class="inputs" />
               </template>
               <!-- @blur="DrugQuantityChange(row)" -->
             </el-table-column>
             <el-table-column prop="locationNumber" label="货位号" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('locationNumber')">
               <template #default="{ row }">
-                <el-input :disabled="Rstate.value == '已推送'" v-model="row.locationNumber" size="small"
+                <el-input :disabled="Rstate.value == '已推送'" v-model="row.locationNumber" size="small" class="inputs"
                   @blur="DrugQuantityChange(row)" />
               </template>
 
@@ -152,7 +152,7 @@
             <el-table-column prop="dateOfManufacture" label="生产日期" align="center" :show-overflow-tooltip="true"
               v-if="columns.showColumn('dateOfManufacture')">
               <template #default="{ row }">
-                <el-input :disabled="Rstate.value == '已推送'" v-model="row.dateOfManufacture" size="small"
+                <el-input :disabled="Rstate.value == '已推送'" v-model="row.dateOfManufacture" size="small" class="inputs"
                   @blur="DrugQuantityChange(row)" />
               </template>
 
@@ -1573,12 +1573,15 @@ function FUllcodesubmitForm() {
   AllMixCodedataList.value.forEach(e => {
     FUllcodeform.value.Code = e.code;
     FUllcodeform.value.ParentCode = e.parentCode;
+    FUllcodeform.value.packageLevel = e.packageLevel;
     const formCopy = { ...FUllcodeform.value };
     codelist.value.push(formCopy);
   });
-
+  console.log(codelist.value)
+  proxy.$modal.loading("请稍等")
   addCodeDetails(codelist.value).then((res) => {
     proxy.$modal.msgSuccess("新增成功")
+    proxy.$modal.closeLoading()
     Codeopen.value = false
     FUllcodeopen.value = false
     selectedcodeRow.value.batchNumber = FUllcodeform.value.batchNo
@@ -1587,42 +1590,17 @@ function FUllcodesubmitForm() {
 
     if (selectedcodeRow.value.id != undefined) {
       updateInWarehousing(selectedcodeRow.value).then((res) => {
-        // proxy.$modal.msgSuccess("修改成功")
-        // open.value = false
         getList()
       })
     }
     CodegetList()
-    // getList()
+
   })
   const formattedDate = (date) => {
-    // 确保日期为字符串
     date = date.toString();
-    // 格式化为 YYYY-MM-DD
     return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
   };
-  // proxy.$refs["FUllcodeformRef"].validate((valid) => {
-  //   if (valid) {
-  //     if (FUllcodeform.value.id != undefined) {
-  //       updateCodeDetails(FUllcodeform.value).then((res) => {
-  //         proxy.$modal.msgSuccess("修改成功")
-  //         Codeopen.value = false
-  //         CodegetList()
-  //       })
-  //     } else {
-  //       addCodeDetails(FUllcodeform.value).then((res) => {
-  //         proxy.$modal.msgSuccess("新增成功")
-  //         Codeopen.value = false
-  //         CodegetList()
-  //       })
-  //     }
-  //   }
-  // })
-
-
 }
-
-
 
 
 // 删除按钮操作
@@ -2276,5 +2254,19 @@ function codesreset() {
   /* background-color: #65c332 !important; */
   background-color: hsl(119, 67%, 70%) !important;
   /* 自定义的背景色 */
+}
+
+.inputs {
+  background-color: hsl(119, 100%, 64%) !important;
+  color: red;
+  margin: 0px;
+  padding: 0px;
+}
+
+.inputs .el-input__inner {
+  /* background-color: hsl(119, 100%, 64%) !important; */
+  color: red;
+  margin: 0px;
+  padding: 0px;
 }
 </style>
