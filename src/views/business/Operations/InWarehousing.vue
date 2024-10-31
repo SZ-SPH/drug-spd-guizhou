@@ -203,7 +203,6 @@
             <el-table-column prop="drugId" label="药品id" align="center" v-if="Codecolumns.showColumn('drugId')" />
             <el-table-column prop="inWarehouseId" label="入库药品id" align="center"
               v-if="Codecolumns.showColumn('inWarehouseId')" />
-
             <el-table-column prop="code" label="追溯码" align="center" :show-overflow-tooltip="true"
               v-if="Codecolumns.showColumn('code')" />
             <el-table-column prop="physicTypeDesc" label="药品类型描述" align="center" :show-overflow-tooltip="true"
@@ -213,7 +212,12 @@
             <el-table-column prop="entName" label="企业名称" align="center" :show-overflow-tooltip="true"
               v-if="Codecolumns.showColumn('entName')" />
             <el-table-column prop="packageLevel" label="码等级" align="center" :show-overflow-tooltip="true"
-              v-if="Codecolumns.showColumn('packageLevel')" />
+              v-if="Codecolumns.showColumn('packageLevel')">
+              <template v-slot="scope">
+                <span>{{ levelMap[scope.row.packageLevel] }}</span>
+              </template>
+            </el-table-column>
+
             <el-table-column prop="physicName" label="药品名称" align="center" :show-overflow-tooltip="true"
               v-if="Codecolumns.showColumn('physicName')" />
             <el-table-column prop="exprie" label="有效期" align="center" :show-overflow-tooltip="true"
@@ -524,7 +528,12 @@
               </el-col>
               <el-col :lg="12">
                 <el-form-item label="码等级" prop="packageLevel">
-                  <el-input v-model="FUllcodeform.packageLevel" placeholder="请输入码等级" />
+
+                  <template v-slot="scope">
+                    <el-input v-model="levelMap[FUllcodeform.packageLevel]" placeholder="请输入码等级" />
+
+                    <!-- <span>{{ levelMap[scope.row.packageLevel] }}</span> -->
+                  </template>
                 </el-form-item>
               </el-col>
               <el-col :lg="12">
@@ -589,7 +598,7 @@
           <el-table :data="AllMixCodelistM" ref="table" border header-cell-class-name="el-table-header-cell"
             highlight-current-row :row-class-name="rowClassName">
             <el-table-column prop="code" label="溯源码" align="center" v-if="AllMixCodecolumns.showColumn('code')" />
-            <el-table-column prop="packageLevel" label="码等级" align="center" :show-overflow-tooltip="true"
+            <el-table-column prop="packageLevel" label="码等级" align="center" width="90" :show-overflow-tooltip="true"
               v-if="AllMixCodecolumns.showColumn('packageLevel')">
               <template v-slot="scope">
                 <span>{{ levelMap[scope.row.packageLevel] || '未知等级' }}</span>
@@ -597,6 +606,13 @@
             </el-table-column>
             <el-table-column prop="parentCode" label="父编码" align="center" :show-overflow-tooltip="true"
               v-if="AllMixCodecolumns.showColumn('parentCode')" />
+            <el-table-column prop="parentCode" label="父码等级" align="center" :show-overflow-tooltip="true" width="90"
+              v-if="AllMixCodecolumns.showColumn('codeLevel')">
+              <template v-slot="scope">
+                <span>{{ levelMap[scope.row.codeLevel] }}</span>
+              </template>
+            </el-table-column>
+
           </el-table>
           <pagination :total="AllMixCodetotal" v-model:page="AllMixCodeParams.pageNum"
             v-model:limit="AllMixCodeParams.pageSize" @pagination="AllMixCodegetList" />
@@ -697,6 +713,10 @@ const levelMap = {
   1: '小码',
   2: '中码',
   3: '大码',
+  11: '中码',
+  21: '大码',
+  31: '',
+
 };
 const columns = ref([
   { visible: false, align: 'center', type: '', prop: 'id', label: 'id' },
@@ -1498,7 +1518,7 @@ const fetchData = async (code) => {
     FUllcodeform.value.packageLevel = response.data.data.models[0].packageLevel
 
     FUllcodeform.value.pkgAmount = response.data.data.models[0].codeProduceInfoDTO.produceInfoList[0].pkgAmount
-    FUllcodeform.value.expireDate = response.data.data.models[0].codeProduceInfoDTO.produceInfoList[0].expireDate
+    FUllcodeform.value.expireDate = formattedDate(response.data.data.models[0].codeProduceInfoDTO.produceInfoList[0].expireDate)
     FUllcodeform.value.batchNo = response.data.data.models[0].codeProduceInfoDTO.produceInfoList[0].batchNo
     FUllcodeform.value.produceDateStr = response.data.data.models[0].codeProduceInfoDTO.produceInfoList[0].produceDateStr
 
@@ -1596,12 +1616,12 @@ function FUllcodesubmitForm() {
     CodegetList()
 
   })
-  const formattedDate = (date) => {
-    date = date.toString();
-    return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
-  };
-}
 
+}
+const formattedDate = (date) => {
+  date = date.toString();
+  return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
+};
 
 // 删除按钮操作
 function CodehandleDelete(row) {
@@ -2149,6 +2169,7 @@ const AllMixCodecolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'code', label: '溯源码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'packageLevel', label: '码等级', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'parentCode', label: '父编号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'codeLevel', label: '父编号', showOverflowTooltip: true },
 
 ])
 
