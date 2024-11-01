@@ -2180,8 +2180,8 @@ const getAllMixCodedataList = async (code) => {
     const response = await axios.get('http://localhost:8888/Mtaobo/AllMIXcode', {
       params: { codes: code }
     });
-    console.log('接口返回数据2：', response.data);
-    AllMixCodedataList.value = response.data
+    console.log('接口返回数据3：', response);
+    AllMixCodedataList.value = response.data.data
     AllMixCodegetList()
   } catch (error) {
     console.log(error)
