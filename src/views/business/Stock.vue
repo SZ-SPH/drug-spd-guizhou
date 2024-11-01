@@ -77,7 +77,14 @@
       @selection-change="stockhandleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column prop="id" label="Id" align="center" v-if="stockcolumns.showColumn('id')" />
-      <el-table-column prop="drugId" label="药品" align="center" v-if="stockcolumns.showColumn('drugId')" />
+      <!-- <el-table-column prop="drugId" label="药品" align="center" v-if="stockcolumns.showColumn('drugId')" /> -->
+      <el-table-column prop="drugName" label="药品名称" align="center" :show-overflow-tooltip="true"
+        v-if="stockcolumns.showColumn('drugName')" />
+      <el-table-column prop="drugMnemonicCode" label="药品助记码" :show-overflow-tooltip="true" align="center"
+        v-if="stockcolumns.showColumn('drugMnemonicCode')" />
+      <el-table-column prop="drugSpecifications" label="药品规格" align="center"
+        v-if="stockcolumns.showColumn('drugSpecifications')" />
+      <el-table-column prop="drugCategory" label="药品类别" align="center" v-if="stockcolumns.showColumn('drugCategory')" />
       <el-table-column prop="drugqty" label="药品数量" align="center" v-if="stockcolumns.showColumn('drugqty')" />
       <el-table-column prop="purchasePrice" label="购入价" align="center"
         v-if="stockcolumns.showColumn('purchasePrice')" />
@@ -236,6 +243,10 @@ const stockqueryParams = reactive({
 const stockcolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
   { visible: true, align: 'center', type: '', prop: 'drugId', label: '药品' },
+  { visible: true, align: 'center', type: '', prop: 'drugName', label: '药品名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugMnemonicCode', label: '药品助记码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '药品规格' },
+  { visible: true, align: 'center', type: '', prop: 'drugCategory', label: '药品类别' },
   { visible: true, align: 'center', type: '', prop: 'drugqty', label: '药品数量' },
   { visible: true, align: 'center', type: '', prop: 'purchasePrice', label: '购入价' },
   { visible: true, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
