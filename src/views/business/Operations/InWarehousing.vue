@@ -370,11 +370,11 @@
     <el-dialog :title="Receipttitle" :lock-scroll="false" v-model="Receiptopen">
       <el-form ref="ReceiptformRef" :model="Receiptform" :rules="Receiptrules" label-width="100px">
         <el-row :gutter="20">
-          <el-col :lg="12">
+          <!-- <el-col :lg="12">
             <el-form-item label="入库单编号" prop="receiptCode">
               <el-input v-model="Receiptform.receiptCode" placeholder="请输入入库单编号" />
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :lg="12">
             <el-form-item label="发票号" prop="invoiceNumber">
               <el-input v-model="Receiptform.invoiceNumber" placeholder="请输入发票号" />
