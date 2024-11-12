@@ -14,19 +14,14 @@
       </el-form-item>
     </el-form>
     <el-row>
-      <el-table
-        ref="table"
-        @row-click="clickRow"
-        :data="dbTableList"
-        highlight-current-row
-        height="300px"
-        :row-key="getRowKey"
-        @selection-change="handleSelectionChange">
+      <el-table ref="table" @row-click="clickRow" :data="dbTableList" highlight-current-row height="300px"
+        :row-key="getRowKey" @selection-change="handleSelectionChange">
         <el-table-column type="selection" :reserve-selection="true" width="55"></el-table-column>
         <el-table-column prop="name" label="表名" sortable="custom" width="380" />
         <el-table-column prop="description" label="表描述" />
       </el-table>
-      <pagination v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" v-model:total="total" @pagination="getList" />
+      <pagination v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" v-model:total="total"
+        @pagination="getList" />
     </el-row>
     <template #footer>
       <el-button text @click="visible = false">取 消</el-button>

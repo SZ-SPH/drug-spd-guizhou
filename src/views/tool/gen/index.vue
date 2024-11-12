@@ -12,20 +12,16 @@
 
     <el-row :gutter="10" class="mb10">
       <el-col :span="1.5">
-        <el-button type="info" plain icon="upload" @click="openImportTable" v-hasPermi="['tool:gen:import']">导入数据表</el-button>
+        <el-button type="info" plain icon="upload" @click="openImportTable"
+          v-hasPermi="['tool:gen:import']">导入数据表</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" :disabled="multiple" plain icon="delete" @click="handleDelete" v-hasPermi="['tool:gen:remove']"> 删除</el-button>
+        <el-button type="danger" :disabled="multiple" plain icon="delete" @click="handleDelete"
+          v-hasPermi="['tool:gen:remove']"> 删除</el-button>
       </el-col>
     </el-row>
-    <el-table
-      ref="gridtable"
-      v-loading="tableloading"
-      :data="tableList"
-      border
-      @selection-change="handleSelectionChange"
-      highlight-current-row
-      height="400px">
+    <el-table ref="gridtable" v-loading="tableloading" :data="tableList" border
+      @selection-change="handleSelectionChange" highlight-current-row height="400px">
       <el-table-column type="selection" align="center" width="55"></el-table-column>
       <el-table-column prop="tableId" label="tableId" width="80" sortable="" />
       <el-table-column prop="dbName" label="数据库名" width="90" :show-overflow-tooltip="true" />
@@ -38,8 +34,10 @@
       <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
           <el-button-group>
-            <el-button text icon="view" @click="handlePreview(scope.row)" v-hasPermi="['tool:gen:preview']"> 预览 </el-button>
-            <el-button text icon="edit" @click="handleEditTable(scope.row)" v-hasPermi="['tool:gen:edit']"> 编辑 </el-button>
+            <el-button text icon="view" @click="handlePreview(scope.row)" v-hasPermi="['tool:gen:preview']"> 预览
+            </el-button>
+            <el-button text icon="edit" @click="handleEditTable(scope.row)" v-hasPermi="['tool:gen:edit']"> 编辑
+            </el-button>
 
             <el-dropdown @command="handleCommand($event, scope.row)">
               <el-button text>
@@ -73,12 +71,14 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" v-model:total="total" @pagination="getList" />
+    <pagination v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" v-model:total="total"
+      @pagination="getList" />
 
     <!-- 预览界面 -->
     <zr-dialog v-model="preview.open" width="80%" top="5vh" append-to-body>
       <el-tabs v-model="preview.activeName">
-        <el-tab-pane v-for="(item, key) in preview.data" :label="item.title" :id="key" :name="key.toString()" :key="key">
+        <el-tab-pane v-for="(item, key) in preview.data" :label="item.title" :id="key" :name="key.toString()"
+          :key="key">
           {{ item.path }}
           <el-link :underline="false" icon="DocumentCopy" @click="onCopy(item.content)" class="btn-copy">复制 </el-link>
           <pre><code class="hljs" v-html="highlightedCode(item.content)"></code></pre>
@@ -198,7 +198,7 @@ function handleSynchDb(row) {
     .then(() => {
       proxy.$modal.msgSuccess('同步成功')
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 /** 打开导入表弹窗 */
 function openImportTable() {
@@ -305,6 +305,7 @@ getList()
   right: 0;
   top: -5px;
 }
+
 .el-dropdown {
   vertical-align: middle;
 }

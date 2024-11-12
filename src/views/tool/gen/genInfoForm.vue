@@ -99,14 +99,9 @@
               </el-tooltip>
             </span>
           </template>
-          <el-cascader
-            class="w100"
-            :options="menuOptions"
-            :props="{ checkStrictly: true, value: 'menuId', label: 'menuName', emitPath: false }"
-            placeholder="请选择上级菜单"
-            clearable
-            @change="clearParentMent($event)"
-            v-model="info.parentMenuId">
+          <el-cascader class="w100" :options="menuOptions"
+            :props="{ checkStrictly: true, value: 'menuId', label: 'menuName', emitPath: false }" placeholder="请选择上级菜单"
+            clearable @change="clearParentMent($event)" v-model="info.parentMenuId">
             <template #default="{ node, data }">
               <span>{{ data.menuName }}</span>
               <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
@@ -117,7 +112,8 @@
       <el-col :lg="24">
         <el-form-item label="默认查询排序字段">
           <el-select v-model="info.sortField" placeholder="请选择字段" class="mr10" clearable="">
-            <el-option v-for="item in columns" :key="item.columnId" :label="item.csharpField" :value="item.csharpField"> </el-option>
+            <el-option v-for="item in columns" :key="item.columnId" :label="item.csharpField" :value="item.csharpField">
+            </el-option>
           </el-select>
 
           <el-radio v-model="info.sortType" value="asc">正序</el-radio>
@@ -304,7 +300,8 @@
             </span>
           </template>
           <el-select v-model="info.treeCode" placeholder="请选择树编码字段">
-            <el-option v-for="(column, index) in columns" :key="index" :label="column.columnComment" :value="column.csharpField">
+            <el-option v-for="(column, index) in columns" :key="index" :label="column.columnComment"
+              :value="column.csharpField">
               <span style="float: left">{{ column.csharpField }}</span>
               <span style="float: right">{{ column.columnComment }}</span>
             </el-option>
@@ -325,7 +322,8 @@
             </span>
           </template>
           <el-select v-model="info.treeName" placeholder="请选择树名称字段">
-            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField" :value="column.csharpField">
+            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField"
+              :value="column.csharpField">
               <span style="float: left">{{ column.csharpField }}</span>
               <span style="float: right">{{ column.columnComment }}</span>
             </el-option>
@@ -345,11 +343,8 @@
             </span>
           </template>
           <el-select v-model="info.treeParentCode" placeholder="请选择树父编码字段">
-            <el-option
-              v-for="(column, index) in columns"
-              :key="index"
-              :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField">
+            <el-option v-for="(column, index) in columns" :key="index"
+              :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField">
               <span style="float: left">{{ column.csharpField }}</span>
               <span style="float: right">{{ column.columnComment }}</span>
             </el-option>
@@ -377,12 +372,8 @@
             </span>
           </template>
           <el-select v-model="info.subTableName" filterable placeholder="请选择" @change="subSelectChange(this)">
-            <el-option
-              v-for="(table, index) in tables"
-              :disabled="table.tableName == info.tableName"
-              :key="index"
-              :label="table.tableName + '：' + table.tableComment"
-              :value="table.tableName">
+            <el-option v-for="(table, index) in tables" :disabled="table.tableName == info.tableName" :key="index"
+              :label="table.tableName + '：' + table.tableComment" :value="table.tableName">
             </el-option>
           </el-select>
         </el-form-item>
@@ -400,7 +391,8 @@
             </span>
           </template>
           <el-select v-model="info.subTableFkName">
-            <el-option v-for="(column, index) in subColumns" :key="index" :label="column.csharpField" :value="column.csharpField">
+            <el-option v-for="(column, index) in subColumns" :key="index" :label="column.csharpField"
+              :value="column.csharpField">
               <span style="float: left">{{ column.csharpField }}</span>
               <span style="float: right">{{ column.columnComment }}</span>
             </el-option>

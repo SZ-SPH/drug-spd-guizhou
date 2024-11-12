@@ -12,6 +12,13 @@ export function listSupplier(query) {
     params: query,
   })
 }
+export function AlllistSupplier(query) {
+  return request({
+    url: 'business/Supplier/AllList',
+    method: 'get',
+    params: query,
+  })
+}
 
 /**
  * 新增供应商基础功能

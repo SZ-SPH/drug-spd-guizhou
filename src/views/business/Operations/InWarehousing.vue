@@ -381,11 +381,17 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="供应商" prop="supplierId">
-              <!-- <el-input v-model="Receiptform.supplierId" placeholder="请输入供应商" /> -->
-              <el-select v-model="Receiptform.supplierId" placeholder="请选择供应商" filterable clearable>
-                <!-- 备注 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'} -->
+            <!-- <el-form-item label="供应商" prop="supplierId">
+              <el-select v-model="Receiptform.supplierId" placeholder="请选择供应商" filterable clearable :onBlur>
                 <el-option v-for="item in AReceipt.ReceiptoptionsSupllid" :key="item.dictValue" :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
+            </el-form-item> -->
+            <el-form-item label="供应商" prop="supplierId">
+              <el-select v-model="Receiptform.supplierId" placeholder="请选择供应商" filterable remote
+                :remote-method="fetchSuppliers" :loading="resloading" clearable>
+                <el-option v-for="item in suppliers" :key="item.dictValue" :label="item.dictLabel"
                   :value="item.dictValue">
                 </el-option>
               </el-select>
@@ -1057,7 +1063,7 @@ const AReceipt = ref({
   ReceiptoptionsSupllid: [] // 初始化供应商选项列表
 });
 import {
-  listSupplier,
+  AlllistSupplier,
   addSupplier, delSupplier,
   updateSupplier, getSupplier,
   clearSupplier,
@@ -1074,23 +1080,33 @@ const SupplierqueryParams = reactive({
   enterpriseAddress: undefined,
   enterprisePhone: undefined,
 })
-SuppliergetList()
-function SuppliergetList() {
-  listSupplier(SupplierqueryParams).then(res => {
-    const { code, data } = res
-    if (code == 200) {
-      console.log(data.result)
-      // 假设 data 是供应商的数组
-      AReceipt.value.ReceiptoptionsSupllid = data.result.map(item => ({
-        dictLabel: item.supplierName,  // 根据实际数据结构修改
-        dictValue: item.id      // 根据实际数据结构修改
+
+const suppliers = ref([]);
+const resloading = ref(false);
+
+// 获取供应商数据
+const fetchSuppliers = async (query) => {
+  resloading.value = true;
+  SupplierqueryParams.pageNum = 1; // 每次搜索时重置页码
+  SupplierqueryParams.supplierName = query; // 更新查询参数
+  suppliers.value = []; // 清空当前选项
+
+  try {
+    const response = await AlllistSupplier(SupplierqueryParams);
+    if (response.code === 200) {
+      suppliers.value = response.data.map(item => ({
+        dictLabel: item.supplierName,
+        dictValue: item.id,
       }));
+      // hasMore.value = response.data.totalPage > response.data.pageIndex; // 判断是否有更多数据
     }
-  })
+  } catch (error) {
+    console.error(error);
+  } finally {
+    resloading.value = false;
+  }
+};
 
-  console.log(AReceipt.value)
-
-}
 
 
 // 关闭dialog
