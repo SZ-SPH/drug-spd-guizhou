@@ -2078,7 +2078,7 @@ function WarehousesubmitForm() {
   //选择一个单据
   if (Warehouseids.value.length == 1 && Receiptids.value.length > 0) {
     proxy
-      .$confirm("是否确认收货" + (Receiptids.value.length + 1) + "个单据?", "警告", {
+      .$confirm("是否确认收货" + (Receiptids.value.length) + "个单据?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

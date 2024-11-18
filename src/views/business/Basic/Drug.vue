@@ -101,13 +101,29 @@
       <el-table-column prop="packageRatio" label="转换系数" align="center" v-if="Drugcolumns.showColumn('packageRatio')" />
       <el-table-column prop="packageUnit" label="包装单位" align="center" :show-overflow-tooltip="true"
         v-if="Drugcolumns.showColumn('packageUnit')" />
-
+      <el-table-column prop="hisID" label="hisid" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('hisID')" />
+      <el-table-column prop="price" label="价格" align="center" v-if="columns.showColumn('price')" />
+      <el-table-column prop="refCode" label="溯源码编号绑定" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('refCode')" />
+      <el-table-column prop="defaultLocation" label="默认货位" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('defaultLocation')" />
+      <el-table-column prop="changeTime" label="修改时间" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('changeTime')" />
+      <el-table-column prop="creationTime" label="创建时间" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('creationTime')" />
+      <el-table-column prop="hisPrice" label="HIS价格" align="center" v-if="columns.showColumn('hisPrice')" />
+      <el-table-column prop="kfEnable" label="库房禁用" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('kfEnable')" />
+      <el-table-column prop="yfEnable" label="药房禁用" align="center" :show-overflow-tooltip="true"
+        v-if="Drugcolumns.showColumn('yfEnable')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
-          <el-button type="primary" small icon="view" title="详情" @click="DrughandlePreview(scope.row)"></el-button>
-          <el-button type="success" small icon="edit" title="编辑" v-hasPermi="['drug:edit']"
+          <el-button type="primary" size="small" icon="view" title="详情"
+            @click="DrughandlePreview(scope.row)"></el-button>
+          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['drug:edit']"
             @click="DrughandleUpdate(scope.row)"></el-button>
-          <el-button type="danger" small icon="delete" title="删除" v-hasPermi="['drug:delete']"
+          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['drug:delete']"
             @click="DrughandleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
@@ -259,6 +275,16 @@
     { visible: true, align: 'center', type: '', prop: 'produceName', label: '生产厂家', showOverflowTooltip: true },
     { visible: true, align: 'center', type: '', prop: 'packageRatio', label: '转换系数' },
     { visible: true, align: 'center', type: '', prop: 'packageUnit', label: '包装单位', showOverflowTooltip: true },
+    { visible: false, align: 'center', type: '', prop: 'hisID', label: 'hisid', showOverflowTooltip: true },
+    { visible: false, align: 'center', type: '', prop: 'price', label: '价格' },
+    { visible: false, align: 'center', type: '', prop: 'refCode', label: '溯源码编号绑定', showOverflowTooltip: true },
+    { visible: false, align: 'center', type: '', prop: 'defaultLocation', label: '默认货位', showOverflowTooltip: true },
+    { visible: false, align: 'center', type: '', prop: 'changeTime', label: '修改时间', showOverflowTooltip: true },
+    { visible: false, align: 'center', type: '', prop: 'creationTime', label: '创建时间', showOverflowTooltip: true },
+    { visible: false, align: 'center', type: '', prop: 'hisPrice', label: 'HIS价格' },
+    { visible: false, align: 'center', type: '', prop: 'kfEnable', label: '库房禁用', showOverflowTooltip: true },
+    { visible: false, align: 'center', type: '', prop: 'yfEnable', label: '药房禁用', showOverflowTooltip: true },
+
     //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
   ])
   const Drugtotal = ref(0)
