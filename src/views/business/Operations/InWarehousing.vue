@@ -1511,7 +1511,7 @@ const handleBlur = () => {
 // 定义 fetchData 函数
 const fetchData = async (code) => {
   try {
-    const response = await axios.get('http://localhost:8888/Mtaobo/codedetail', {
+    const response = await axios.get('http://119.145.169.162:50088/Mtaobo/codedetail', {
       params: { codes: code }
     });
     console.log('接口返回数据：', response.data.data.models[0]);
@@ -2193,7 +2193,7 @@ const getAllMixCodedataList = async (code) => {
   try {
     // const response = await axios.get('http://120.79.135.98:8888/Mtaobo/AllMIXcode', {
 
-    const response = await axios.get('http://localhost:8888/Mtaobo/AllMIXcode', {
+    const response = await axios.get('http://119.145.169.162:50088/Mtaobo/AllMIXcode', {
       params: { codes: code }
     });
     AllMixCodedataList.value = response.data.data

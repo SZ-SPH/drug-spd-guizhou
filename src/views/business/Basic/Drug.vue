@@ -103,7 +103,7 @@
         v-if="Drugcolumns.showColumn('packageUnit')" />
       <el-table-column prop="hisID" label="hisid" align="center" :show-overflow-tooltip="true"
         v-if="Drugcolumns.showColumn('hisID')" />
-      <el-table-column prop="price" label="价格" align="center" v-if="columns.showColumn('price')" />
+      <el-table-column prop="price" label="价格" align="center" v-if="Drugcolumns.showColumn('price')" />
       <el-table-column prop="refCode" label="溯源码编号绑定" align="center" :show-overflow-tooltip="true"
         v-if="Drugcolumns.showColumn('refCode')" />
       <el-table-column prop="defaultLocation" label="默认货位" align="center" :show-overflow-tooltip="true"
@@ -112,7 +112,7 @@
         v-if="Drugcolumns.showColumn('changeTime')" />
       <el-table-column prop="creationTime" label="创建时间" align="center" :show-overflow-tooltip="true"
         v-if="Drugcolumns.showColumn('creationTime')" />
-      <el-table-column prop="hisPrice" label="HIS价格" align="center" v-if="columns.showColumn('hisPrice')" />
+      <el-table-column prop="hisPrice" label="HIS价格" align="center" v-if="Drugcolumns.showColumn('hisPrice')" />
       <el-table-column prop="kfEnable" label="库房禁用" align="center" :show-overflow-tooltip="true"
         v-if="Drugcolumns.showColumn('kfEnable')" />
       <el-table-column prop="yfEnable" label="药房禁用" align="center" :show-overflow-tooltip="true"
