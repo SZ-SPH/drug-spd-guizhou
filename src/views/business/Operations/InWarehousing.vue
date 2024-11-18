@@ -1511,7 +1511,7 @@ const handleBlur = () => {
 // 定义 fetchData 函数
 const fetchData = async (code) => {
   try {
-    const response = await axios.get('http://120.79.135.98:8888/Mtaobo/codedetail', {
+    const response = await axios.get('http://localhost:8888/Mtaobo/codedetail', {
       params: { codes: code }
     });
     console.log('接口返回数据：', response.data.data.models[0]);
@@ -2196,7 +2196,6 @@ const getAllMixCodedataList = async (code) => {
     const response = await axios.get('http://localhost:8888/Mtaobo/AllMIXcode', {
       params: { codes: code }
     });
-    console.log('接口返回数据3：', response);
     AllMixCodedataList.value = response.data.data
     AllMixCodegetList()
   } catch (error) {
@@ -2219,9 +2218,6 @@ function AllMixCodegetList() {
   // AllMixCodetotal.value = response.total; // 假设总数在response.total中
   const start = (AllMixCodeParams.value.pageNum - 1) * AllMixCodeParams.value.pageSize;
   const end = start + AllMixCodeParams.value.pageSize;
-  console.log("start", start)
-  console.log("end", end)
-
   AllMixCodelistM.value = AllMixCodedataList.value.slice(start, end);
 }
 
