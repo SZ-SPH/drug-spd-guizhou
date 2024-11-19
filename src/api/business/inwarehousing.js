@@ -1,7 +1,6 @@
 import request from '@/utils/request'
 import { downFile } from '@/utils/request'
 
-
 /**
  * 获取码信息
  * @param {codes}
@@ -22,7 +21,7 @@ export function listInWarehousing(query) {
   return request({
     url: 'business/InWarehousingDrug/list',
     method: 'get',
-    params: query,
+    params: query
   })
 }
 
@@ -34,7 +33,7 @@ export function addInWarehousing(data) {
   return request({
     url: 'business/InWarehousing',
     method: 'post',
-    data: data,
+    data: data
   })
 }
 /**
@@ -45,7 +44,7 @@ export function updateInWarehousing(data) {
   return request({
     url: 'business/InWarehousing',
     method: 'PUT',
-    data: data,
+    data: data
   })
 }
 /**
@@ -72,4 +71,13 @@ export function delInWarehousing(pid) {
 // 导出入库信息
 export async function exportInWarehousing(query) {
   await downFile('business/InWarehousing/export', { ...query })
+}
+
+//allmixcode
+export async function AllMixCode(query) {
+  return request({
+    url: 'Mtaobo/AllMIXcode',
+    method: 'get',
+    params: query
+  })
 }

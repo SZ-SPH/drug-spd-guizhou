@@ -697,6 +697,7 @@ import {
   listInWarehousing,
   addInWarehousing, delInWarehousing,
   updateInWarehousing, getInWarehousing,
+  AllMixCode
 }
   from '@/api/business/inwarehousing.js'
 const { proxy } = getCurrentInstance()
@@ -2199,6 +2200,9 @@ const getAllMixCodedataList = async (code) => {
     const response = await axios.get('http://119.145.169.162:50088/Mtaobo/AllMIXcode', {
       params: { codes: code }
     });
+    console.log(`接口返回shuju${response.data.data}`)
+
+    //console.log('接口返回数据3：', response);
     AllMixCodedataList.value = response.data.data
     AllMixCodegetList()
   } catch (error) {
@@ -2301,7 +2305,7 @@ function codesreset() {
 
 .inputs .el-input__inner {
   /* background-color: hsl(119, 100%, 64%) !important; */
-  color: red;
+  color:red;
   margin: 0px;
   padding: 0px;
 }
