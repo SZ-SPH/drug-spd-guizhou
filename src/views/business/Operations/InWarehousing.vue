@@ -1247,6 +1247,7 @@ function CODEDrugdatalist(row) {
   CodequeryParams.drugId = row.drugId
   CodequeryParams.inWarehouseId = row.id
   CodegetList()
+
 }
 //码信息
 import {
@@ -1602,9 +1603,9 @@ const codelist = ref([])
 // 添加&修改 表单提交
 function FUllcodesubmitForm() {
   codelist.value = [];
-  FUllcodeform.value.Receiptid = queryParams.receiptId
-  FUllcodeform.value.DrugId = CodequeryParams.drugId
-  FUllcodeform.value.InWarehouseId = CodequeryParams.inWarehouseId
+  FUllcodeform.value.receiptid = queryParams.receiptId
+  FUllcodeform.value.drugId = CodequeryParams.drugId
+  FUllcodeform.value.inWarehouseId = CodequeryParams.inWarehouseId
   // FUllcodeform.value.code = AllMixCodedataList.value.code
   AllMixCodedataList.value.forEach(e => {
     FUllcodeform.value.Code = e.code;
@@ -1613,6 +1614,8 @@ function FUllcodesubmitForm() {
     const formCopy = { ...FUllcodeform.value };
     codelist.value.push(formCopy);
   });
+  console.log("full", FUllcodeform.value)
+
   console.log(codelist.value)
   proxy.$modal.loading("请稍等")
   addCodeDetails(codelist.value).then((res) => {
