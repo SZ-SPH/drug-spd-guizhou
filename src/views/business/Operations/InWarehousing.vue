@@ -1512,7 +1512,7 @@ const handleBlur = () => {
 // 定义 fetchData 函数
 const fetchData = async (code) => {
   try {
-    const response = await axios.get('http://localhost:8888/Mtaobo/codedetail', {
+    const response = await axios.get('http://119.145.169.162:50088/Mtaobo/codedetail', {
       params: { codes: code }
     });
     console.log('接口返回数据：', response.data.data.models[0]);
@@ -2079,7 +2079,7 @@ function WarehousesubmitForm() {
   //选择一个单据
   if (Warehouseids.value.length == 1 && Receiptids.value.length > 0) {
     proxy
-      .$confirm("是否确认收货" + (Receiptids.value.length + 1) + "个单据?", "警告", {
+      .$confirm("是否确认收货" + (Receiptids.value.length) + "个单据?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -2193,7 +2193,8 @@ const AllMixCodecolumns = ref([
 const getAllMixCodedataList = async (code) => {
   try {
     // const response = await axios.get('http://120.79.135.98:8888/Mtaobo/AllMIXcode', {
-    const response = await axios.get('http://120.79.135.98:8888/Mtaobo/AllMIXcode', {
+
+    const response = await axios.get('http://119.145.169.162:50088/Mtaobo/AllMIXcode', {
       params: { codes: code }
     });
     console.log(`接口返回shuju${response.data.data}`)

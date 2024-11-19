@@ -1,7 +1,7 @@
 <!--
- * @Descripttion: (医嘱/MEDICAL_ADVICE)
+ * @Descripttion: (医嘱信息/MEDICALADVICE)
  * @Author: (admin)
- * @Date: (2024-09-14)
+ * @Date: (2024-11-18)
 -->
 <template>
   <div>
@@ -9,17 +9,38 @@
       <el-form-item label="病患号" prop="ipiRegistrationId">
         <el-input v-model="queryParams.ipiRegistrationId" placeholder="请输入病患号" />
       </el-form-item>
-      <el-form-item label="药品id" prop="drugId">
-        <el-input v-model.number="queryParams.drugId" placeholder="请输入药品id" />
+      <el-form-item label="药品id(Hisid)" prop="drugId">
+        <el-input v-model="queryParams.drugId" placeholder="请输入药品id(Hisid)" />
+      </el-form-item>
+      <el-form-item label="开单医生id" prop="orderedDoctorId">
+        <el-input v-model="queryParams.orderedDoctorId" placeholder="请输入开单医生id" />
       </el-form-item>
       <el-form-item label="开单医生" prop="employeeName">
         <el-input v-model="queryParams.employeeName" placeholder="请输入开单医生" />
       </el-form-item>
-      <el-form-item label="开单科室名称" prop="departmentChinese Name">
+      <el-form-item label="HIS医嘱号" prop="assignDrugSeq">
+        <el-input v-model="queryParams.assignDrugSeq" placeholder="请输入HIS医嘱号" />
+      </el-form-item>
+      <el-form-item label="开单科室id" prop="orderedDeptId">
+        <el-input v-model="queryParams.orderedDeptId" placeholder="请输入开单科室id" />
+      </el-form-item>
+      <el-form-item label="开单科室名称" prop="departmentChineseName">
         <el-input v-model="queryParams.departmentChineseName" placeholder="请输入开单科室名称" />
       </el-form-item>
       <el-form-item label="住院号" prop="ipiReaistrationNo">
         <el-input v-model="queryParams.ipiReaistrationNo" placeholder="请输入住院号" />
+      </el-form-item>
+      <el-form-item label="病患号码" prop="patientNumber">
+        <el-input v-model="queryParams.patientNumber" placeholder="请输入病患号码" />
+      </el-form-item>
+      <el-form-item label="发药明细ID" prop="fymxId">
+        <el-input v-model="queryParams.fymxId" placeholder="请输入发药明细ID" />
+      </el-form-item>
+      <el-form-item label="类别 1门诊 2住院" prop="typeCode">
+        <el-input v-model="queryParams.typeCode" placeholder="请输入类别 1门诊 2住院" />
+      </el-form-item>
+      <el-form-item label="票号" prop="billNum">
+        <el-input v-model="queryParams.billNum" placeholder="请输入票号" />
       </el-form-item>
       <el-form-item>
         <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
@@ -79,7 +100,8 @@
       <el-table-column prop="orderId" label="id" align="center" v-if="columns.showColumn('orderId')" />
       <el-table-column prop="ipiRegistrationId" label="病患号" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('ipiRegistrationId')" />
-      <el-table-column prop="drugName" label="药品id" align="center" v-if="columns.showColumn('drugName')" />
+      <el-table-column prop="drugId" label="药品id(Hisid)" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugId')" />
       <el-table-column prop="totalQty" label="药品数量" align="center" v-if="columns.showColumn('totalQty')" />
       <el-table-column prop="orderedDoctorId" label="开单医生id" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('orderedDoctorId')" />
@@ -89,10 +111,18 @@
         v-if="columns.showColumn('assignDrugSeq')" />
       <el-table-column prop="orderedDeptId" label="开单科室id" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('orderedDeptId')" />
-      <el-table-column prop="departmentChinese Name" label="开单科室名称" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('departmentChinese Name')" />
+      <el-table-column prop="departmentChineseName" label="开单科室名称" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('departmentChineseName')" />
       <el-table-column prop="ipiReaistrationNo" label="住院号" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('ipiReaistrationNo')" />
+      <el-table-column prop="patientNumber" label="病患号码" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('patientNumber')" />
+      <el-table-column prop="fymxId" label="发药明细ID" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('fymxId')" />
+      <el-table-column prop="typeCode" label="类别 1门诊 2住院" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('typeCode')" />
+      <el-table-column prop="billNum" label="票号" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('billNum')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
@@ -124,8 +154,8 @@
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="药品id" prop="drugId">
-              <el-input v-model.number="form.drugId" placeholder="请输入药品id" />
+            <el-form-item label="药品id(Hisid)" prop="drugId">
+              <el-input v-model="form.drugId" placeholder="请输入药品id(Hisid)" />
             </el-form-item>
           </el-col>
 
@@ -160,7 +190,7 @@
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="开单科室名称" prop="departmentChinese Name">
+            <el-form-item label="开单科室名称" prop="departmentChineseName">
               <el-input v-model="form.departmentChineseName" placeholder="请输入开单科室名称" />
             </el-form-item>
           </el-col>
@@ -168,6 +198,30 @@
           <el-col :lg="12">
             <el-form-item label="住院号" prop="ipiReaistrationNo">
               <el-input v-model="form.ipiReaistrationNo" placeholder="请输入住院号" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="病患号码" prop="patientNumber">
+              <el-input v-model="form.patientNumber" placeholder="请输入病患号码" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="发药明细ID" prop="fymxId">
+              <el-input v-model="form.fymxId" placeholder="请输入发药明细ID" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="类别 1门诊 2住院" prop="typeCode">
+              <el-input v-model="form.typeCode" placeholder="请输入类别 1门诊 2住院" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="票号" prop="billNum">
+              <el-input v-model="form.billNum" placeholder="请输入票号" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -200,14 +254,21 @@ const queryParams = reactive({
   sortType: 'asc',
   ipiRegistrationId: undefined,
   drugId: undefined,
+  orderedDoctorId: undefined,
   employeeName: undefined,
+  assignDrugSeq: undefined,
+  orderedDeptId: undefined,
   departmentChineseName: undefined,
   ipiReaistrationNo: undefined,
+  patientNumber: undefined,
+  fymxId: undefined,
+  typeCode: undefined,
+  billNum: undefined,
 })
 const columns = ref([
   { visible: true, align: 'center', type: '', prop: 'orderId', label: 'id' },
   { visible: true, align: 'center', type: '', prop: 'ipiRegistrationId', label: '病患号', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugName', label: '药品id' },
+  { visible: true, align: 'center', type: '', prop: 'drugId', label: '药品id(Hisid)', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'totalQty', label: '药品数量' },
   { visible: true, align: 'center', type: '', prop: 'orderedDoctorId', label: '开单医生id', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'employeeName', label: '开单医生', showOverflowTooltip: true },
@@ -215,6 +276,10 @@ const columns = ref([
   { visible: true, align: 'center', type: '', prop: 'orderedDeptId', label: '开单科室id', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'departmentChineseName', label: '开单科室名称', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'ipiReaistrationNo', label: '住院号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'patientNumber', label: '病患号码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'fymxId', label: '发药明细ID', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'typeCode', label: '类别 1门诊 2住院', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'billNum', label: '票号', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
@@ -309,6 +374,10 @@ function reset() {
     orderedDeptId: null,
     departmentChineseName: null,
     ipiReaistrationNo: null,
+    patientNumber: null,
+    fymxId: null,
+    typeCode: null,
+    billNum: null,
   };
   proxy.resetForm("formRef")
 }
@@ -337,7 +406,7 @@ function handlePreview(row) {
 function handleAdd() {
   reset();
   open.value = true
-  title.value = '添加医嘱'
+  title.value = '添加医嘱信息'
   opertype.value = 1
 }
 // 修改按钮操作
@@ -348,7 +417,7 @@ function handleUpdate(row) {
     const { code, data } = res
     if (code == 200) {
       open.value = true
-      title.value = '修改医嘱'
+      title.value = '修改医嘱信息'
       opertype.value = 2
 
       form.value = {
@@ -432,7 +501,7 @@ const handleFileSuccess = (response) => {
 // 导出按钮操作
 function handleExport() {
   proxy
-    .$confirm("是否确认导出医嘱数据项?", "警告", {
+    .$confirm("是否确认导出医嘱信息数据项?", "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning",
