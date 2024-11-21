@@ -2074,7 +2074,7 @@ const sendOutData = ref({
   warehouseId: null,
   receiptIds: [],
   warehousecode: null,
-  org_id: null,
+  org_id: "",
 })
 
 // 添加&修改 表单提交
@@ -2092,7 +2092,8 @@ function WarehousesubmitForm() {
         sendOutData.value.warehouseId = Warehouseids.value[0]
         sendOutData.value.receiptIds = Receiptids.value
         sendOutData.value.warehousecode = Warehousecode.value[0]
-        console.log(sendOutData.value)
+
+        // console.log(sendOutData.value)
         // sendOutData.value.
         //数据分析
         //传递单据
@@ -2305,7 +2306,7 @@ function codesreset() {
 
 .inputs .el-input__inner {
   /* background-color: hsl(119, 100%, 64%) !important; */
-  color:red;
+  color: red;
   margin: 0px;
   padding: 0px;
 }
