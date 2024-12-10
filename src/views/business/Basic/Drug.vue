@@ -20,6 +20,10 @@
         <el-button icon="search" type="primary" @click="DrughandleQuery">{{ $t('btn.search') }}</el-button>
         <el-button icon="refresh" @click="DrugresetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button @click="Tongbu" type="primary">同步</el-button>
+
+      </el-form-item>
     </el-form>
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
@@ -287,6 +291,22 @@
 
     //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
   ])
+  const Tongbu = async () => {
+    //His/HisDrug/Tongbu
+    try {
+      const response = await axios.get('http://119.145.169.162:50088/His/HisDrug/Tongbu', {
+      });
+      if (response.data == "true") {
+        proxy.$modal.msgSuccess("同步成功")
+        DruggetList()
+      }
+
+    }
+    catch (error) {
+      console.error('请求失败：', error);
+    }
+
+  }
   const Drugtotal = ref(0)
   const DrugdataList = ref([])
   const DrugqueryRef = ref()
