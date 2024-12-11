@@ -5,83 +5,83 @@
 -->
 <template>
   <div>
-    <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
+    <el-form :model="PhaInPlanqueryParams" label-position="right" inline ref="PhaInPlanqueryRef"
+      v-show="PhaInPlanshowSearch" @submit.prevent>
       <el-form-item label="入库计划流水号" prop="planNo">
-        <el-input v-model="queryParams.planNo" placeholder="请输入入库计划流水号" />
+        <el-input v-model="PhaInPlanqueryParams.planNo" placeholder="请输入入库计划流水号" />
       </el-form-item>
       <el-form-item label="采购单号" prop="billCode">
-        <el-input v-model="queryParams.billCode" placeholder="请输入采购单号" />
+        <el-input v-model="PhaInPlanqueryParams.billCode" placeholder="请输入采购单号" />
       </el-form-item>
-      <el-form-item label="单据状态 0 计划单，1 采购单" prop="state">
-        <el-radio-group v-model="queryParams.state">
+      <el-form-item label="单据状态" prop="state">
+        <el-radio-group v-model="PhaInPlanqueryParams.state">
           <el-radio>全部</el-radio>
-          <el-radio v-for="item in options.stateOptions" :key="item.dictValue"
+          <el-radio v-for="item in PhaInPlanoptions.statePhaInPlanoptions" :key="item.dictValue"
             :value="item.dictValue">{{ item.dictLabel }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="计划类型0手工计划，1警戒线，2消耗，3时间，4日消耗" prop="planType">
-        <el-select clearable v-model="queryParams.planType" placeholder="请选择计划类型0手工计划，1警戒线，2消耗，3时间，4日消耗">
-          <el-option v-for="item in options.planTypeOptions" :key="item.dictValue" :label="item.dictLabel"
-            :value="item.dictValue">
+      <el-form-item label="计划类型" prop="planType">
+        <el-select clearable v-model="PhaInPlanqueryParams.planType" placeholder="请选择计划类型">
+          <el-option v-for="item in PhaInPlanoptions.planTypePhaInPlanoptions" :key="item.dictValue"
+            :label="item.dictLabel" :value="item.dictValue">
             <span class="fl">{{ item.dictLabel }}</span>
             <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="科室编码" prop="drugDeptCode">
-        <el-input v-model="queryParams.drugDeptCode" placeholder="请输入科室编码" />
+        <el-input v-model="PhaInPlanqueryParams.drugDeptCode" placeholder="请输入科室编码" />
       </el-form-item>
       <el-form-item label="药品编码" prop="drugCode">
-        <el-input v-model="queryParams.drugCode" placeholder="请输入药品编码" />
+        <el-input v-model="PhaInPlanqueryParams.drugCode" placeholder="请输入药品编码" />
       </el-form-item>
       <el-form-item label="药品名称" prop="tradeName">
-        <el-input v-model="queryParams.tradeName" placeholder="请输入药品名称" />
+        <el-input v-model="PhaInPlanqueryParams.tradeName" placeholder="请输入药品名称" />
       </el-form-item>
       <el-form-item label="计划日期">
-        <el-date-picker v-model="dateRangePlanDate" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"
-          value-format="YYYY-MM-DD HH:mm:ss" :default-time="defaultTime" :shortcuts="dateOptions">
+        <el-date-picker v-model="PhaInPlandateRangePlanDate" type="datetimerange" start-placeholder="开始日期"
+          end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="PhaInPlandefaultTime">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="采购日期">
-        <el-date-picker v-model="dateRangeStockDate" type="datetimerange" start-placeholder="开始日期"
-          end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="defaultTime"
-          :shortcuts="dateOptions">
+        <el-date-picker v-model="PhaInPlandateRangeStockDate" type="datetimerange" start-placeholder="开始日期"
+          end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="PhaInPlandefaultTime">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="采购流水号" prop="stockNo">
-        <el-input v-model="queryParams.stockNo" placeholder="请输入采购流水号" />
+        <el-input v-model="PhaInPlanqueryParams.stockNo" placeholder="请输入采购流水号" />
       </el-form-item>
       <el-form-item label="操作日期">
-        <el-date-picker v-model="dateRangeOperDate" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"
-          value-format="YYYY-MM-DD HH:mm:ss" :default-time="defaultTime" :shortcuts="dateOptions">
+        <el-date-picker v-model="PhaInPlandateRangeOperDate" type="datetimerange" start-placeholder="开始日期"
+          end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="PhaInPlandefaultTime">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
-        <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
+        <el-button icon="search" type="primary" @click="PhaInPlanhandleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" @click="PhaInPlanresetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form>
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['phainplan:add']" plain icon="plus" @click="handleAdd">
+        <el-button type="primary" v-hasPermi="['phainplan:add']" plain icon="plus" @click="PhaInPlanhandleAdd">
           {{ $t('btn.add') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" :disabled="single" v-hasPermi="['phainplan:edit']" plain icon="edit"
-          @click="handleUpdate">
+        <el-button type="success" :disabled="PhaInPlansingle" v-hasPermi="['phainplan:edit']" plain icon="edit"
+          @click="PhaInPlanhandleUpdate">
           {{ $t('btn.edit') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" :disabled="multiple" v-hasPermi="['phainplan:delete']" plain icon="delete"
-          @click="handleDelete">
+        <el-button type="danger" :disabled="PhaInPlanmultiple" v-hasPermi="['phainplan:delete']" plain icon="delete"
+          @click="PhaInPlanhandleDelete">
           {{ $t('btn.delete') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" v-hasPermi="['phainplan:delete']" plain icon="delete" @click="handleClear">
+        <el-button type="danger" v-hasPermi="['phainplan:delete']" plain icon="delete" @click="PhaInPlanhandleClear">
           {{ $t('btn.clean') }}
         </el-button>
       </el-col>
@@ -94,115 +94,125 @@
             <el-dropdown-menu>
               <el-dropdown-item command="upload">
                 <importData templateUrl="business/PhaInPlan/importTemplate" importUrl="/business/PhaInPlan/importData"
-                  @success="handleFileSuccess"></importData>
+                  @success="PhaInPlanhandleFileSuccess"></importData>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['phainplan:export']">
+        <el-button type="warning" plain icon="download" @click="PhaInPlanhandleExport"
+          v-hasPermi="['phainplan:export']">
           {{ $t('btn.export') }}
         </el-button>
       </el-col>
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
+      <right-toolbar v-model:showSearch="PhaInPlanshowSearch" @queryTable="PhaInPlangetList"
+        :columns="PhaInPlancolumns"></right-toolbar>
     </el-row>
 
-    <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
-      highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
+    <el-table :data="PhaInPlandataList" v-loading="PhaInPlanloading" ref="PhaInPlantable" border
+      header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="PhaInPlansortChange"
+      @selection-change="PhaInPlanhandleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="planNo" label="入库计划流水号" align="center" v-if="columns.showColumn('planNo')" />
+      <el-table-column prop="planNo" label="入库计划流水号" align="center" v-if="PhaInPlancolumns.showColumn('planNo')" />
       <el-table-column prop="billCode" label="采购单号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('billCode')" />
-      <el-table-column prop="state" label="单据状态 0 计划单，1 采购单" align="center" v-if="columns.showColumn('state')">
+        v-if="PhaInPlancolumns.showColumn('billCode')" />
+      <el-table-column prop="state" label="单据状态" align="center" v-if="PhaInPlancolumns.showColumn('state')">
         <template #default="scope">
-          <dict-tag :options="options.stateOptions" :value="scope.row.state" />
+          <dict-tag :options="PhaInPlanoptions.statePhaInPlanoptions" :value="scope.row.state" />
         </template>
       </el-table-column>
-      <el-table-column prop="planType" label="计划类型0手工计划，1警戒线，2消耗，3时间，4日消耗" align="center"
-        v-if="columns.showColumn('planType')">
+      <el-table-column prop="planType" label="计划类型" align="center" v-if="PhaInPlancolumns.showColumn('planType')">
         <template #default="scope">
-          <dict-tag :options="options.planTypeOptions" :value="scope.row.planType" />
+          <dict-tag :options="PhaInPlanoptions.planTypePhaInPlanoptions" :value="scope.row.planType" />
         </template>
       </el-table-column>
       <el-table-column prop="drugDeptCode" label="科室编码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('drugDeptCode')" />
+        v-if="PhaInPlancolumns.showColumn('drugDeptCode')" />
       <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('drugCode')" />
+        v-if="PhaInPlancolumns.showColumn('drugCode')" />
       <el-table-column prop="tradeName" label="药品名称" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('tradeName')" />
+        v-if="PhaInPlancolumns.showColumn('tradeName')" />
       <el-table-column prop="specs" label="规格" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('specs')" />
-      <el-table-column prop="retailPrice" label="参考零售价" align="center" v-if="columns.showColumn('retailPrice')" />
-      <el-table-column prop="wholesalePrice" label="参考批发价" align="center" v-if="columns.showColumn('wholesalePrice')" />
-      <el-table-column prop="purchasePrice" label="最新购入价" align="center" v-if="columns.showColumn('purchasePrice')" />
+        v-if="PhaInPlancolumns.showColumn('specs')" />
+      <el-table-column prop="retailPrice" label="参考零售价" align="center"
+        v-if="PhaInPlancolumns.showColumn('retailPrice')" />
+      <el-table-column prop="wholesalePrice" label="参考批发价" align="center"
+        v-if="PhaInPlancolumns.showColumn('wholesalePrice')" />
+      <el-table-column prop="purchasePrice" label="最新购入价" align="center"
+        v-if="PhaInPlancolumns.showColumn('purchasePrice')" />
       <el-table-column prop="packUnit" label="包装单位" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('packUnit')" />
-      <el-table-column prop="packQty" label="包装数量" align="center" v-if="columns.showColumn('packQty')" />
+        v-if="PhaInPlancolumns.showColumn('packUnit')" />
+      <el-table-column prop="packQty" label="包装数量" align="center" v-if="PhaInPlancolumns.showColumn('packQty')" />
       <el-table-column prop="minUnit" label="最小单位" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('minUnit')" />
+        v-if="PhaInPlancolumns.showColumn('minUnit')" />
       <el-table-column prop="producerCode" label="生产厂家编码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('producerCode')" />
+        v-if="PhaInPlancolumns.showColumn('producerCode')" />
       <el-table-column prop="producerName" label="生产厂家名称" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('producerName')" />
-      <el-table-column prop="storeNum" label="本科室库存数量" align="center" v-if="columns.showColumn('storeNum')" />
-      <el-table-column prop="storeTotsum" label="全院库存总和" align="center" v-if="columns.showColumn('storeTotsum')" />
-      <el-table-column prop="outputSum" label="全院出库总量" align="center" v-if="columns.showColumn('outputSum')" />
-      <el-table-column prop="planNum" label="计划入库量" align="center" v-if="columns.showColumn('planNum')" />
+        v-if="PhaInPlancolumns.showColumn('producerName')" />
+      <el-table-column prop="storeNum" label="本科室库存数量" align="center" v-if="PhaInPlancolumns.showColumn('storeNum')" />
+      <el-table-column prop="storeTotsum" label="全院库存总和" align="center"
+        v-if="PhaInPlancolumns.showColumn('storeTotsum')" />
+      <el-table-column prop="outputSum" label="全院出库总量" align="center" v-if="PhaInPlancolumns.showColumn('outputSum')" />
+      <el-table-column prop="planNum" label="计划入库量" align="center" v-if="PhaInPlancolumns.showColumn('planNum')" />
       <el-table-column prop="planEmpl" label="计划人" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('planEmpl')" />
+        v-if="PhaInPlancolumns.showColumn('planEmpl')" />
       <el-table-column prop="planDate" label="计划日期" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('planDate')" />
+        v-if="PhaInPlancolumns.showColumn('planDate')" />
       <el-table-column prop="stockEmpl" label="采购人" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('stockEmpl')" />
+        v-if="PhaInPlancolumns.showColumn('stockEmpl')" />
       <el-table-column prop="stockDate" label="采购日期" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('stockDate')" />
+        v-if="PhaInPlancolumns.showColumn('stockDate')" />
       <el-table-column prop="stockNo" label="采购流水号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('stockNo')" />
+        v-if="PhaInPlancolumns.showColumn('stockNo')" />
       <el-table-column prop="replacePlanNo" label="作废、替代计划单流水号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('replacePlanNo')" />
+        v-if="PhaInPlancolumns.showColumn('replacePlanNo')" />
       <el-table-column prop="mark" label="备注" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('mark')" />
+        v-if="PhaInPlancolumns.showColumn('mark')" />
       <el-table-column prop="operCode" label="操作员" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('operCode')" />
+        v-if="PhaInPlancolumns.showColumn('operCode')" />
       <el-table-column prop="operDate" label="操作日期" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('operDate')" />
+        v-if="PhaInPlancolumns.showColumn('operDate')" />
       <el-table-column prop="extendField" label="扩展字段" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('extendField')" />
+        v-if="PhaInPlancolumns.showColumn('extendField')" />
+      <el-table-column prop="stockNum" label="库存数量" align="center" :show-overflow-tooltip="true"
+        v-if="PhaInPlancolumns.showColumn('stockNum')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
-          <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['phainplan:edit']"
-            @click="handleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['phainplan:delete']"
-            @click="handleDelete(scope.row)"></el-button>
+          <el-button type="primary" size="small" icon="view" PhaInPlantitle="详情"
+            @click="PhaInPlanhandlePreview(scope.row)"></el-button>
+          <el-button type="success" size="small" icon="edit" PhaInPlantitle="编辑" v-hasPermi="['phainplan:edit']"
+            @click="PhaInPlanhandleUpdate(scope.row)"></el-button>
+          <el-button type="danger" size="small" icon="delete" PhaInPlantitle="删除" v-hasPermi="['phainplan:delete']"
+            @click="PhaInPlanhandleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+    <pagination :total="PhaInPlantotal" v-model:page="PhaInPlanqueryParams.pageNum"
+      v-model:limit="PhaInPlanqueryParams.pageSize" @pagination="PhaInPlangetList" />
 
 
-    <el-dialog :title="title" :lock-scroll="false" v-model="open">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+    <el-dialog :PhaInPlantitle="PhaInPlantitle" :lock-scroll="false" v-model="PhaInPlanopen">
+      <el-form ref="PhaInPlanformRef" :model="PhaInPlanform" :PhaInPlanrules="PhaInPlanrules" label-width="100px">
         <el-row :gutter="20">
 
           <el-col :lg="12">
             <el-form-item label="入库计划流水号" prop="planNo">
-              <el-input v-model="form.planNo" placeholder="请输入入库计划流水号" :disabled="opertype != 1" />
+              <el-input v-model="PhaInPlanform.planNo" placeholder="请输入入库计划流水号" :disabled="PhaInPlanopertype != 1" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="采购单号" prop="billCode">
-              <el-input v-model="form.billCode" placeholder="请输入采购单号" />
+              <el-input v-model="PhaInPlanform.billCode" placeholder="请输入采购单号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="单据状态 0 计划单，1 采购单" prop="state">
-              <el-radio-group v-model="form.state">
-                <el-radio v-for="item in options.stateOptions" :key="item.dictValue" :value="item.dictValue">
+            <el-form-item label="单据状态" prop="state">
+              <el-radio-group v-model="PhaInPlanform.state">
+                <el-radio v-for="item in PhaInPlanoptions.statePhaInPlanoptions" :key="item.dictValue"
+                  :value="item.dictValue">
                   {{ item.dictLabel }}
                 </el-radio>
               </el-radio-group>
@@ -210,119 +220,119 @@
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="计划类型0手工计划，1警戒线，2消耗，3时间，4日消耗" prop="planType">
-              <el-select v-model="form.planType" placeholder="请选择计划类型0手工计划，1警戒线，2消耗，3时间，4日消耗">
-                <el-option v-for="item in options.planTypeOptions" :key="item.dictValue" :label="item.dictLabel"
-                  :value="item.dictValue"></el-option>
+            <el-form-item label="计划类型" prop="planType">
+              <el-select v-model="PhaInPlanform.planType" placeholder="请选择计划类型">
+                <el-option v-for="item in PhaInPlanoptions.planTypePhaInPlanoptions" :key="item.dictValue"
+                  :label="item.dictLabel" :value="item.dictValue"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="科室编码" prop="drugDeptCode">
-              <el-input v-model="form.drugDeptCode" placeholder="请输入科室编码" />
+              <el-input v-model="PhaInPlanform.drugDeptCode" placeholder="请输入科室编码" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="药品编码" prop="drugCode">
-              <el-input v-model="form.drugCode" placeholder="请输入药品编码" />
+              <el-input v-model="PhaInPlanform.drugCode" placeholder="请输入药品编码" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="药品名称" prop="tradeName">
-              <el-input v-model="form.tradeName" placeholder="请输入药品名称" />
+              <el-input v-model="PhaInPlanform.tradeName" placeholder="请输入药品名称" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="规格" prop="specs">
-              <el-input v-model="form.specs" placeholder="请输入规格" />
+              <el-input v-model="PhaInPlanform.specs" placeholder="请输入规格" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="参考零售价" prop="retailPrice">
-              <el-input v-model="form.retailPrice" placeholder="请输入参考零售价" />
+              <el-input v-model="PhaInPlanform.retailPrice" placeholder="请输入参考零售价" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="参考批发价" prop="wholesalePrice">
-              <el-input v-model="form.wholesalePrice" placeholder="请输入参考批发价" />
+              <el-input v-model="PhaInPlanform.wholesalePrice" placeholder="请输入参考批发价" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="最新购入价" prop="purchasePrice">
-              <el-input v-model="form.purchasePrice" placeholder="请输入最新购入价" />
+              <el-input v-model="PhaInPlanform.purchasePrice" placeholder="请输入最新购入价" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="包装单位" prop="packUnit">
-              <el-input v-model="form.packUnit" placeholder="请输入包装单位" />
+              <el-input v-model="PhaInPlanform.packUnit" placeholder="请输入包装单位" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="包装数量" prop="packQty">
-              <el-input v-model="form.packQty" placeholder="请输入包装数量" />
+              <el-input v-model="PhaInPlanform.packQty" placeholder="请输入包装数量" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="最小单位" prop="minUnit">
-              <el-input v-model="form.minUnit" placeholder="请输入最小单位" />
+              <el-input v-model="PhaInPlanform.minUnit" placeholder="请输入最小单位" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="生产厂家编码" prop="producerCode">
-              <el-input v-model="form.producerCode" placeholder="请输入生产厂家编码" />
+              <el-input v-model="PhaInPlanform.producerCode" placeholder="请输入生产厂家编码" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="生产厂家名称" prop="producerName">
-              <el-input v-model="form.producerName" placeholder="请输入生产厂家名称" />
+              <el-input v-model="PhaInPlanform.producerName" placeholder="请输入生产厂家名称" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="本科室库存数量" prop="storeNum">
-              <el-input v-model="form.storeNum" placeholder="请输入本科室库存数量" />
+              <el-input v-model="PhaInPlanform.storeNum" placeholder="请输入本科室库存数量" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="全院库存总和" prop="storeTotsum">
-              <el-input v-model="form.storeTotsum" placeholder="请输入全院库存总和" />
+              <el-input v-model="PhaInPlanform.storeTotsum" placeholder="请输入全院库存总和" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="全院出库总量" prop="outputSum">
-              <el-input v-model="form.outputSum" placeholder="请输入全院出库总量" />
+              <el-input v-model="PhaInPlanform.outputSum" placeholder="请输入全院出库总量" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="计划入库量" prop="planNum">
-              <el-input v-model="form.planNum" placeholder="请输入计划入库量" />
+              <el-input v-model="PhaInPlanform.planNum" placeholder="请输入计划入库量" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="计划人" prop="planEmpl">
-              <el-input v-model="form.planEmpl" placeholder="请输入计划人" />
+              <el-input v-model="PhaInPlanform.planEmpl" placeholder="请输入计划人" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="计划日期" prop="planDate">
-              <el-date-picker v-model="form.planDate" type="datetime" placeholder="选择日期时间"
+              <el-date-picker v-model="PhaInPlanform.planDate" type="datetime" placeholder="选择日期时间"
                 value-format="YYYY-MM-DD HH:mm:ss">
               </el-date-picker>
             </el-form-item>
@@ -330,13 +340,13 @@
 
           <el-col :lg="12">
             <el-form-item label="采购人" prop="stockEmpl">
-              <el-input v-model="form.stockEmpl" placeholder="请输入采购人" />
+              <el-input v-model="PhaInPlanform.stockEmpl" placeholder="请输入采购人" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="采购日期" prop="stockDate">
-              <el-date-picker v-model="form.stockDate" type="datetime" placeholder="选择日期时间"
+              <el-date-picker v-model="PhaInPlanform.stockDate" type="datetime" placeholder="选择日期时间"
                 value-format="YYYY-MM-DD HH:mm:ss">
               </el-date-picker>
             </el-form-item>
@@ -344,46 +354,50 @@
 
           <el-col :lg="12">
             <el-form-item label="采购流水号" prop="stockNo">
-              <el-input v-model="form.stockNo" placeholder="请输入采购流水号" />
+              <el-input v-model="PhaInPlanform.stockNo" placeholder="请输入采购流水号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="作废、替代计划单流水号" prop="replacePlanNo">
-              <el-input v-model="form.replacePlanNo" placeholder="请输入作废、替代计划单流水号" />
+              <el-input v-model="PhaInPlanform.replacePlanNo" placeholder="请输入作废、替代计划单流水号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="备注" prop="mark">
-              <el-input v-model="form.mark" placeholder="请输入备注" />
+              <el-input v-model="PhaInPlanform.mark" placeholder="请输入备注" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="操作员" prop="operCode">
-              <el-input v-model="form.operCode" placeholder="请输入操作员" />
+              <el-input v-model="PhaInPlanform.operCode" placeholder="请输入操作员" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="操作日期" prop="operDate">
-              <el-date-picker v-model="form.operDate" type="datetime" placeholder="选择日期时间"
+              <el-date-picker v-model="PhaInPlanform.operDate" type="datetime" placeholder="选择日期时间"
                 value-format="YYYY-MM-DD HH:mm:ss">
               </el-date-picker>
             </el-form-item>
           </el-col>
-
+          <el-col :lg="12">
+            <el-form-item label="库存数量" prop="stockNum">
+              <el-input v-model="PhaInPlanform.stockNum" placeholder="请输入库存数量" />
+            </el-form-item>
+          </el-col>
           <el-col :lg="12">
             <el-form-item label="扩展字段" prop="extendField">
-              <el-input v-model="form.extendField" placeholder="请输入扩展字段" />
+              <el-input v-model="PhaInPlanform.extendField" placeholder="请输入扩展字段" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <template #footer v-if="opertype != 3">
-        <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
+      <template #footer v-if="PhaInPlanopertype != 3">
+        <el-button text @click="PhaInPlancancel">{{ $t('btn.cancel') }}</el-button>
+        <el-button type="primary" @click="PhaInPlansubmitForm">{{ $t('btn.submit') }}</el-button>
       </template>
     </el-dialog>
   </div>
@@ -399,10 +413,10 @@ import {
   from '@/api/business/phainplan.js'
 import importData from '@/components/ImportData'
 const { proxy } = getCurrentInstance()
-const ids = ref([])
-const loading = ref(false)
-const showSearch = ref(true)
-const queryParams = reactive({
+const PhaInPlanids = ref([])
+const PhaInPlanloading = ref(false)
+const PhaInPlanshowSearch = ref(true)
+const PhaInPlanqueryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   sort: '',
@@ -419,11 +433,11 @@ const queryParams = reactive({
   stockNo: undefined,
   operDate: undefined,
 })
-const columns = ref([
+const PhaInPlancolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'planNo', label: '入库计划流水号' },
   { visible: true, align: 'center', type: '', prop: 'billCode', label: '采购单号', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: 'dict', prop: 'state', label: '单据状态 0 计划单，1 采购单', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: 'dict', prop: 'planType', label: '计划类型0手工计划，1警戒线，2消耗，3时间，4日消耗', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: 'dict', prop: 'state', label: '单据状态', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: 'dict', prop: 'planType', label: '计划类型', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '科室编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'tradeName', label: '药品名称', showOverflowTooltip: true },
@@ -450,67 +464,69 @@ const columns = ref([
   { visible: false, align: 'center', type: '', prop: 'operCode', label: '操作员', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'extendField', label: '扩展字段', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'stockNum', label: '库存数量', showOverflowTooltip: true },
+
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
-const total = ref(0)
-const dataList = ref([])
-const queryRef = ref()
-const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
+const PhaInPlantotal = ref(0)
+const PhaInPlandataList = ref([])
+const PhaInPlanqueryRef = ref()
+const PhaInPlandefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 // 计划日期时间范围
-const dateRangePlanDate = ref([])
+const PhaInPlandateRangePlanDate = ref([])
 
 // 采购日期时间范围
-const dateRangeStockDate = ref([])
+const PhaInPlandateRangeStockDate = ref([])
 
 // 操作日期时间范围
-const dateRangeOperDate = ref([])
+const PhaInPlandateRangeOperDate = ref([])
 
 
-var dictParams = [
+var PhaInPlandictParams = [
 ]
 
 
-function getList() {
-  proxy.addDateRange(queryParams, dateRangePlanDate.value, 'PlanDate');
-  proxy.addDateRange(queryParams, dateRangeStockDate.value, 'StockDate');
-  proxy.addDateRange(queryParams, dateRangeOperDate.value, 'OperDate');
-  loading.value = true
-  listPhaInPlan(queryParams).then(res => {
+function PhaInPlangetList() {
+  proxy.addDateRange(PhaInPlanqueryParams, PhaInPlandateRangePlanDate.value, 'PlanDate');
+  proxy.addDateRange(PhaInPlanqueryParams, PhaInPlandateRangeStockDate.value, 'StockDate');
+  proxy.addDateRange(PhaInPlanqueryParams, PhaInPlandateRangeOperDate.value, 'OperDate');
+  PhaInPlanloading.value = true
+  listPhaInPlan(PhaInPlanqueryParams).then(res => {
     const { code, data } = res
     if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
-      loading.value = false
+      PhaInPlandataList.value = data.result
+      PhaInPlantotal.value = data.totalNum
+      PhaInPlanloading.value = false
     }
   })
 }
 
 // 查询
-function handleQuery() {
-  queryParams.pageNum = 1
-  getList()
+function PhaInPlanhandleQuery() {
+  PhaInPlanqueryParams.pageNum = 1
+  PhaInPlangetList()
 }
 
 // 重置查询操作
-function resetQuery() {
+function PhaInPlanresetQuery() {
   // 计划日期时间范围
-  dateRangePlanDate.value = []
+  PhaInPlandateRangePlanDate.value = []
   // 采购日期时间范围
-  dateRangeStockDate.value = []
+  PhaInPlandateRangeStockDate.value = []
   // 操作日期时间范围
-  dateRangeOperDate.value = []
-  proxy.resetForm("queryRef")
-  handleQuery()
+  PhaInPlandateRangeOperDate.value = []
+  proxy.resetForm("PhaInPlanqueryRef")
+  PhaInPlanhandleQuery()
 }
 // 多选框选中数据
-function handleSelectionChange(selection) {
-  ids.value = selection.map((item) => item.planNo);
-  single.value = selection.length != 1
-  multiple.value = !selection.length;
+function PhaInPlanhandleSelectionChange(selection) {
+  PhaInPlanids.value = selection.map((item) => item.planNo);
+  PhaInPlansingle.value = selection.length != 1
+  PhaInPlanmultiple.value = !selection.length;
 }
 // 自定义排序
-function sortChange(column) {
+function PhaInPlansortChange(column) {
   var sort = undefined
   var sortType = undefined
 
@@ -519,44 +535,48 @@ function sortChange(column) {
     sortType = column.order
 
   }
-  queryParams.sort = sort
-  queryParams.sortType = sortType
-  handleQuery()
+  PhaInPlanqueryParams.sort = sort
+  PhaInPlanqueryParams.sortType = sortType
+  PhaInPlanhandleQuery()
 }
 
 /*************** form操作 ***************/
-const formRef = ref()
-const title = ref('')
+const PhaInPlanformRef = ref()
+const PhaInPlantitle = ref('')
 // 操作类型 1、add 2、edit 3、view
-const opertype = ref(0)
-const open = ref(false)
-const state = reactive({
-  single: true,
-  multiple: true,
-  form: {},
-  rules: {
+const PhaInPlanopertype = ref(0)
+const PhaInPlanopen = ref(false)
+const PhaInPlanstate = reactive({
+  PhaInPlansingle: true,
+  PhaInPlanmultiple: true,
+  PhaInPlanform: {},
+  PhaInPlanrules: {
     planNo: [{ required: true, message: "入库计划流水号不能为空", trigger: "blur" }],
     billCode: [{ required: true, message: "采购单号不能为空", trigger: "blur" }],
     drugDeptCode: [{ required: true, message: "科室编码不能为空", trigger: "blur" }],
     drugCode: [{ required: true, message: "药品编码不能为空", trigger: "blur" }],
   },
-  options: {
-    // 单据状态 0 计划单，1 采购单 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    stateOptions: [],
+  PhaInPlanoptions: {
+    statePhaInPlanoptions: [{ dictLabel: '计划单', dictValue: '0' }, { dictLabel: '采购单', dictValue: '1' }],
+    planTypePhaInPlanoptions: [{ dictLabel: '手工计划', dictValue: '0' },
+    { dictLabel: '警戒线', dictValue: '1' },
+    { dictLabel: '消耗', dictValue: '2' },
+    { dictLabel: '时间', dictValue: '3' },
+    { dictLabel: '日消耗', dictValue: '4' }]
   }
 })
 
-const { form, rules, options, single, multiple } = toRefs(state)
+const { PhaInPlanform, PhaInPlanrules, PhaInPlanoptions, PhaInPlansingle, PhaInPlanmultiple } = toRefs(PhaInPlanstate)
 
 // 关闭dialog
-function cancel() {
-  open.value = false
-  reset()
+function PhaInPlancancel() {
+  PhaInPlanopen.value = false
+  PhaInPlanreset()
 }
 
 // 重置表单
-function reset() {
-  form.value = {
+function PhaInPlanreset() {
+  PhaInPlanform.value = {
     planNo: null,
     billCode: null,
     state: null,
@@ -587,24 +607,25 @@ function reset() {
     operCode: null,
     operDate: null,
     extendField: null,
+    stockNum: null
   };
-  proxy.resetForm("formRef")
+  proxy.resetForm("PhaInPlanformRef")
 }
 
 /**
  * 查看
  * @param {*} row
  */
-function handlePreview(row) {
-  reset()
+function PhaInPlanhandlePreview(row) {
+  PhaInPlanreset()
   const id = row.planNo
   getPhaInPlan(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
-      open.value = true
-      title.value = '查看'
-      opertype.value = 3
-      form.value = {
+      PhaInPlanopen.value = true
+      PhaInPlantitle.value = '查看'
+      PhaInPlanopertype.value = 3
+      PhaInPlanform.value = {
         ...data,
       }
     }
@@ -612,24 +633,24 @@ function handlePreview(row) {
 }
 
 // 添加按钮操作
-function handleAdd() {
-  reset();
-  open.value = true
-  title.value = '添加入库计划'
-  opertype.value = 1
+function PhaInPlanhandleAdd() {
+  PhaInPlanreset();
+  PhaInPlanopen.value = true
+  PhaInPlantitle.value = '添加入库计划'
+  PhaInPlanopertype.value = 1
 }
 // 修改按钮操作
-function handleUpdate(row) {
-  reset()
-  const id = row.planNo || ids.value
+function PhaInPlanhandleUpdate(row) {
+  PhaInPlanreset()
+  const id = row.planNo || PhaInPlanids.value
   getPhaInPlan(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
-      open.value = true
-      title.value = '修改入库计划'
-      opertype.value = 2
+      PhaInPlanopen.value = true
+      PhaInPlantitle.value = '修改入库计划'
+      PhaInPlanopertype.value = 2
 
-      form.value = {
+      PhaInPlanform.value = {
         ...data,
       }
     }
@@ -637,21 +658,21 @@ function handleUpdate(row) {
 }
 
 // 添加&修改 表单提交
-function submitForm() {
-  proxy.$refs["formRef"].validate((valid) => {
+function PhaInPlansubmitForm() {
+  proxy.$refs["PhaInPlanformRef"].validate((valid) => {
     if (valid) {
 
-      if (form.value.planNo != undefined && opertype.value === 2) {
-        updatePhaInPlan(form.value).then((res) => {
+      if (PhaInPlanform.value.planNo != undefined && PhaInPlanopertype.value === 2) {
+        updatePhaInPlan(PhaInPlanform.value).then((res) => {
           proxy.$modal.msgSuccess("修改成功")
-          open.value = false
-          getList()
+          PhaInPlanopen.value = false
+          PhaInPlangetList()
         })
       } else {
-        addPhaInPlan(form.value).then((res) => {
+        addPhaInPlan(PhaInPlanform.value).then((res) => {
           proxy.$modal.msgSuccess("新增成功")
-          open.value = false
-          getList()
+          PhaInPlanopen.value = false
+          PhaInPlangetList()
         })
       }
     }
@@ -659,43 +680,43 @@ function submitForm() {
 }
 
 // 删除按钮操作
-function handleDelete(row) {
-  const Ids = row.planNo || ids.value
+function PhaInPlanhandleDelete(row) {
+  const PhaInPlanids = row.planNo || PhaInPlanids.value
 
   proxy
-    .$confirm('是否确认删除参数编号为"' + Ids + '"的数据项？', "警告", {
+    .$confirm('是否确认删除参数编号为"' + PhaInPlanids + '"的数据项？', "警告", {
       confirmButtonText: proxy.$t('common.ok'),
-      cancelButtonText: proxy.$t('common.cancel'),
+      PhaInPlancancelButtonText: proxy.$t('common.PhaInPlancancel'),
       type: "warning",
     })
     .then(function () {
-      return delPhaInPlan(Ids)
+      return delPhaInPlan(PhaInPlanids)
     })
     .then(() => {
-      getList()
+      PhaInPlangetList()
       proxy.$modal.msgSuccess("删除成功")
     })
 }
 
 // 清空
-function handleClear() {
+function PhaInPlanhandleClear() {
   proxy
     .$confirm("是否确认清空所有数据项?", "警告", {
       confirmButtonText: proxy.$t('common.ok'),
-      cancelButtonText: proxy.$t('common.cancel'),
+      PhaInPlancancelButtonText: proxy.$t('common.PhaInPlancancel'),
       type: "warning",
     })
     .then(function () {
       return clearPhaInPlan()
     })
     .then(() => {
-      handleQuery()
+      PhaInPlanhandleQuery()
       proxy.$modal.msgSuccess('清空成功')
     })
 }
 
 // 导入数据成功处理
-const handleFileSuccess = (response) => {
+const PhaInPlanhandleFileSuccess = (response) => {
   const { item1, item2 } = response.data
   var error = ''
   item2.forEach((item) => {
@@ -704,21 +725,21 @@ const handleFileSuccess = (response) => {
   proxy.$alert(item1 + '<p>' + error + '</p>', '导入结果', {
     dangerouslyUseHTMLString: true
   })
-  getList()
+  PhaInPlangetList()
 }
 
 // 导出按钮操作
-function handleExport() {
+function PhaInPlanhandleExport() {
   proxy
     .$confirm("是否确认导出入库计划数据项?", "警告", {
       confirmButtonText: "确定",
-      cancelButtonText: "取消",
+      PhaInPlancancelButtonText: "取消",
       type: "warning",
     })
     .then(async () => {
-      await proxy.downFile('/business/PhaInPlan/export', { ...queryParams })
+      await proxy.downFile('/business/PhaInPlan/export', { ...PhaInPlanqueryParams })
     })
 }
 
-handleQuery()
+PhaInPlanhandleQuery()
 </script>
