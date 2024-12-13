@@ -5,25 +5,26 @@
 -->
 <template>
   <div>
-    <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
+    <el-form :model="PhaOutqueryParams" label-position="right" inline ref="PhaOutqueryRef" v-show="PhaOutshowSearch"
+      @submit.prevent>
       <el-form-item label="出库科室编码" prop="drugDeptCode">
-        <el-input v-model="queryParams.drugDeptCode" placeholder="请输入出库科室编码" />
+        <el-input v-model="PhaOutqueryParams.drugDeptCode" placeholder="请输入出库科室编码" />
       </el-form-item>
       <el-form-item label="出库单流水号" prop="outBillCode">
-        <el-input v-model.number="queryParams.outBillCode" placeholder="请输入出库单流水号" />
+        <el-input v-model.number="PhaOutqueryParams.outBillCode" placeholder="请输入出库单流水号" />
       </el-form-item>
       <el-form-item label="序号" prop="serialCode">
-        <el-input v-model.number="queryParams.serialCode" placeholder="请输入序号" />
+        <el-input v-model.number="PhaOutqueryParams.serialCode" placeholder="请输入序号" />
       </el-form-item>
       <el-form-item label="批次号" prop="groupCode">
-        <el-input v-model="queryParams.groupCode" placeholder="请输入批次号" />
+        <el-input v-model="PhaOutqueryParams.groupCode" placeholder="请输入批次号" />
       </el-form-item>
       <el-form-item label="出库单据号" prop="outListCode">
-        <el-input v-model="queryParams.outListCode" placeholder="请输入出库单据号" />
+        <el-input v-model="PhaOutqueryParams.outListCode" placeholder="请输入出库单据号" />
       </el-form-item>
       <el-form-item label="出库类型" prop="outType">
-        <el-select clearable v-model="queryParams.outType" placeholder="请选择出库类型">
-          <el-option v-for="item in options.outTypeOptions" :key="item.dictValue" :label="item.dictLabel"
+        <el-select clearable v-model="PhaOutqueryParams.outType" placeholder="请选择出库类型">
+          <el-option v-for="item in PhaOutoptions.outTypePhaOutoptions" :key="item.dictValue" :label="item.dictLabel"
             :value="item.dictValue">
             <span class="fl">{{ item.dictLabel }}</span>
             <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
@@ -31,26 +32,26 @@
         </el-select>
       </el-form-item>
       <el-form-item label="出库分类" prop="class3MeaningCode">
-        <el-input v-model="queryParams.class3MeaningCode" placeholder="请输入出库分类" />
+        <el-input v-model="PhaOutqueryParams.class3MeaningCode" placeholder="请输入出库分类" />
       </el-form-item>
       <el-form-item label="入库单号" prop="inBillCode">
-        <el-input v-model.number="queryParams.inBillCode" placeholder="请输入入库单号" />
+        <el-input v-model.number="PhaOutqueryParams.inBillCode" placeholder="请输入入库单号" />
       </el-form-item>
       <el-form-item label="入库单序号" prop="inSerialCode">
-        <el-input v-model.number="queryParams.inSerialCode" placeholder="请输入入库单序号" />
+        <el-input v-model.number="PhaOutqueryParams.inSerialCode" placeholder="请输入入库单序号" />
       </el-form-item>
       <el-form-item label="入库单据号" prop="inListCode">
-        <el-input v-model="queryParams.inListCode" placeholder="请输入入库单据号" />
+        <el-input v-model="PhaOutqueryParams.inListCode" placeholder="请输入入库单据号" />
       </el-form-item>
       <el-form-item label="药品编码" prop="drugCode">
-        <el-input v-model="queryParams.drugCode" placeholder="请输入药品编码" />
+        <el-input v-model="PhaOutqueryParams.drugCode" placeholder="请输入药品编码" />
       </el-form-item>
       <el-form-item label="药品商品名" prop="tradeName">
-        <el-input v-model="queryParams.tradeName" placeholder="请输入药品商品名" />
+        <el-input v-model="PhaOutqueryParams.tradeName" placeholder="请输入药品商品名" />
       </el-form-item>
       <el-form-item label="药品类别" prop="drugType">
-        <el-select clearable v-model="queryParams.drugType" placeholder="请选择药品类别">
-          <el-option v-for="item in options.drugTypeOptions" :key="item.dictValue" :label="item.dictLabel"
+        <el-select clearable v-model="PhaOutqueryParams.drugType" placeholder="请选择药品类别">
+          <el-option v-for="item in PhaOutoptions.drugTypePhaOutoptions" :key="item.dictValue" :label="item.dictLabel"
             :value="item.dictValue">
             <span class="fl">{{ item.dictLabel }}</span>
             <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
@@ -58,37 +59,37 @@
         </el-select>
       </el-form-item>
       <el-form-item label="生产厂家" prop="producerCode">
-        <el-input v-model="queryParams.producerCode" placeholder="请输入生产厂家" />
+        <el-input v-model="PhaOutqueryParams.producerCode" placeholder="请输入生产厂家" />
       </el-form-item>
       <el-form-item label="供货单位代码" prop="companyCode">
-        <el-input v-model="queryParams.companyCode" placeholder="请输入供货单位代码" />
+        <el-input v-model="PhaOutqueryParams.companyCode" placeholder="请输入供货单位代码" />
       </el-form-item>
       <el-form-item>
-        <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
-        <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
+        <el-button icon="search" type="primary" @click="PhaOuthandleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" @click="PhaOutresetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form>
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="handleAdd">
+        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="PhaOuthandleAdd">
           {{ $t('btn.add') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" :disabled="single" v-hasPermi="['phaout:edit']" plain icon="edit"
-          @click="handleUpdate">
+        <el-button type="success" :disabled="PhaOutsingle" v-hasPermi="['phaout:edit']" plain icon="edit"
+          @click="PhaOuthandleUpdate">
           {{ $t('btn.edit') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" :disabled="multiple" v-hasPermi="['phaout:delete']" plain icon="delete"
-          @click="handleDelete">
+        <el-button type="danger" :disabled="PhaOutmultiple" v-hasPermi="['phaout:delete']" plain icon="delete"
+          @click="PhaOuthandleDelete">
           {{ $t('btn.delete') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" v-hasPermi="['phaout:delete']" plain icon="delete" @click="handleClear">
+        <el-button type="danger" v-hasPermi="['phaout:delete']" plain icon="delete" @click="PhaOuthandleClear">
           {{ $t('btn.clean') }}
         </el-button>
       </el-col>
@@ -101,285 +102,294 @@
             <el-dropdown-menu>
               <el-dropdown-item command="upload">
                 <importData templateUrl="business/PhaOut/importTemplate" importUrl="/business/PhaOut/importData"
-                  @success="handleFileSuccess"></importData>
+                  @success="PhaOuthandleFileSuccess"></importData>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['phaout:export']">
+        <el-button type="warning" plain icon="download" @click="PhaOuthandleExport" v-hasPermi="['phaout:export']">
           {{ $t('btn.export') }}
         </el-button>
       </el-col>
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
+      <right-toolbar v-model:showSearch="PhaOutshowSearch" @queryTable="PhaOutgetList"
+        :columns="PhaOutcolumns"></right-toolbar>
     </el-row>
 
-    <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
-      highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
+    <el-table :data="PhaOutdataList" v-loading="PhaOutloading" ref="PhaOuttable" border
+      header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="PhaOutsortChange"
+      @selection-change="PhaOuthandleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column prop="drugDeptCode" label="出库科室编码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('drugDeptCode')" />
-      <el-table-column prop="outBillCode" label="出库单流水号" align="center" v-if="columns.showColumn('outBillCode')" />
-      <el-table-column prop="serialCode" label="序号" align="center" v-if="columns.showColumn('serialCode')" />
+        v-if="PhaOutcolumns.showColumn('drugDeptCode')" />
+      <el-table-column prop="outBillCode" label="出库单流水号" align="center"
+        v-if="PhaOutcolumns.showColumn('outBillCode')" />
+      <el-table-column prop="serialCode" label="序号" align="center" v-if="PhaOutcolumns.showColumn('serialCode')" />
       <el-table-column prop="groupCode" label="批次号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('groupCode')" />
+        v-if="PhaOutcolumns.showColumn('groupCode')" />
       <el-table-column prop="outListCode" label="出库单据号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('outListCode')" />
-      <el-table-column prop="outType" label="出库类型" align="center" v-if="columns.showColumn('outType')">
+        v-if="PhaOutcolumns.showColumn('outListCode')" />
+      <el-table-column prop="outType" label="出库类型" align="center" v-if="PhaOutcolumns.showColumn('outType')">
         <template #default="scope">
-          <dict-tag :options="options.outTypeOptions" :value="scope.row.outType" />
+          <dict-tag :options="PhaOutoptions.outTypePhaOutoptions" :value="scope.row.outType" />
         </template>
       </el-table-column>
       <el-table-column prop="class3MeaningCode" label="出库分类" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('class3MeaningCode')" />
-      <el-table-column prop="inBillCode" label="入库单号" align="center" v-if="columns.showColumn('inBillCode')" />
-      <el-table-column prop="inSerialCode" label="入库单序号" align="center" v-if="columns.showColumn('inSerialCode')" />
+        v-if="PhaOutcolumns.showColumn('class3MeaningCode')" />
+      <el-table-column prop="inBillCode" label="入库单号" align="center" v-if="PhaOutcolumns.showColumn('inBillCode')" />
+      <el-table-column prop="inSerialCode" label="入库单序号" align="center"
+        v-if="PhaOutcolumns.showColumn('inSerialCode')" />
       <el-table-column prop="inListCode" label="入库单据号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('inListCode')" />
+        v-if="PhaOutcolumns.showColumn('inListCode')" />
       <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('drugCode')" />
+        v-if="PhaOutcolumns.showColumn('drugCode')" />
       <el-table-column prop="tradeName" label="药品商品名" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('tradeName')" />
-      <el-table-column prop="drugType" label="药品类别" align="center" v-if="columns.showColumn('drugType')">
+        v-if="PhaOutcolumns.showColumn('tradeName')" />
+      <el-table-column prop="drugType" label="药品类别" align="center" v-if="PhaOutcolumns.showColumn('drugType')">
         <template #default="scope">
-          <dict-tag :options="options.drugTypeOptions" :value="scope.row.drugType" />
+          <dict-tag :options="PhaOutoptions.drugTypePhaOutoptions" :value="scope.row.drugType" />
         </template>
       </el-table-column>
       <el-table-column prop="drugQuality" label="药品性质" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('drugQuality')" />
+        v-if="PhaOutcolumns.showColumn('drugQuality')" />
       <el-table-column prop="specs" label="规格" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('specs')" />
+        v-if="PhaOutcolumns.showColumn('specs')" />
       <el-table-column prop="packUnit" label="包装单位" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('packUnit')" />
-      <el-table-column prop="packQty" label="包装数" align="center" v-if="columns.showColumn('packQty')" />
+        v-if="PhaOutcolumns.showColumn('packUnit')" />
+      <el-table-column prop="packQty" label="包装数" align="center" v-if="PhaOutcolumns.showColumn('packQty')" />
       <el-table-column prop="minUnit" label="最小单位" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('minUnit')" />
+        v-if="PhaOutcolumns.showColumn('minUnit')" />
       <el-table-column prop="showFlag" label="显示的单位标记" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('showFlag')" />
+        v-if="PhaOutcolumns.showColumn('showFlag')" />
       <el-table-column prop="showUnit" label="显示的单位" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('showUnit')" />
+        v-if="PhaOutcolumns.showColumn('showUnit')" />
       <el-table-column prop="batchNo" label="批号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('batchNo')" />
+        v-if="PhaOutcolumns.showColumn('batchNo')" />
       <el-table-column prop="validDate" label="有效期" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('validDate')" />
+        v-if="PhaOutcolumns.showColumn('validDate')" />
       <el-table-column prop="producerCode" label="生产厂家" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('producerCode')" />
+        v-if="PhaOutcolumns.showColumn('producerCode')" />
       <el-table-column prop="companyCode" label="供货单位代码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('companyCode')" />
-      <el-table-column prop="retailPrice" label="零售价" align="center" v-if="columns.showColumn('retailPrice')" />
-      <el-table-column prop="wholesalePrice" label="批发价" align="center" v-if="columns.showColumn('wholesalePrice')" />
-      <el-table-column prop="purchasePrice" label="购入价" align="center" v-if="columns.showColumn('purchasePrice')" />
-      <el-table-column prop="outNum" label="出库数量" align="center" v-if="columns.showColumn('outNum')" />
-      <el-table-column prop="saleCost" label="零售金额" align="center" v-if="columns.showColumn('saleCost')" />
-      <el-table-column prop="tradeCost" label="批发金额" align="center" v-if="columns.showColumn('tradeCost')" />
-      <el-table-column prop="approveCost" label="购入金额" align="center" v-if="columns.showColumn('approveCost')" />
-      <el-table-column prop="storeNum" label="出库后库存数量" align="center" v-if="columns.showColumn('storeNum')" />
-      <el-table-column prop="storeCost" label="出库后库存总金额" align="center" v-if="columns.showColumn('storeCost')" />
+        v-if="PhaOutcolumns.showColumn('companyCode')" />
+      <el-table-column prop="retailPrice" label="零售价" align="center" v-if="PhaOutcolumns.showColumn('retailPrice')" />
+      <el-table-column prop="wholesalePrice" label="批发价" align="center"
+        v-if="PhaOutcolumns.showColumn('wholesalePrice')" />
+      <el-table-column prop="purchasePrice" label="购入价" align="center"
+        v-if="PhaOutcolumns.showColumn('purchasePrice')" />
+      <el-table-column prop="outNum" label="出库数量" align="center" v-if="PhaOutcolumns.showColumn('outNum')" />
+      <el-table-column prop="saleCost" label="零售金额" align="center" v-if="PhaOutcolumns.showColumn('saleCost')" />
+      <el-table-column prop="tradeCost" label="批发金额" align="center" v-if="PhaOutcolumns.showColumn('tradeCost')" />
+      <el-table-column prop="approveCost" label="购入金额" align="center" v-if="PhaOutcolumns.showColumn('approveCost')" />
+      <el-table-column prop="storeNum" label="出库后库存数量" align="center" v-if="PhaOutcolumns.showColumn('storeNum')" />
+      <el-table-column prop="storeCost" label="出库后库存总金额" align="center" v-if="PhaOutcolumns.showColumn('storeCost')" />
       <el-table-column prop="specialFlag" label="特殊标记" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('specialFlag')" />
-      <el-table-column prop="outState" label="出库状态" align="center" v-if="columns.showColumn('outState')">
+        v-if="PhaOutcolumns.showColumn('specialFlag')" />
+      <el-table-column prop="outState" label="出库状态" align="center" v-if="PhaOutcolumns.showColumn('outState')">
         <template #default="scope">
-          <dict-tag :options="options.outStateOptions" :value="scope.row.outState" />
+          <dict-tag :options="PhaOutoptions.outStatePhaOutoptions" :value="scope.row.outState" />
         </template>
       </el-table-column>
-      <el-table-column prop="applyNum" label="申请出库量" align="center" v-if="columns.showColumn('applyNum')" />
+      <el-table-column prop="applyNum" label="申请出库量" align="center" v-if="PhaOutcolumns.showColumn('applyNum')" />
       <el-table-column prop="applyOpercode" label="申请出库人" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('applyOpercode')" />
+        v-if="PhaOutcolumns.showColumn('applyOpercode')" />
       <el-table-column prop="applyDate" label="申请出库日期" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('applyDate')" />
-      <el-table-column prop="examNum" label="审批数量" align="center" v-if="columns.showColumn('examNum')" />
+        v-if="PhaOutcolumns.showColumn('applyDate')" />
+      <el-table-column prop="examNum" label="审批数量" align="center" v-if="PhaOutcolumns.showColumn('examNum')" />
       <el-table-column prop="examOpercode" label="审批人" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('examOpercode')" />
+        v-if="PhaOutcolumns.showColumn('examOpercode')" />
       <el-table-column prop="examDate" label="审批日期" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('examDate')" />
+        v-if="PhaOutcolumns.showColumn('examDate')" />
       <el-table-column prop="approveOpercode" label="核准人" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('approveOpercode')" />
+        v-if="PhaOutcolumns.showColumn('approveOpercode')" />
       <el-table-column prop="approveDate" label="核准日期" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('approveDate')" />
+        v-if="PhaOutcolumns.showColumn('approveDate')" />
       <el-table-column prop="placeCode" label="货位号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('placeCode')" />
-      <el-table-column prop="returnNum" label="退库数量" align="center" v-if="columns.showColumn('returnNum')" />
+        v-if="PhaOutcolumns.showColumn('placeCode')" />
+      <el-table-column prop="returnNum" label="退库数量" align="center" v-if="PhaOutcolumns.showColumn('returnNum')" />
       <el-table-column prop="drugedBill" label="摆药单号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('drugedBill')" />
+        v-if="PhaOutcolumns.showColumn('drugedBill')" />
       <el-table-column prop="medId" label="制剂序号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('medId')" />
+        v-if="PhaOutcolumns.showColumn('medId')" />
       <el-table-column prop="drugStorageCode" label="领药单位编码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('drugStorageCode')" />
+        v-if="PhaOutcolumns.showColumn('drugStorageCode')" />
       <el-table-column prop="recipeNo" label="处方号" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('recipeNo')" />
-      <el-table-column prop="sequenceNo" label="处方流水号" align="center" v-if="columns.showColumn('sequenceNo')" />
+        v-if="PhaOutcolumns.showColumn('recipeNo')" />
+      <el-table-column prop="sequenceNo" label="处方流水号" align="center" v-if="PhaOutcolumns.showColumn('sequenceNo')" />
       <el-table-column prop="signPerson" label="签字人" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('signPerson')" />
+        v-if="PhaOutcolumns.showColumn('signPerson')" />
       <el-table-column prop="getPerson" label="领药人" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('getPerson')" />
+        v-if="PhaOutcolumns.showColumn('getPerson')" />
       <el-table-column prop="strikeFlag" label="冲账标志" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('strikeFlag')" />
+        v-if="PhaOutcolumns.showColumn('strikeFlag')" />
       <el-table-column prop="mark" label="备注" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('mark')" />
+        v-if="PhaOutcolumns.showColumn('mark')" />
       <el-table-column prop="operCode" label="操作员" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('operCode')" />
+        v-if="PhaOutcolumns.showColumn('operCode')" />
       <el-table-column prop="operDate" label="操作日期" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('operDate')" />
+        v-if="PhaOutcolumns.showColumn('operDate')" />
       <el-table-column prop="arkFlag" label="是否药房向药柜出库记录" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('arkFlag')" />
-      <el-table-column prop="arkBillCode" label="药柜发药出库单流水号" align="center" v-if="columns.showColumn('arkBillCode')" />
+        v-if="PhaOutcolumns.showColumn('arkFlag')" />
+      <el-table-column prop="arkBillCode" label="药柜发药出库单流水号" align="center"
+        v-if="PhaOutcolumns.showColumn('arkBillCode')" />
       <el-table-column prop="outDate" label="出库记录发生时间" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('outDate')" />
-      <el-table-column prop="applyNumber" label="申请单流水号" align="center" v-if="columns.showColumn('applyNumber')" />
+        v-if="PhaOutcolumns.showColumn('outDate')" />
+      <el-table-column prop="applyNumber" label="申请单流水号" align="center"
+        v-if="PhaOutcolumns.showColumn('applyNumber')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
-          <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
+          <el-button type="primary" size="small" icon="view" title="详情"
+            @click="PhaOuthandlePreview(scope.row)"></el-button>
           <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['phaout:edit']"
-            @click="handleUpdate(scope.row)"></el-button>
+            @click="PhaOuthandleUpdate(scope.row)"></el-button>
           <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['phaout:delete']"
-            @click="handleDelete(scope.row)"></el-button>
+            @click="PhaOuthandleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+    <pagination :total="PhaOuttotal" v-model:page="PhaOutqueryParams.pageNum" v-model:limit="PhaOutqueryParams.pageSize"
+      @pagination="PhaOutgetList" />
 
 
-    <el-dialog :title="title" :lock-scroll="false" v-model="open">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+    <el-dialog :title="PhaOuttitle" :lock-scroll="false" v-model="PhaOutopen">
+      <el-form ref="PhaOutformRef" :model="PhaOutform" :rules="PhaOutrules" label-width="100px">
         <el-row :gutter="20">
 
           <el-col :lg="12">
             <el-form-item label="出库科室编码" prop="drugDeptCode">
-              <el-input v-model="form.drugDeptCode" placeholder="请输入出库科室编码" />
+              <el-input v-model="PhaOutform.drugDeptCode" placeholder="请输入出库科室编码" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="出库单流水号" prop="outBillCode">
-              <el-input v-model.number="form.outBillCode" placeholder="请输入出库单流水号" />
+              <el-input v-model.number="PhaOutform.outBillCode" placeholder="请输入出库单流水号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="序号" prop="serialCode">
-              <el-input v-model.number="form.serialCode" placeholder="请输入序号" />
+              <el-input v-model.number="PhaOutform.serialCode" placeholder="请输入序号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="批次号" prop="groupCode">
-              <el-input v-model="form.groupCode" placeholder="请输入批次号" />
+              <el-input v-model="PhaOutform.groupCode" placeholder="请输入批次号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="出库单据号" prop="outListCode">
-              <el-input v-model="form.outListCode" placeholder="请输入出库单据号" />
+              <el-input v-model="PhaOutform.outListCode" placeholder="请输入出库单据号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="出库类型" prop="outType">
-              <el-select v-model="form.outType" placeholder="请选择出库类型">
-                <el-option v-for="item in options.outTypeOptions" :key="item.dictValue" :label="item.dictLabel"
-                  :value="item.dictValue"></el-option>
+              <el-select v-model="PhaOutform.outType" placeholder="请选择出库类型">
+                <el-option v-for="item in PhaOutoptions.outTypePhaOutoptions" :key="item.dictValue"
+                  :label="item.dictLabel" :value="item.dictValue"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="出库分类" prop="class3MeaningCode">
-              <el-input v-model="form.class3MeaningCode" placeholder="请输入出库分类" />
+              <el-input v-model="PhaOutform.class3MeaningCode" placeholder="请输入出库分类" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="入库单号" prop="inBillCode">
-              <el-input v-model.number="form.inBillCode" placeholder="请输入入库单号" />
+              <el-input v-model.number="PhaOutform.inBillCode" placeholder="请输入入库单号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="入库单序号" prop="inSerialCode">
-              <el-input v-model.number="form.inSerialCode" placeholder="请输入入库单序号" />
+              <el-input v-model.number="PhaOutform.inSerialCode" placeholder="请输入入库单序号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="入库单据号" prop="inListCode">
-              <el-input v-model="form.inListCode" placeholder="请输入入库单据号" />
+              <el-input v-model="PhaOutform.inListCode" placeholder="请输入入库单据号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="药品编码" prop="drugCode">
-              <el-input v-model="form.drugCode" placeholder="请输入药品编码" />
+              <el-input v-model="PhaOutform.drugCode" placeholder="请输入药品编码" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="药品商品名" prop="tradeName">
-              <el-input v-model="form.tradeName" placeholder="请输入药品商品名" />
+              <el-input v-model="PhaOutform.tradeName" placeholder="请输入药品商品名" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="药品类别" prop="drugType">
-              <el-select v-model="form.drugType" placeholder="请选择药品类别">
-                <el-option v-for="item in options.drugTypeOptions" :key="item.dictValue" :label="item.dictLabel"
-                  :value="item.dictValue"></el-option>
+              <el-select v-model="PhaOutform.drugType" placeholder="请选择药品类别">
+                <el-option v-for="item in PhaOutoptions.drugTypePhaOutoptions" :key="item.dictValue"
+                  :label="item.dictLabel" :value="item.dictValue"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="药品性质" prop="drugQuality">
-              <el-input v-model="form.drugQuality" placeholder="请输入药品性质" />
+              <el-input v-model="PhaOutform.drugQuality" placeholder="请输入药品性质" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="规格" prop="specs">
-              <el-input v-model="form.specs" placeholder="请输入规格" />
+              <el-input v-model="PhaOutform.specs" placeholder="请输入规格" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="包装单位" prop="packUnit">
-              <el-input v-model="form.packUnit" placeholder="请输入包装单位" />
+              <el-input v-model="PhaOutform.packUnit" placeholder="请输入包装单位" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="包装数" prop="packQty">
-              <el-input v-model.number="form.packQty" placeholder="请输入包装数" />
+              <el-input v-model.number="PhaOutform.packQty" placeholder="请输入包装数" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="最小单位" prop="minUnit">
-              <el-input v-model="form.minUnit" placeholder="请输入最小单位" />
+              <el-input v-model="PhaOutform.minUnit" placeholder="请输入最小单位" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="显示的单位标记" prop="showFlag">
-              <el-input v-model="form.showFlag" placeholder="请输入显示的单位标记" />
+              <el-input v-model="PhaOutform.showFlag" placeholder="请输入显示的单位标记" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="显示的单位" prop="showUnit">
-              <el-input v-model="form.showUnit" placeholder="请输入显示的单位" />
+              <el-input v-model="PhaOutform.showUnit" placeholder="请输入显示的单位" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="批号" prop="batchNo">
-              <el-input v-model="form.batchNo" placeholder="请输入批号" />
+              <el-input v-model="PhaOutform.batchNo" placeholder="请输入批号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="有效期" prop="validDate">
-              <el-date-picker v-model="form.validDate" type="datetime" placeholder="选择日期时间"
+              <el-date-picker v-model="PhaOutform.validDate" type="datetime" placeholder="选择日期时间"
                 value-format="YYYY-MM-DD HH:mm:ss">
               </el-date-picker>
             </el-form-item>
@@ -387,80 +397,81 @@
 
           <el-col :lg="12">
             <el-form-item label="生产厂家" prop="producerCode">
-              <el-input v-model="form.producerCode" placeholder="请输入生产厂家" />
+              <el-input v-model="PhaOutform.producerCode" placeholder="请输入生产厂家" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="供货单位代码" prop="companyCode">
-              <el-input v-model="form.companyCode" placeholder="请输入供货单位代码" />
+              <el-input v-model="PhaOutform.companyCode" placeholder="请输入供货单位代码" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="零售价" prop="retailPrice">
-              <el-input v-model="form.retailPrice" placeholder="请输入零售价" />
+              <el-input v-model="PhaOutform.retailPrice" placeholder="请输入零售价" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="批发价" prop="wholesalePrice">
-              <el-input v-model="form.wholesalePrice" placeholder="请输入批发价" />
+              <el-input v-model="PhaOutform.wholesalePrice" placeholder="请输入批发价" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="购入价" prop="purchasePrice">
-              <el-input v-model="form.purchasePrice" placeholder="请输入购入价" />
+              <el-input v-model="PhaOutform.purchasePrice" placeholder="请输入购入价" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="出库数量" prop="outNum">
-              <el-input v-model="form.outNum" placeholder="请输入出库数量" />
+              <el-input v-model="PhaOutform.outNum" placeholder="请输入出库数量" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="零售金额" prop="saleCost">
-              <el-input v-model="form.saleCost" placeholder="请输入零售金额" />
+              <el-input v-model="PhaOutform.saleCost" placeholder="请输入零售金额" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="批发金额" prop="tradeCost">
-              <el-input v-model="form.tradeCost" placeholder="请输入批发金额" />
+              <el-input v-model="PhaOutform.tradeCost" placeholder="请输入批发金额" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="购入金额" prop="approveCost">
-              <el-input v-model="form.approveCost" placeholder="请输入购入金额" />
+              <el-input v-model="PhaOutform.approveCost" placeholder="请输入购入金额" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="出库后库存数量" prop="storeNum">
-              <el-input v-model="form.storeNum" placeholder="请输入出库后库存数量" />
+              <el-input v-model="PhaOutform.storeNum" placeholder="请输入出库后库存数量" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="出库后库存总金额" prop="storeCost">
-              <el-input v-model="form.storeCost" placeholder="请输入出库后库存总金额" />
+              <el-input v-model="PhaOutform.storeCost" placeholder="请输入出库后库存总金额" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="特殊标记" prop="specialFlag">
-              <el-input v-model="form.specialFlag" placeholder="请输入特殊标记" />
+              <el-input v-model="PhaOutform.specialFlag" placeholder="请输入特殊标记" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="出库状态" prop="outState">
-              <el-radio-group v-model="form.outState">
-                <el-radio v-for="item in options.outStateOptions" :key="item.dictValue" :value="item.dictValue">
+              <el-radio-group v-model="PhaOutform.outState">
+                <el-radio v-for="item in PhaOutoptions.outStatePhaOutoptions" :key="item.dictValue"
+                  :value="item.dictValue">
                   {{ item.dictLabel }}
                 </el-radio>
               </el-radio-group>
@@ -469,19 +480,19 @@
 
           <el-col :lg="12">
             <el-form-item label="申请出库量" prop="applyNum">
-              <el-input v-model="form.applyNum" placeholder="请输入申请出库量" />
+              <el-input v-model="PhaOutform.applyNum" placeholder="请输入申请出库量" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="申请出库人" prop="applyOpercode">
-              <el-input v-model="form.applyOpercode" placeholder="请输入申请出库人" />
+              <el-input v-model="PhaOutform.applyOpercode" placeholder="请输入申请出库人" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="申请出库日期" prop="applyDate">
-              <el-date-picker v-model="form.applyDate" type="datetime" placeholder="选择日期时间"
+              <el-date-picker v-model="PhaOutform.applyDate" type="datetime" placeholder="选择日期时间"
                 value-format="YYYY-MM-DD HH:mm:ss">
               </el-date-picker>
             </el-form-item>
@@ -489,19 +500,19 @@
 
           <el-col :lg="12">
             <el-form-item label="审批数量" prop="examNum">
-              <el-input v-model="form.examNum" placeholder="请输入审批数量" />
+              <el-input v-model="PhaOutform.examNum" placeholder="请输入审批数量" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="审批人" prop="examOpercode">
-              <el-input v-model="form.examOpercode" placeholder="请输入审批人" />
+              <el-input v-model="PhaOutform.examOpercode" placeholder="请输入审批人" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="审批日期" prop="examDate">
-              <el-date-picker v-model="form.examDate" type="datetime" placeholder="选择日期时间"
+              <el-date-picker v-model="PhaOutform.examDate" type="datetime" placeholder="选择日期时间"
                 value-format="YYYY-MM-DD HH:mm:ss">
               </el-date-picker>
             </el-form-item>
@@ -509,13 +520,13 @@
 
           <el-col :lg="12">
             <el-form-item label="核准人" prop="approveOpercode">
-              <el-input v-model="form.approveOpercode" placeholder="请输入核准人" />
+              <el-input v-model="PhaOutform.approveOpercode" placeholder="请输入核准人" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="核准日期" prop="approveDate">
-              <el-date-picker v-model="form.approveDate" type="datetime" placeholder="选择日期时间"
+              <el-date-picker v-model="PhaOutform.approveDate" type="datetime" placeholder="选择日期时间"
                 value-format="YYYY-MM-DD HH:mm:ss">
               </el-date-picker>
             </el-form-item>
@@ -523,79 +534,79 @@
 
           <el-col :lg="12">
             <el-form-item label="货位号" prop="placeCode">
-              <el-input v-model="form.placeCode" placeholder="请输入货位号" />
+              <el-input v-model="PhaOutform.placeCode" placeholder="请输入货位号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="退库数量" prop="returnNum">
-              <el-input v-model="form.returnNum" placeholder="请输入退库数量" />
+              <el-input v-model="PhaOutform.returnNum" placeholder="请输入退库数量" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="摆药单号" prop="drugedBill">
-              <el-input v-model="form.drugedBill" placeholder="请输入摆药单号" />
+              <el-input v-model="PhaOutform.drugedBill" placeholder="请输入摆药单号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="制剂序号" prop="medId">
-              <el-input v-model="form.medId" placeholder="请输入制剂序号" />
+              <el-input v-model="PhaOutform.medId" placeholder="请输入制剂序号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="领药单位编码" prop="drugStorageCode">
-              <el-input v-model="form.drugStorageCode" placeholder="请输入领药单位编码" />
+              <el-input v-model="PhaOutform.drugStorageCode" placeholder="请输入领药单位编码" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="处方号" prop="recipeNo">
-              <el-input v-model="form.recipeNo" placeholder="请输入处方号" />
+              <el-input v-model="PhaOutform.recipeNo" placeholder="请输入处方号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="处方流水号" prop="sequenceNo">
-              <el-input v-model.number="form.sequenceNo" placeholder="请输入处方流水号" />
+              <el-input v-model.number="PhaOutform.sequenceNo" placeholder="请输入处方流水号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="签字人" prop="signPerson">
-              <el-input v-model="form.signPerson" placeholder="请输入签字人" />
+              <el-input v-model="PhaOutform.signPerson" placeholder="请输入签字人" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="领药人" prop="getPerson">
-              <el-input v-model="form.getPerson" placeholder="请输入领药人" />
+              <el-input v-model="PhaOutform.getPerson" placeholder="请输入领药人" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="冲账标志" prop="strikeFlag">
-              <el-input v-model="form.strikeFlag" placeholder="请输入冲账标志" />
+              <el-input v-model="PhaOutform.strikeFlag" placeholder="请输入冲账标志" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="备注" prop="mark">
-              <el-input v-model="form.mark" placeholder="请输入备注" />
+              <el-input v-model="PhaOutform.mark" placeholder="请输入备注" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="操作员" prop="operCode">
-              <el-input v-model="form.operCode" placeholder="请输入操作员" />
+              <el-input v-model="PhaOutform.operCode" placeholder="请输入操作员" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="操作日期" prop="operDate">
-              <el-date-picker v-model="form.operDate" type="datetime" placeholder="选择日期时间"
+              <el-date-picker v-model="PhaOutform.operDate" type="datetime" placeholder="选择日期时间"
                 value-format="YYYY-MM-DD HH:mm:ss">
               </el-date-picker>
             </el-form-item>
@@ -603,19 +614,19 @@
 
           <el-col :lg="12">
             <el-form-item label="是否药房向药柜出库记录" prop="arkFlag">
-              <el-input v-model="form.arkFlag" placeholder="请输入是否药房向药柜出库记录" />
+              <el-input v-model="PhaOutform.arkFlag" placeholder="请输入是否药房向药柜出库记录" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="药柜发药出库单流水号" prop="arkBillCode">
-              <el-input v-model.number="form.arkBillCode" placeholder="请输入药柜发药出库单流水号" />
+              <el-input v-model.number="PhaOutform.arkBillCode" placeholder="请输入药柜发药出库单流水号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="出库记录发生时间" prop="outDate">
-              <el-date-picker v-model="form.outDate" type="datetime" placeholder="选择日期时间"
+              <el-date-picker v-model="PhaOutform.outDate" type="datetime" placeholder="选择日期时间"
                 value-format="YYYY-MM-DD HH:mm:ss">
               </el-date-picker>
             </el-form-item>
@@ -623,20 +634,21 @@
 
           <el-col :lg="12">
             <el-form-item label="申请单流水号" prop="applyNumber">
-              <el-input v-model.number="form.applyNumber" placeholder="请输入申请单流水号" />
+              <el-input v-model.number="PhaOutform.applyNumber" placeholder="请输入申请单流水号" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <template #footer v-if="opertype != 3">
-        <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
+      <template #footer v-if="PhaOutopertype != 3">
+        <el-button text @click="PhaOutcancel">{{ $t('btn.cancel') }}</el-button>
+        <el-button type="primary" @click="PhaOutsubmitForm">{{ $t('btn.submit') }}</el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup name="phaout">
+//#region 出库
 import {
   listPhaOut,
   addPhaOut, delPhaOut,
@@ -646,10 +658,10 @@ import {
   from '@/api/business/phaout.js'
 import importData from '@/components/ImportData'
 const { proxy } = getCurrentInstance()
-const ids = ref([])
-const loading = ref(false)
-const showSearch = ref(true)
-const queryParams = reactive({
+const PhaOutids = ref([])
+const PhaOutloading = ref(false)
+const PhaOutshowSearch = ref(true)
+const PhaOutqueryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   sort: '',
@@ -670,7 +682,7 @@ const queryParams = reactive({
   producerCode: undefined,
   companyCode: undefined,
 })
-const columns = ref([
+const PhaOutcolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
   { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
@@ -733,47 +745,47 @@ const columns = ref([
   { visible: false, align: 'center', type: '', prop: 'applyNumber', label: '申请单流水号' },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
-const total = ref(0)
-const dataList = ref([])
-const queryRef = ref()
-const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
+const PhaOuttotal = ref(0)
+const PhaOutdataList = ref([])
+const PhaOutqueryRef = ref()
+const PhaOutdefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 
-var dictParams = [
+var PhaOutdictParams = [
 ]
 
 
-function getList() {
-  loading.value = true
-  listPhaOut(queryParams).then(res => {
+function PhaOutgetList() {
+  PhaOutloading.value = true
+  listPhaOut(PhaOutqueryParams).then(res => {
     const { code, data } = res
     if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
-      loading.value = false
+      PhaOutdataList.value = data.result
+      PhaOuttotal.value = data.totalNum
+      PhaOutloading.value = false
     }
   })
 }
 
 // 查询
-function handleQuery() {
-  queryParams.pageNum = 1
-  getList()
+function PhaOuthandleQuery() {
+  PhaOutqueryParams.pageNum = 1
+  PhaOutgetList()
 }
 
 // 重置查询操作
-function resetQuery() {
-  proxy.resetForm("queryRef")
-  handleQuery()
+function PhaOutresetQuery() {
+  proxy.resetForm("PhaOutqueryRef")
+  PhaOuthandleQuery()
 }
 // 多选框选中数据
-function handleSelectionChange(selection) {
-  ids.value = selection.map((item) => item.id);
-  single.value = selection.length != 1
-  multiple.value = !selection.length;
+function PhaOuthandleSelectionChange(selection) {
+  PhaOutids.value = selection.map((item) => item.id);
+  PhaOutsingle.value = selection.length != 1
+  PhaOutmultiple.value = !selection.length;
 }
 // 自定义排序
-function sortChange(column) {
+function PhaOutsortChange(column) {
   var sort = undefined
   var sortType = undefined
 
@@ -782,40 +794,40 @@ function sortChange(column) {
     sortType = column.order
 
   }
-  queryParams.sort = sort
-  queryParams.sortType = sortType
-  handleQuery()
+  PhaOutqueryParams.sort = sort
+  PhaOutqueryParams.sortType = sortType
+  PhaOuthandleQuery()
 }
 
 /*************** form操作 ***************/
-const formRef = ref()
-const title = ref('')
+const PhaOutformRef = ref()
+const PhaOuttitle = ref('')
 // 操作类型 1、add 2、edit 3、view
-const opertype = ref(0)
-const open = ref(false)
-const state = reactive({
-  single: true,
-  multiple: true,
-  form: {},
-  rules: {
+const PhaOutopertype = ref(0)
+const PhaOutopen = ref(false)
+const PhaOutstate = reactive({
+  PhaOutsingle: true,
+  PhaOutmultiple: true,
+  PhaOutform: {},
+  PhaOutrules: {
   },
-  options: {
+  PhaOutoptions: {
     // 出库类型 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    outTypeOptions: [],
+    outTypePhaOutoptions: [],
   }
 })
 
-const { form, rules, options, single, multiple } = toRefs(state)
+const { PhaOutform, PhaOutrules, PhaOutoptions, PhaOutsingle, PhaOutmultiple } = toRefs(PhaOutstate)
 
 // 关闭dialog
-function cancel() {
-  open.value = false
-  reset()
+function PhaOutcancel() {
+  PhaOutopen.value = false
+  PhaOutreset()
 }
 
 // 重置表单
-function reset() {
-  form.value = {
+function PhaOutreset() {
+  PhaOutform.value = {
     drugDeptCode: null,
     outBillCode: null,
     serialCode: null,
@@ -877,23 +889,23 @@ function reset() {
     outDate: null,
     applyNumber: null,
   };
-  proxy.resetForm("formRef")
+  proxy.resetForm("PhaOutformRef")
 }
 
 /**
  * 查看
  * @param {*} row
  */
-function handlePreview(row) {
-  reset()
+function PhaOuthandlePreview(row) {
+  PhaOutreset()
   const id = row.id
   getPhaOut(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
-      open.value = true
-      title.value = '查看'
-      opertype.value = 3
-      form.value = {
+      PhaOutopen.value = true
+      PhaOuttitle.value = '查看'
+      PhaOutopertype.value = 3
+      PhaOutform.value = {
         ...data,
       }
     }
@@ -901,24 +913,24 @@ function handlePreview(row) {
 }
 
 // 添加按钮操作
-function handleAdd() {
-  reset();
-  open.value = true
-  title.value = '添加出库记录'
-  opertype.value = 1
+function PhaOuthandleAdd() {
+  PhaOutreset();
+  PhaOutopen.value = true
+  PhaOuttitle.value = '添加出库记录'
+  PhaOutopertype.value = 1
 }
 // 修改按钮操作
-function handleUpdate(row) {
-  reset()
-  const id = row.id || ids.value
+function PhaOuthandleUpdate(row) {
+  PhaOutreset()
+  const id = row.id || PhaOutids.value
   getPhaOut(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
-      open.value = true
-      title.value = '修改出库记录'
-      opertype.value = 2
+      PhaOutopen.value = true
+      PhaOuttitle.value = '修改出库记录'
+      PhaOutopertype.value = 2
 
-      form.value = {
+      PhaOutform.value = {
         ...data,
       }
     }
@@ -926,21 +938,21 @@ function handleUpdate(row) {
 }
 
 // 添加&修改 表单提交
-function submitForm() {
-  proxy.$refs["formRef"].validate((valid) => {
+function PhaOutsubmitForm() {
+  proxy.$refs["PhaOutformRef"].validate((valid) => {
     if (valid) {
 
-      if (form.value.id != undefined && opertype.value === 2) {
-        updatePhaOut(form.value).then((res) => {
+      if (PhaOutform.value.id != undefined && PhaOutopertype.value === 2) {
+        updatePhaOut(PhaOutform.value).then((res) => {
           proxy.$modal.msgSuccess("修改成功")
-          open.value = false
-          getList()
+          PhaOutopen.value = false
+          PhaOutgetList()
         })
       } else {
-        addPhaOut(form.value).then((res) => {
+        addPhaOut(PhaOutform.value).then((res) => {
           proxy.$modal.msgSuccess("新增成功")
-          open.value = false
-          getList()
+          PhaOutopen.value = false
+          PhaOutgetList()
         })
       }
     }
@@ -948,43 +960,43 @@ function submitForm() {
 }
 
 // 删除按钮操作
-function handleDelete(row) {
-  const Ids = row.id || ids.value
+function PhaOuthandleDelete(row) {
+  const PhaOutids = row.id || PhaOutids.value
 
   proxy
-    .$confirm('是否确认删除参数编号为"' + Ids + '"的数据项？', "警告", {
+    .$confirm('是否确认删除参数编号为"' + PhaOutids + '"的数据项？', "警告", {
       confirmButtonText: proxy.$t('common.ok'),
-      cancelButtonText: proxy.$t('common.cancel'),
+      PhaOutcancelButtonText: proxy.$t('common.PhaOutcancel'),
       type: "warning",
     })
     .then(function () {
-      return delPhaOut(Ids)
+      return delPhaOut(PhaOutids)
     })
     .then(() => {
-      getList()
+      PhaOutgetList()
       proxy.$modal.msgSuccess("删除成功")
     })
 }
 
 // 清空
-function handleClear() {
+function PhaOuthandleClear() {
   proxy
     .$confirm("是否确认清空所有数据项?", "警告", {
       confirmButtonText: proxy.$t('common.ok'),
-      cancelButtonText: proxy.$t('common.cancel'),
+      PhaOutcancelButtonText: proxy.$t('common.PhaOutcancel'),
       type: "warning",
     })
     .then(function () {
       return clearPhaOut()
     })
     .then(() => {
-      handleQuery()
+      PhaOuthandleQuery()
       proxy.$modal.msgSuccess('清空成功')
     })
 }
 
 // 导入数据成功处理
-const handleFileSuccess = (response) => {
+const PhaOuthandleFileSuccess = (response) => {
   const { item1, item2 } = response.data
   var error = ''
   item2.forEach((item) => {
@@ -993,21 +1005,22 @@ const handleFileSuccess = (response) => {
   proxy.$alert(item1 + '<p>' + error + '</p>', '导入结果', {
     dangerouslyUseHTMLString: true
   })
-  getList()
+  PhaOutgetList()
 }
 
 // 导出按钮操作
-function handleExport() {
+function PhaOuthandleExport() {
   proxy
     .$confirm("是否确认导出出库记录数据项?", "警告", {
       confirmButtonText: "确定",
-      cancelButtonText: "取消",
+      PhaOutcancelButtonText: "取消",
       type: "warning",
     })
     .then(async () => {
-      await proxy.downFile('/business/PhaOut/export', { ...queryParams })
+      await proxy.downFile('/business/PhaOut/export', { ...PhaOutqueryParams })
     })
 }
 
-handleQuery()
+PhaOuthandleQuery()
+//#endregion
 </script>

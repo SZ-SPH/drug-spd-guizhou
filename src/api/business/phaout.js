@@ -24,6 +24,15 @@ export function addPhaOut(data) {
     data: data,
   })
 }
+
+
+export function addOut(data) {
+  return request({
+    url: 'business/PhaOut/Addout',
+    method: 'post',
+    data: data,
+  })
+}
 /**
  * 修改出库记录
  * @param data

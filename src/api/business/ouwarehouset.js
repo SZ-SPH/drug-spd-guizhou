@@ -2,7 +2,7 @@ import request from '@/utils/request'
 import { downFile } from '@/utils/request'
 
 /**
- * 出库分页查询
+ * 出库药品详情分页查询
  * @param {查询条件} data
  */
 export function listOuWarehouset(query) {
@@ -14,7 +14,7 @@ export function listOuWarehouset(query) {
 }
 
 /**
- * 新增出库
+ * 新增出库药品详情
  * @param data
  */
 export function addOuWarehouset(data) {
@@ -24,19 +24,8 @@ export function addOuWarehouset(data) {
     data: data,
   })
 }
-
-
-
-export function aLLADDplanStock(data) {
-  return request({
-    url: 'business/OuWarehouset/stockAdd',
-    method: 'post',
-    data: data,
-
-  })
-}
 /**
- * 修改出库
+ * 修改出库药品详情
  * @param data
  */
 export function updateOuWarehouset(data) {
@@ -47,7 +36,7 @@ export function updateOuWarehouset(data) {
   })
 }
 /**
- * 获取出库详情
+ * 获取出库药品详情详情
  * @param {Id}
  */
 export function getOuWarehouset(id) {
@@ -58,7 +47,7 @@ export function getOuWarehouset(id) {
 }
 
 /**
- * 删除出库
+ * 删除出库药品详情
  * @param {主键} pid
  */
 export function delOuWarehouset(pid) {
@@ -67,14 +56,14 @@ export function delOuWarehouset(pid) {
     method: 'delete'
   })
 }
-// 清空出库
+// 清空出库药品详情
 export function clearOuWarehouset() {
   return request({
     url: 'business/OuWarehouset/clean',
     method: 'delete'
   })
 }
-// 导出出库
+// 导出出库药品详情
 export async function exportOuWarehouset(query) {
   await downFile('business/OuWarehouset/export', { ...query })
 }

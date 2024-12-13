@@ -5,218 +5,481 @@
 -->
 <template>
   <div>
-
     <div>
-      <el-form :model="PhaInPlanqueryParams" label-position="right" inline ref="PhaInPlanqueryRef"
-        v-show="PhaInPlanshowSearch" @submit.prevent>
-        <el-form-item label="入库计划流水号" prop="planNo">
-          <el-input v-model="PhaInPlanqueryParams.planNo" placeholder="请输入入库计划流水号" />
+      <el-form :model="PhaOutqueryParams" label-position="right" inline ref="PhaOutqueryRef" v-show="PhaOutshowSearch"
+        @submit.prevent>
+        <el-form-item label="出库科室编码" prop="drugDeptCode">
+          <el-input v-model="PhaOutqueryParams.drugDeptCode" placeholder="请输入出库科室编码" />
         </el-form-item>
-        <el-form-item label="采购单号" prop="billCode">
-          <el-input v-model="PhaInPlanqueryParams.billCode" placeholder="请输入采购单号" />
+        <el-form-item label="出库单流水号" prop="outBillCode">
+          <el-input v-model.number="PhaOutqueryParams.outBillCode" placeholder="请输入出库单流水号" />
         </el-form-item>
-        <el-form-item label="单据状态" prop="state">
-          <el-radio-group v-model="PhaInPlanqueryParams.state">
-            <el-radio>全部</el-radio>
-            <el-radio v-for="item in PhaInPlanoptions.statePhaInPlanoptions" :key="item.dictValue"
-              :value="item.dictValue">{{ item.dictLabel }}</el-radio>
-          </el-radio-group>
+        <el-form-item label="序号" prop="serialCode">
+          <el-input v-model.number="PhaOutqueryParams.serialCode" placeholder="请输入序号" />
         </el-form-item>
-        <el-form-item label="计划类型" prop="planType">
-          <el-select clearable v-model="PhaInPlanqueryParams.planType" placeholder="请选择计划类型">
-            <el-option v-for="item in PhaInPlanoptions.planTypePhaInPlanoptions" :key="item.dictValue"
-              :label="item.dictLabel" :value="item.dictValue">
+        <el-form-item label="批次号" prop="groupCode">
+          <el-input v-model="PhaOutqueryParams.groupCode" placeholder="请输入批次号" />
+        </el-form-item>
+        <el-form-item label="出库单据号" prop="outListCode">
+          <el-input v-model="PhaOutqueryParams.outListCode" placeholder="请输入出库单据号" />
+        </el-form-item>
+        <el-form-item label="出库类型" prop="outType">
+          <el-select clearable v-model="PhaOutqueryParams.outType" placeholder="请选择出库类型">
+            <el-option v-for="item in PhaOutoptions.outTypePhaOutoptions" :key="item.dictValue" :label="item.dictLabel"
+              :value="item.dictValue">
               <span class="fl">{{ item.dictLabel }}</span>
-              <!-- <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span> -->
+              <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="科室编码" prop="drugDeptCode">
-          <el-input v-model="PhaInPlanqueryParams.drugDeptCode" placeholder="请输入科室编码" />
+        <el-form-item label="出库分类" prop="class3MeaningCode">
+          <el-input v-model="PhaOutqueryParams.class3MeaningCode" placeholder="请输入出库分类" />
+        </el-form-item>
+        <el-form-item label="入库单号" prop="inBillCode">
+          <el-input v-model.number="PhaOutqueryParams.inBillCode" placeholder="请输入入库单号" />
+        </el-form-item>
+        <el-form-item label="入库单序号" prop="inSerialCode">
+          <el-input v-model.number="PhaOutqueryParams.inSerialCode" placeholder="请输入入库单序号" />
+        </el-form-item>
+        <el-form-item label="入库单据号" prop="inListCode">
+          <el-input v-model="PhaOutqueryParams.inListCode" placeholder="请输入入库单据号" />
         </el-form-item>
         <el-form-item label="药品编码" prop="drugCode">
-          <el-input v-model="PhaInPlanqueryParams.drugCode" placeholder="请输入药品编码" />
+          <el-input v-model="PhaOutqueryParams.drugCode" placeholder="请输入药品编码" />
         </el-form-item>
-        <el-form-item label="药品名称" prop="tradeName">
-          <el-input v-model="PhaInPlanqueryParams.tradeName" placeholder="请输入药品名称" />
+        <el-form-item label="药品商品名" prop="tradeName">
+          <el-input v-model="PhaOutqueryParams.tradeName" placeholder="请输入药品商品名" />
         </el-form-item>
-        <el-form-item label="计划日期">
-          <el-date-picker v-model="PhaInPlandateRangePlanDate" type="datetimerange" start-placeholder="开始日期"
-            end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="PhaInPlandefaultTime"
-            :shortcuts="dateOptions">
-          </el-date-picker>
+        <el-form-item label="药品类别" prop="drugType">
+          <el-select clearable v-model="PhaOutqueryParams.drugType" placeholder="请选择药品类别">
+            <el-option v-for="item in PhaOutoptions.drugTypePhaOutoptions" :key="item.dictValue" :label="item.dictLabel"
+              :value="item.dictValue">
+              <span class="fl">{{ item.dictLabel }}</span>
+              <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="采购日期">
-          <el-date-picker v-model="PhaInPlandateRangeStockDate" type="datetimerange" start-placeholder="开始日期"
-            end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="PhaInPlandefaultTime"
-            :shortcuts="dateOptions">
-          </el-date-picker>
+        <el-form-item label="生产厂家" prop="producerCode">
+          <el-input v-model="PhaOutqueryParams.producerCode" placeholder="请输入生产厂家" />
         </el-form-item>
-        <el-form-item label="采购流水号" prop="stockNo">
-          <el-input v-model="PhaInPlanqueryParams.stockNo" placeholder="请输入采购流水号" />
-        </el-form-item>
-        <el-form-item label="操作日期">
-          <el-date-picker v-model="PhaInPlandateRangeOperDate" type="datetimerange" start-placeholder="开始日期"
-            end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="PhaInPlandefaultTime"
-            :shortcuts="dateOptions">
-          </el-date-picker>
+        <el-form-item label="供货单位代码" prop="companyCode">
+          <el-input v-model="PhaOutqueryParams.companyCode" placeholder="请输入供货单位代码" />
         </el-form-item>
         <el-form-item>
-          <el-button icon="search" type="primary" @click="PhaInPlanhandleQuery">{{ $t('btn.search') }}</el-button>
-          <el-button icon="refresh" @click="PhaInPlanresetQuery">{{ $t('btn.reset') }}</el-button>
+          <el-button icon="search" type="primary" @click="PhaOuthandleQuery">{{ $t('btn.search') }}</el-button>
+          <el-button icon="refresh" @click="PhaOutresetQuery">{{ $t('btn.reset') }}</el-button>
         </el-form-item>
       </el-form>
       <!-- 工具区域 -->
       <el-row :gutter="15" class="mb10">
         <el-col :span="1.5">
-          <el-button type="primary" v-hasPermi="['phainplan:add']" plain icon="plus" @click="PhaInPlanhandleAdd">
+          <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="AlladdOut">
+            生成出库单据
+          </el-button>
+        </el-col>
+
+        <!-- <el-col :span="1.5">
+          <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="PhaOuthandleAdd">
             {{ $t('btn.add') }}
           </el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button type="success" :disabled="PhaInPlansingle" v-hasPermi="['phainplan:edit']" plain icon="edit"
-            @click="PhaInPlanhandleUpdate">
+          <el-button type="success" :disabled="PhaOutsingle" v-hasPermi="['phaout:edit']" plain icon="edit"
+            @click="PhaOuthandleUpdate">
             {{ $t('btn.edit') }}
           </el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button type="danger" :disabled="PhaInPlanmultiple" v-hasPermi="['phainplan:delete']" plain icon="delete"
-            @click="PhaInPlanhandleDelete">
+          <el-button type="danger" :disabled="PhaOutmultiple" v-hasPermi="['phaout:delete']" plain icon="delete"
+            @click="PhaOuthandleDelete">
             {{ $t('btn.delete') }}
           </el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button type="danger" v-hasPermi="['phainplan:delete']" plain icon="delete" @click="PhaInPlanhandleClear">
+          <el-button type="danger" v-hasPermi="['phaout:delete']" plain icon="delete" @click="PhaOuthandleClear">
             {{ $t('btn.clean') }}
           </el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-dropdown trigger="click" v-hasPermi="['phainplan:import']">
+          <el-dropdown trigger="click" v-hasPermi="['phaout:import']">
             <el-button type="primary" plain icon="Upload">
               {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item command="upload">
-                  <importData templateUrl="business/PhaInPlan/importTemplate" importUrl="/business/PhaInPlan/importData"
-                    @success="PhaInPlanhandleFileSuccess"></importData>
+                  <importData templateUrl="business/PhaOut/importTemplate" importUrl="/business/PhaOut/importData"
+                    @success="PhaOuthandleFileSuccess"></importData>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
-          </el-dropdown>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button type="warning" plain icon="download" @click="PhaInPlanhandleExport"
-            v-hasPermi="['phainplan:export']">
-            {{ $t('btn.export') }}
-          </el-button>
-        </el-col>
-        <right-toolbar v-model:showSearch="PhaInPlanshowSearch" @queryTable="PhaInPlangetList"
-          :columns="PhaInPlancolumns"></right-toolbar>
+</el-dropdown>
+</el-col>
+<el-col :span="1.5">
+  <el-button type="warning" plain icon="download" @click="PhaOuthandleExport" v-hasPermi="['phaout:export']">
+    {{ $t('btn.export') }}
+  </el-button>
+</el-col> -->
+        <right-toolbar v-model:showSearch="PhaOutshowSearch" @queryTable="PhaOutgetList"
+          :columns="PhaOutcolumns"></right-toolbar>
       </el-row>
 
-      <el-table :data="PhaInPlandataList" v-loading="PhaInPlanloading" ref="PhaInPlantable" border
-        header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="PhaInPlansortChange"
-        @selection-change="PhaInPlanhandleSelectionChange">
+      <el-table :data="PhaOutdataList" v-loading="PhaOutloading" ref="PhaOuttable" border
+        header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="PhaOutsortChange"
+        @selection-change="PhaOuthandleSelectionChange">
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column prop="planNo" label="入库计划流水号" align="center" v-if="PhaInPlancolumns.showColumn('planNo')" />
-        <el-table-column prop="billCode" label="采购单号" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('billCode')" />
-        <el-table-column prop="state" label="单据状态" align="center" v-if="PhaInPlancolumns.showColumn('state')">
+        <el-table-column prop="drugDeptCode" label="出库科室编码" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('drugDeptCode')" />
+        <el-table-column prop="outBillCode" label="出库单流水号" align="center"
+          v-if="PhaOutcolumns.showColumn('outBillCode')" />
+        <el-table-column prop="serialCode" label="序号" align="center" v-if="PhaOutcolumns.showColumn('serialCode')" />
+        <el-table-column prop="groupCode" label="批次号" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('groupCode')" />
+        <el-table-column prop="outListCode" label="出库单据号" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('outListCode')" />
+        <el-table-column prop="outType" label="出库类型" align="center" v-if="PhaOutcolumns.showColumn('outType')">
           <template #default="scope">
-            <dict-tag :options="PhaInPlanoptions.statePhaInPlanoptions" :value="scope.row.state" />
+            <dict-tag :options="PhaOutoptions.outTypePhaOutoptions" :value="scope.row.outType" />
           </template>
         </el-table-column>
-        <el-table-column prop="planType" label="计划类型" align="center" v-if="PhaInPlancolumns.showColumn('planType')">
-          <template #default="scope">
-            <dict-tag :options="PhaInPlanoptions.planTypePhaInPlanoptions" :value="scope.row.planType" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="drugDeptCode" label="科室编码" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('drugDeptCode')" />
+        <el-table-column prop="class3MeaningCode" label="出库分类" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('class3MeaningCode')" />
+        <el-table-column prop="inBillCode" label="入库单号" align="center" v-if="PhaOutcolumns.showColumn('inBillCode')" />
+        <el-table-column prop="inSerialCode" label="入库单序号" align="center"
+          v-if="PhaOutcolumns.showColumn('inSerialCode')" />
+        <el-table-column prop="inListCode" label="入库单据号" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('inListCode')" />
         <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('drugCode')" />
-        <el-table-column prop="tradeName" label="药品名称" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('tradeName')" />
+          v-if="PhaOutcolumns.showColumn('drugCode')" />
+        <el-table-column prop="tradeName" label="药品商品名" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('tradeName')" />
+        <el-table-column prop="drugType" label="药品类别" align="center" v-if="PhaOutcolumns.showColumn('drugType')">
+          <template #default="scope">
+            <dict-tag :options="PhaOutoptions.drugTypePhaOutoptions" :value="scope.row.drugType" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="drugQuality" label="药品性质" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('drugQuality')" />
         <el-table-column prop="specs" label="规格" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('specs')" />
-        <el-table-column prop="retailPrice" label="参考零售价" align="center"
-          v-if="PhaInPlancolumns.showColumn('retailPrice')" />
-        <el-table-column prop="wholesalePrice" label="参考批发价" align="center"
-          v-if="PhaInPlancolumns.showColumn('wholesalePrice')" />
-        <el-table-column prop="purchasePrice" label="最新购入价" align="center"
-          v-if="PhaInPlancolumns.showColumn('purchasePrice')" />
+          v-if="PhaOutcolumns.showColumn('specs')" />
         <el-table-column prop="packUnit" label="包装单位" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('packUnit')" />
-        <el-table-column prop="packQty" label="包装数量" align="center" v-if="PhaInPlancolumns.showColumn('packQty')" />
+          v-if="PhaOutcolumns.showColumn('packUnit')" />
+        <el-table-column prop="packQty" label="包装数" align="center" v-if="PhaOutcolumns.showColumn('packQty')" />
         <el-table-column prop="minUnit" label="最小单位" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('minUnit')" />
-        <el-table-column prop="producerCode" label="生产厂家编码" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('producerCode')" />
-        <el-table-column prop="producerName" label="生产厂家名称" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('producerName')" />
-        <el-table-column prop="storeNum" label="本科室库存数量" align="center"
-          v-if="PhaInPlancolumns.showColumn('storeNum')" />
-        <el-table-column prop="storeTotsum" label="全院库存总和" align="center"
-          v-if="PhaInPlancolumns.showColumn('storeTotsum')" />
-        <el-table-column prop="outputSum" label="全院出库总量" align="center"
-          v-if="PhaInPlancolumns.showColumn('outputSum')" />
-        <el-table-column prop="planNum" label="计划入库量" align="center" v-if="PhaInPlancolumns.showColumn('planNum')" />
-        <el-table-column prop="planEmpl" label="计划人" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('planEmpl')" />
-        <el-table-column prop="planDate" label="计划日期" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('planDate')" />
-        <el-table-column prop="stockEmpl" label="采购人" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('stockEmpl')" />
-        <el-table-column prop="stockDate" label="采购日期" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('stockDate')" />
-        <el-table-column prop="stockNo" label="采购流水号" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('stockNo')" />
-        <el-table-column prop="replacePlanNo" label="作废、替代计划单流水号" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('replacePlanNo')" />
+          v-if="PhaOutcolumns.showColumn('minUnit')" />
+        <el-table-column prop="showFlag" label="显示的单位标记" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('showFlag')" />
+        <el-table-column prop="showUnit" label="显示的单位" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('showUnit')" />
+        <el-table-column prop="batchNo" label="批号" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('batchNo')" />
+        <el-table-column prop="validDate" label="有效期" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('validDate')" />
+        <el-table-column prop="producerCode" label="生产厂家" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('producerCode')" />
+        <el-table-column prop="companyCode" label="供货单位代码" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('companyCode')" />
+        <el-table-column prop="retailPrice" label="零售价" align="center" v-if="PhaOutcolumns.showColumn('retailPrice')" />
+        <el-table-column prop="wholesalePrice" label="批发价" align="center"
+          v-if="PhaOutcolumns.showColumn('wholesalePrice')" />
+        <el-table-column prop="purchasePrice" label="购入价" align="center"
+          v-if="PhaOutcolumns.showColumn('purchasePrice')" />
+        <el-table-column prop="outNum" label="出库数量" align="center" v-if="PhaOutcolumns.showColumn('outNum')" />
+        <el-table-column prop="saleCost" label="零售金额" align="center" v-if="PhaOutcolumns.showColumn('saleCost')" />
+        <el-table-column prop="tradeCost" label="批发金额" align="center" v-if="PhaOutcolumns.showColumn('tradeCost')" />
+        <el-table-column prop="approveCost" label="购入金额" align="center"
+          v-if="PhaOutcolumns.showColumn('approveCost')" />
+        <el-table-column prop="storeNum" label="出库后库存数量" align="center" v-if="PhaOutcolumns.showColumn('storeNum')" />
+        <el-table-column prop="storeCost" label="出库后库存总金额" align="center"
+          v-if="PhaOutcolumns.showColumn('storeCost')" />
+        <el-table-column prop="specialFlag" label="特殊标记" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('specialFlag')" />
+        <el-table-column prop="outState" label="出库状态" align="center" v-if="PhaOutcolumns.showColumn('outState')">
+          <template #default="scope">
+            <dict-tag :options="PhaOutoptions.outStatePhaOutoptions" :value="scope.row.outState" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="applyNum" label="申请出库量" align="center" v-if="PhaOutcolumns.showColumn('applyNum')" />
+        <el-table-column prop="applyOpercode" label="申请出库人" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('applyOpercode')" />
+        <el-table-column prop="applyDate" label="申请出库日期" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('applyDate')" />
+        <el-table-column prop="examNum" label="审批数量" align="center" v-if="PhaOutcolumns.showColumn('examNum')" />
+        <el-table-column prop="examOpercode" label="审批人" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('examOpercode')" />
+        <el-table-column prop="examDate" label="审批日期" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('examDate')" />
+        <el-table-column prop="approveOpercode" label="核准人" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('approveOpercode')" />
+        <el-table-column prop="approveDate" label="核准日期" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('approveDate')" />
+        <el-table-column prop="placeCode" label="货位号" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('placeCode')" />
+        <el-table-column prop="returnNum" label="退库数量" align="center" v-if="PhaOutcolumns.showColumn('returnNum')" />
+        <el-table-column prop="drugedBill" label="摆药单号" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('drugedBill')" />
+        <el-table-column prop="medId" label="制剂序号" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('medId')" />
+        <el-table-column prop="drugStorageCode" label="领药单位编码" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('drugStorageCode')" />
+        <el-table-column prop="recipeNo" label="处方号" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('recipeNo')" />
+        <el-table-column prop="sequenceNo" label="处方流水号" align="center" v-if="PhaOutcolumns.showColumn('sequenceNo')" />
+        <el-table-column prop="signPerson" label="签字人" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('signPerson')" />
+        <el-table-column prop="getPerson" label="领药人" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('getPerson')" />
+        <el-table-column prop="strikeFlag" label="冲账标志" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('strikeFlag')" />
         <el-table-column prop="mark" label="备注" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('mark')" />
+          v-if="PhaOutcolumns.showColumn('mark')" />
         <el-table-column prop="operCode" label="操作员" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('operCode')" />
+          v-if="PhaOutcolumns.showColumn('operCode')" />
         <el-table-column prop="operDate" label="操作日期" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('operDate')" />
-        <el-table-column prop="extendField" label="扩展字段" align="center" :show-overflow-tooltip="true"
-          v-if="PhaInPlancolumns.showColumn('extendField')" />
+          v-if="PhaOutcolumns.showColumn('operDate')" />
+        <el-table-column prop="arkFlag" label="是否药房向药柜出库记录" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('arkFlag')" />
+        <el-table-column prop="arkBillCode" label="药柜发药出库单流水号" align="center"
+          v-if="PhaOutcolumns.showColumn('arkBillCode')" />
+        <el-table-column prop="outDate" label="出库记录发生时间" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('outDate')" />
+        <el-table-column prop="applyNumber" label="申请单流水号" align="center"
+          v-if="PhaOutcolumns.showColumn('applyNumber')" />
         <el-table-column label="操作" width="160">
           <template #default="scope">
-            <el-button type="primary" size="small" icon="view" PhaInPlantitle="详情"
-              @click="PhaInPlanhandlePreview(scope.row)"></el-button>
-            <el-button type="success" size="small" icon="edit" PhaInPlantitle="编辑" v-hasPermi="['phainplan:edit']"
-              @click="PhaInPlanhandleUpdate(scope.row)"></el-button>
-            <el-button type="danger" size="small" icon="delete" PhaInPlantitle="删除" v-hasPermi="['phainplan:delete']"
-              @click="PhaInPlanhandleDelete(scope.row)"></el-button>
+            <el-button type="primary" size="small" icon="view" title="详情"
+              @click="PhaOuthandlePreview(scope.row)"></el-button>
+            <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['phaout:edit']"
+              @click="PhaOuthandleUpdate(scope.row)"></el-button>
+            <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['phaout:delete']"
+              @click="PhaOuthandleDelete(scope.row)"></el-button>
           </template>
         </el-table-column>
       </el-table>
-      <pagination :total="PhaInPlantotal" v-model:page="PhaInPlanqueryParams.pageNum"
-        v-model:limit="PhaInPlanqueryParams.pageSize" @pagination="PhaInPlangetList" />
+      <pagination :total="PhaOuttotal" v-model:page="PhaOutqueryParams.pageNum"
+        v-model:limit="PhaOutqueryParams.pageSize" @pagination="PhaOutgetList" />
 
 
-      <el-dialog :PhaInPlantitle="PhaInPlantitle" :lock-scroll="false" v-model="PhaInPlanopen">
-        <el-form ref="PhaInPlanformRef" :model="PhaInPlanform" :PhaInPlanrules="PhaInPlanrules" label-width="100px">
+      <el-dialog :title="PhaOuttitle" :lock-scroll="false" v-model="PhaOutopen">
+        <el-form ref="PhaOutformRef" :model="PhaOutform" :rules="PhaOutrules" label-width="100px">
           <el-row :gutter="20">
 
             <el-col :lg="12">
-              <el-form-item label="入库计划流水号" prop="planNo">
-                <el-input v-model="PhaInPlanform.planNo" placeholder="请输入入库计划流水号" :disabled="PhaInPlanopertype != 1" />
+              <el-form-item label="出库科室编码" prop="drugDeptCode">
+                <el-input v-model="PhaOutform.drugDeptCode" placeholder="请输入出库科室编码" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="采购单号" prop="billCode">
-                <el-input v-model="PhaInPlanform.billCode" placeholder="请输入采购单号" />
+              <el-form-item label="出库单流水号" prop="outBillCode">
+                <el-input v-model.number="PhaOutform.outBillCode" placeholder="请输入出库单流水号" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="单据状态" prop="state">
-                <el-radio-group v-model="PhaInPlanform.state">
-                  <el-radio v-for="item in PhaInPlanoptions.statePhaInPlanoptions" :key="item.dictValue"
+              <el-form-item label="序号" prop="serialCode">
+                <el-input v-model.number="PhaOutform.serialCode" placeholder="请输入序号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="批次号" prop="groupCode">
+                <el-input v-model="PhaOutform.groupCode" placeholder="请输入批次号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="出库单据号" prop="outListCode">
+                <el-input v-model="PhaOutform.outListCode" placeholder="请输入出库单据号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="出库类型" prop="outType">
+                <el-select v-model="PhaOutform.outType" placeholder="请选择出库类型">
+                  <el-option v-for="item in PhaOutoptions.outTypePhaOutoptions" :key="item.dictValue"
+                    :label="item.dictLabel" :value="item.dictValue"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="出库分类" prop="class3MeaningCode">
+                <el-input v-model="PhaOutform.class3MeaningCode" placeholder="请输入出库分类" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="入库单号" prop="inBillCode">
+                <el-input v-model.number="PhaOutform.inBillCode" placeholder="请输入入库单号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="入库单序号" prop="inSerialCode">
+                <el-input v-model.number="PhaOutform.inSerialCode" placeholder="请输入入库单序号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="入库单据号" prop="inListCode">
+                <el-input v-model="PhaOutform.inListCode" placeholder="请输入入库单据号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="药品编码" prop="drugCode">
+                <el-input v-model="PhaOutform.drugCode" placeholder="请输入药品编码" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="药品商品名" prop="tradeName">
+                <el-input v-model="PhaOutform.tradeName" placeholder="请输入药品商品名" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="药品类别" prop="drugType">
+                <el-select v-model="PhaOutform.drugType" placeholder="请选择药品类别">
+                  <el-option v-for="item in PhaOutoptions.drugTypePhaOutoptions" :key="item.dictValue"
+                    :label="item.dictLabel" :value="item.dictValue"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="药品性质" prop="drugQuality">
+                <el-input v-model="PhaOutform.drugQuality" placeholder="请输入药品性质" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="规格" prop="specs">
+                <el-input v-model="PhaOutform.specs" placeholder="请输入规格" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="包装单位" prop="packUnit">
+                <el-input v-model="PhaOutform.packUnit" placeholder="请输入包装单位" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="包装数" prop="packQty">
+                <el-input v-model.number="PhaOutform.packQty" placeholder="请输入包装数" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="最小单位" prop="minUnit">
+                <el-input v-model="PhaOutform.minUnit" placeholder="请输入最小单位" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="显示的单位标记" prop="showFlag">
+                <el-input v-model="PhaOutform.showFlag" placeholder="请输入显示的单位标记" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="显示的单位" prop="showUnit">
+                <el-input v-model="PhaOutform.showUnit" placeholder="请输入显示的单位" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="批号" prop="batchNo">
+                <el-input v-model="PhaOutform.batchNo" placeholder="请输入批号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="有效期" prop="validDate">
+                <el-date-picker v-model="PhaOutform.validDate" type="datetime" placeholder="选择日期时间"
+                  value-format="YYYY-MM-DD HH:mm:ss">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="生产厂家" prop="producerCode">
+                <el-input v-model="PhaOutform.producerCode" placeholder="请输入生产厂家" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="供货单位代码" prop="companyCode">
+                <el-input v-model="PhaOutform.companyCode" placeholder="请输入供货单位代码" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="零售价" prop="retailPrice">
+                <el-input v-model="PhaOutform.retailPrice" placeholder="请输入零售价" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="批发价" prop="wholesalePrice">
+                <el-input v-model="PhaOutform.wholesalePrice" placeholder="请输入批发价" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="购入价" prop="purchasePrice">
+                <el-input v-model="PhaOutform.purchasePrice" placeholder="请输入购入价" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="出库数量" prop="outNum">
+                <el-input v-model="PhaOutform.outNum" placeholder="请输入出库数量" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="零售金额" prop="saleCost">
+                <el-input v-model="PhaOutform.saleCost" placeholder="请输入零售金额" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="批发金额" prop="tradeCost">
+                <el-input v-model="PhaOutform.tradeCost" placeholder="请输入批发金额" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="购入金额" prop="approveCost">
+                <el-input v-model="PhaOutform.approveCost" placeholder="请输入购入金额" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="出库后库存数量" prop="storeNum">
+                <el-input v-model="PhaOutform.storeNum" placeholder="请输入出库后库存数量" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="出库后库存总金额" prop="storeCost">
+                <el-input v-model="PhaOutform.storeCost" placeholder="请输入出库后库存总金额" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="特殊标记" prop="specialFlag">
+                <el-input v-model="PhaOutform.specialFlag" placeholder="请输入特殊标记" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="出库状态" prop="outState">
+                <el-radio-group v-model="PhaOutform.outState">
+                  <el-radio v-for="item in PhaOutoptions.outStatePhaOutoptions" :key="item.dictValue"
                     :value="item.dictValue">
                     {{ item.dictLabel }}
                   </el-radio>
@@ -225,180 +488,169 @@
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="计划类型" prop="planType">
-                <el-select v-model="PhaInPlanform.planType" placeholder="请选择计划类型">
-                  <el-option v-for="item in PhaInPlanoptions.planTypePhaInPlanoptions" :key="item.dictValue"
-                    :label="item.dictLabel" :value="item.dictValue"></el-option>
-                </el-select>
+              <el-form-item label="申请出库量" prop="applyNum">
+                <el-input v-model="PhaOutform.applyNum" placeholder="请输入申请出库量" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="科室编码" prop="drugDeptCode">
-                <el-input v-model="PhaInPlanform.drugDeptCode" placeholder="请输入科室编码" />
+              <el-form-item label="申请出库人" prop="applyOpercode">
+                <el-input v-model="PhaOutform.applyOpercode" placeholder="请输入申请出库人" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="药品编码" prop="drugCode">
-                <el-input v-model="PhaInPlanform.drugCode" placeholder="请输入药品编码" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="药品名称" prop="tradeName">
-                <el-input v-model="PhaInPlanform.tradeName" placeholder="请输入药品名称" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="规格" prop="specs">
-                <el-input v-model="PhaInPlanform.specs" placeholder="请输入规格" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="参考零售价" prop="retailPrice">
-                <el-input v-model="PhaInPlanform.retailPrice" placeholder="请输入参考零售价" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="参考批发价" prop="wholesalePrice">
-                <el-input v-model="PhaInPlanform.wholesalePrice" placeholder="请输入参考批发价" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="最新购入价" prop="purchasePrice">
-                <el-input v-model="PhaInPlanform.purchasePrice" placeholder="请输入最新购入价" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="包装单位" prop="packUnit">
-                <el-input v-model="PhaInPlanform.packUnit" placeholder="请输入包装单位" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="包装数量" prop="packQty">
-                <el-input v-model="PhaInPlanform.packQty" placeholder="请输入包装数量" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="最小单位" prop="minUnit">
-                <el-input v-model="PhaInPlanform.minUnit" placeholder="请输入最小单位" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="生产厂家编码" prop="producerCode">
-                <el-input v-model="PhaInPlanform.producerCode" placeholder="请输入生产厂家编码" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="生产厂家名称" prop="producerName">
-                <el-input v-model="PhaInPlanform.producerName" placeholder="请输入生产厂家名称" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="本科室库存数量" prop="storeNum">
-                <el-input v-model="PhaInPlanform.storeNum" placeholder="请输入本科室库存数量" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="全院库存总和" prop="storeTotsum">
-                <el-input v-model="PhaInPlanform.storeTotsum" placeholder="请输入全院库存总和" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="全院出库总量" prop="outputSum">
-                <el-input v-model="PhaInPlanform.outputSum" placeholder="请输入全院出库总量" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="计划入库量" prop="planNum">
-                <el-input v-model="PhaInPlanform.planNum" placeholder="请输入计划入库量" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="计划人" prop="planEmpl">
-                <el-input v-model="PhaInPlanform.planEmpl" placeholder="请输入计划人" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :lg="12">
-              <el-form-item label="计划日期" prop="planDate">
-                <el-date-picker v-model="PhaInPlanform.planDate" type="datetime" placeholder="选择日期时间"
+              <el-form-item label="申请出库日期" prop="applyDate">
+                <el-date-picker v-model="PhaOutform.applyDate" type="datetime" placeholder="选择日期时间"
                   value-format="YYYY-MM-DD HH:mm:ss">
                 </el-date-picker>
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="采购人" prop="stockEmpl">
-                <el-input v-model="PhaInPlanform.stockEmpl" placeholder="请输入采购人" />
+              <el-form-item label="审批数量" prop="examNum">
+                <el-input v-model="PhaOutform.examNum" placeholder="请输入审批数量" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="采购日期" prop="stockDate">
-                <el-date-picker v-model="PhaInPlanform.stockDate" type="datetime" placeholder="选择日期时间"
+              <el-form-item label="审批人" prop="examOpercode">
+                <el-input v-model="PhaOutform.examOpercode" placeholder="请输入审批人" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="审批日期" prop="examDate">
+                <el-date-picker v-model="PhaOutform.examDate" type="datetime" placeholder="选择日期时间"
                   value-format="YYYY-MM-DD HH:mm:ss">
                 </el-date-picker>
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="采购流水号" prop="stockNo">
-                <el-input v-model="PhaInPlanform.stockNo" placeholder="请输入采购流水号" />
+              <el-form-item label="核准人" prop="approveOpercode">
+                <el-input v-model="PhaOutform.approveOpercode" placeholder="请输入核准人" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="作废、替代计划单流水号" prop="replacePlanNo">
-                <el-input v-model="PhaInPlanform.replacePlanNo" placeholder="请输入作废、替代计划单流水号" />
+              <el-form-item label="核准日期" prop="approveDate">
+                <el-date-picker v-model="PhaOutform.approveDate" type="datetime" placeholder="选择日期时间"
+                  value-format="YYYY-MM-DD HH:mm:ss">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="货位号" prop="placeCode">
+                <el-input v-model="PhaOutform.placeCode" placeholder="请输入货位号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="退库数量" prop="returnNum">
+                <el-input v-model="PhaOutform.returnNum" placeholder="请输入退库数量" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="摆药单号" prop="drugedBill">
+                <el-input v-model="PhaOutform.drugedBill" placeholder="请输入摆药单号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="制剂序号" prop="medId">
+                <el-input v-model="PhaOutform.medId" placeholder="请输入制剂序号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="领药单位编码" prop="drugStorageCode">
+                <el-input v-model="PhaOutform.drugStorageCode" placeholder="请输入领药单位编码" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="处方号" prop="recipeNo">
+                <el-input v-model="PhaOutform.recipeNo" placeholder="请输入处方号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="处方流水号" prop="sequenceNo">
+                <el-input v-model.number="PhaOutform.sequenceNo" placeholder="请输入处方流水号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="签字人" prop="signPerson">
+                <el-input v-model="PhaOutform.signPerson" placeholder="请输入签字人" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="领药人" prop="getPerson">
+                <el-input v-model="PhaOutform.getPerson" placeholder="请输入领药人" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="冲账标志" prop="strikeFlag">
+                <el-input v-model="PhaOutform.strikeFlag" placeholder="请输入冲账标志" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
               <el-form-item label="备注" prop="mark">
-                <el-input v-model="PhaInPlanform.mark" placeholder="请输入备注" />
+                <el-input v-model="PhaOutform.mark" placeholder="请输入备注" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
               <el-form-item label="操作员" prop="operCode">
-                <el-input v-model="PhaInPlanform.operCode" placeholder="请输入操作员" />
+                <el-input v-model="PhaOutform.operCode" placeholder="请输入操作员" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
               <el-form-item label="操作日期" prop="operDate">
-                <el-date-picker v-model="PhaInPlanform.operDate" type="datetime" placeholder="选择日期时间"
+                <el-date-picker v-model="PhaOutform.operDate" type="datetime" placeholder="选择日期时间"
                   value-format="YYYY-MM-DD HH:mm:ss">
                 </el-date-picker>
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
-              <el-form-item label="扩展字段" prop="extendField">
-                <el-input v-model="PhaInPlanform.extendField" placeholder="请输入扩展字段" />
+              <el-form-item label="是否药房向药柜出库记录" prop="arkFlag">
+                <el-input v-model="PhaOutform.arkFlag" placeholder="请输入是否药房向药柜出库记录" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="药柜发药出库单流水号" prop="arkBillCode">
+                <el-input v-model.number="PhaOutform.arkBillCode" placeholder="请输入药柜发药出库单流水号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="出库记录发生时间" prop="outDate">
+                <el-date-picker v-model="PhaOutform.outDate" type="datetime" placeholder="选择日期时间"
+                  value-format="YYYY-MM-DD HH:mm:ss">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="申请单流水号" prop="applyNumber">
+                <el-input v-model.number="PhaOutform.applyNumber" placeholder="请输入申请单流水号" />
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
-        <template #footer v-if="PhaInPlanopertype != 3">
-          <el-button text @click="PhaInPlancancel">{{ $t('btn.cancel') }}</el-button>
-          <el-button type="primary" @click="PhaInPlansubmitForm">{{ $t('btn.submit') }}</el-button>
+        <template #footer v-if="PhaOutopertype != 3">
+          <el-button text @click="PhaOutcancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button type="primary" @click="PhaOutsubmitForm">{{ $t('btn.submit') }}</el-button>
         </template>
       </el-dialog>
     </div>
@@ -417,6 +669,9 @@
           </el-form-item>
           <el-form-item label="发出出库" prop="outWarehouseID">
             <el-input v-model.number="OutOrderqueryParams.outWarehouseID" placeholder="请输入发出出库" />
+          </el-form-item>
+          <el-form-item label="his出库单流水号" prop="outBillCode">
+            <el-input v-model.number="OutOrderqueryParams.outBillCode" placeholder="请输入his出库单流水号" />
           </el-form-item>
           <el-form-item label="时间">
             <el-date-picker v-model="OutOrderdateRangeTimes" type="datetimerange" start-placeholder="开始日期"
@@ -456,7 +711,7 @@
               {{ $t('btn.clean') }}
             </el-button>
           </el-col>
-          <el-col :span="1.5">
+          <!-- <el-col :span="1.5">
             <el-dropdown trigger="click" v-hasPermi="['outorder:import']">
               <el-button type="primary" plain icon="Upload">
                 {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
@@ -476,7 +731,7 @@
               v-hasPermi="['outorder:export']">
               {{ $t('btn.export') }}
             </el-button>
-          </el-col>
+          </el-col> -->
           <right-toolbar v-model:showSearch="OutOrderhandleshowSearch" @queryTable="OutOrdergetList"
             :columns="OutOrdercolumns"></right-toolbar>
         </el-row>
@@ -498,6 +753,12 @@
             v-if="OutOrdercolumns.showColumn('times')" />
           <el-table-column prop="remarks" label="备注" align="center" :show-overflow-tooltip="true"
             v-if="OutOrdercolumns.showColumn('remarks')" />
+          <el-table-column prop="outBillCode" label="his出库单流水号" align="center"
+            v-if="OutOrdercolumns.showColumn('outBillCode')" />
+          <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="true"
+            v-if="OutOrdercolumns.showColumn('createTime')" />
+          <el-table-column prop="createBy" label="创建人" align="center" :show-overflow-tooltip="true"
+            v-if="OutOrdercolumns.showColumn('createBy')" />
           <el-table-column label="操作" width="160">
             <template #default="scope">
               <el-button type="primary" size="small" icon="view" OutOrdertitle="详情"
@@ -561,6 +822,25 @@
                   <el-input v-model="OutOrderform.remarks" placeholder="请输入备注" />
                 </el-form-item>
               </el-col>
+              <el-col :lg="12">
+                <el-form-item label="his出库单流水号" prop="outBillCode">
+                  <el-input v-model.number="OutOrderform.outBillCode" placeholder="请输入his出库单流水号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="创建时间" prop="createTime">
+                  <el-date-picker v-model="OutOrderform.createTime" type="datetime" placeholder="选择日期时间"
+                    value-format="YYYY-MM-DD HH:mm:ss">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="创建人" prop="createBy">
+                  <el-input v-model="OutOrderform.createBy" placeholder="请输入创建人" />
+                </el-form-item>
+              </el-col>
             </el-row>
           </el-form>
           <template #footer v-if="OutOrderopertype != 3">
@@ -571,58 +851,54 @@
       </div>
 
       <div class="table-item2">
-        <el-form :model="OutqueryParams" label-position="right" inline ref="OutqueryRef" v-show="OutshowSearch"
-          @submit.prevent>
-          <el-form-item label="药品" prop="drugId">
-            <el-input v-model.number="OutqueryParams.drugId" placeholder="请输入药品" />
+        <el-form :model="OuWarehousetqueryParams" label-position="right" inline ref="OuWarehousetqueryRef"
+          v-show="OuWarehousetshowSearch" @submit.prevent>
+          <el-form-item label="OutorderID" prop="outorderID">
+            <el-input v-model.number="OuWarehousetqueryParams.outorderID" placeholder="请输入OutorderID" />
           </el-form-item>
-          <el-form-item label="出库房" prop="outWarehouseID">
-            <el-input v-model.number="OutqueryParams.outWarehouseID" placeholder="请输入出库房" />
+          <el-form-item label="出库科室编码" prop="drugDeptCode">
+            <el-input v-model="OuWarehousetqueryParams.drugDeptCode" placeholder="请输入出库科室编码" />
           </el-form-item>
-          <el-form-item label="入药房" prop="inpharmacyId">
-            <el-input v-model.number="OutqueryParams.inpharmacyId" placeholder="请输入入药房" />
+          <el-form-item label="出库单流水号" prop="outBillCode">
+            <el-input v-model.number="OuWarehousetqueryParams.outBillCode" placeholder="请输入出库单流水号" />
           </el-form-item>
-          <el-form-item label="数量" prop="qty">
-            <el-input v-model="OutqueryParams.qty" placeholder="请输入数量" />
+          <el-form-item label="批次号" prop="groupCode">
+            <el-input v-model="OuWarehousetqueryParams.groupCode" placeholder="请输入批次号" />
           </el-form-item>
-          <el-form-item label="申请计划" prop="pharmacyId">
-            <el-input v-model.number="OutqueryParams.pharmacyId" placeholder="请输入申请计划" />
+          <el-form-item label="药品编码" prop="drugCode">
+            <el-input v-model="OuWarehousetqueryParams.drugCode" placeholder="请输入药品编码" />
           </el-form-item>
-          <el-form-item label="出库单" prop="outorderID">
-            <el-input v-model.number="OutqueryParams.outorderID" placeholder="请输入出库单" />
-          </el-form-item>
-          <el-form-item label="时间">
-            <el-date-picker v-model="OutdateRangeTimes" type="datetimerange" start-placeholder="开始日期"
-              end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="OutdefaultTime"
-              :shortcuts="dateOptions">
-            </el-date-picker>
+          <el-form-item label="药品商品名" prop="tradeName">
+            <el-input v-model="OuWarehousetqueryParams.tradeName" placeholder="请输入药品商品名" />
           </el-form-item>
           <el-form-item>
-            <el-button icon="search" type="primary" @click="OuthandleQuery">{{ $t('btn.search') }}</el-button>
-            <el-button icon="refresh" @click="OutresetQuery">{{ $t('btn.reset') }}</el-button>
+            <el-button icon="search" type="primary" @click="OuWarehousethandleQuery">{{ $t('btn.search') }}</el-button>
+            <el-button icon="refresh" @click="OuWarehousetresetQuery">{{ $t('btn.reset') }}</el-button>
           </el-form-item>
         </el-form>
         <!-- 工具区域 -->
         <el-row :gutter="15" class="mb10">
           <el-col :span="1.5">
-            <el-button type="primary" v-hasPermi="['ouwarehouset:add']" plain icon="plus" @click="OuthandleAdd">
+            <el-button type="primary" v-hasPermi="['ouwarehouset:add']" plain icon="plus"
+              @click="OuWarehousethandleAdd">
               {{ $t('btn.add') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="success" :disabled="Outsingle" v-hasPermi="['ouwarehouset:edit']" plain icon="edit"
-              @click="OuthandleUpdate">
+            <el-button type="success" :disabled="OuWarehousetsingle" v-hasPermi="['ouwarehouset:edit']" plain
+              icon="edit" @click="OuWarehousethandleUpdate">
               {{ $t('btn.edit') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="danger" :disabled="Outmultiple" v-hasPermi="['ouwarehouset:delete']" plain icon="delete"
-              @click="OuthandleDelete">
+            <el-button type="danger" :disabled="OuWarehousetmultiple" v-hasPermi="['ouwarehouset:delete']" plain
+              icon="delete" @click="OuWarehousethandleDelete">
               {{ $t('btn.delete') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="danger" v-hasPermi="['ouwarehouset:delete']" plain icon="delete" @click="OuthandleClear">
+            <el-button type="danger" v-hasPermi="['ouwarehouset:delete']" plain icon="delete"
+              @click="OuWarehousethandleClear">
               {{ $t('btn.clean') }}
             </el-button>
           </el-col>
@@ -635,173 +911,578 @@
                 <el-dropdown-menu>
                   <el-dropdown-item command="upload">
                     <importData templateUrl="business/OuWarehouset/importTemplate"
-                      importUrl="/business/OuWarehouset/importData" @success="OuthandleFileSuccess"></importData>
+                      importUrl="/business/OuWarehouset/importData" @success="OuWarehousethandleFileSuccess">
+                    </importData>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="warning" plain icon="download" @click="OuthandleExport"
+            <el-button type="warning" plain icon="download" @click="OuWarehousethandleExport"
               v-hasPermi="['ouwarehouset:export']">
               {{ $t('btn.export') }}
             </el-button>
           </el-col>
-          <right-toolbar v-model:showSearch="OutshowSearch" @queryTable="OutgetList"
-            :columns="Outcolumns"></right-toolbar>
+          <right-toolbar v-model:showSearch="OuWarehousetshowSearch" @queryTable="OuWarehousetgetList"
+            :columns="OuWarehousetcolumns"></right-toolbar>
         </el-row>
 
-        <el-table :data="OutdataList" v-loading="Outloading" ref="Outtable" border
-          header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutsortChange"
-          @selection-change="OuthandleSelectionChange">
+        <el-table :data="OuWarehousetdataList" v-loading="OuWarehousetloading" ref="OuWarehousettable" border
+          header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OuWarehousetsortChange"
+          @selection-change="OuWarehousethandleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="id" label="Id" align="center" v-if="Outcolumns.showColumn('id')" />
-          <el-table-column prop="drugName" label="药品" align="center" v-if="Outcolumns.showColumn('drugName')" />
-          <el-table-column prop="outWarehouseName" label="出库房" align="center"
-            v-if="Outcolumns.showColumn('outWarehouseName')" />
-          <el-table-column prop="inpharmacyName" label="入药房" align="center"
-            v-if="Outcolumns.showColumn('inpharmacyName')" />
-          <el-table-column prop="qty" label="数量" align="center" v-if="Outcolumns.showColumn('qty')" />
-          <el-table-column prop="pharmacyId" label="申请计划" align="center" v-if="Outcolumns.showColumn('pharmacyId')" />
-          <el-table-column prop="times" label="时间" :show-overflow-tooltip="true"
-            v-if="Outcolumns.showColumn('times')" />
+          <el-table-column prop="id" label="Id" align="center" v-if="OuWarehousetcolumns.showColumn('id')" />
+          <el-table-column prop="outorderID" label="OutorderID" align="center"
+            v-if="OuWarehousetcolumns.showColumn('outorderID')" />
+          <el-table-column prop="drugDeptCode" label="出库科室编码" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('drugDeptCode')" />
+          <el-table-column prop="outBillCode" label="出库单流水号" align="center"
+            v-if="OuWarehousetcolumns.showColumn('outBillCode')" />
+          <el-table-column prop="serialCode" label="序号" align="center"
+            v-if="OuWarehousetcolumns.showColumn('serialCode')" />
+          <el-table-column prop="groupCode" label="批次号" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('groupCode')" />
+          <el-table-column prop="outListCode" label="出库单据号" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('outListCode')" />
+          <el-table-column prop="outType" label="出库类型" align="center" v-if="OuWarehousetcolumns.showColumn('outType')">
+            <template #default="scope">
+              <dict-tag :options="OuWarehousetoptions.outTypeOuWarehousetoptions" :value="scope.row.outType" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="class3MeaningCode" label="出库分类" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('class3MeaningCode')" />
+          <el-table-column prop="inBillCode" label="入库单号" align="center"
+            v-if="OuWarehousetcolumns.showColumn('inBillCode')" />
+          <el-table-column prop="inSerialCode" label="入库单序号" align="center"
+            v-if="OuWarehousetcolumns.showColumn('inSerialCode')" />
+          <el-table-column prop="inListCode" label="入库单据号" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('inListCode')" />
+          <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('drugCode')" />
+          <el-table-column prop="tradeName" label="药品商品名" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('tradeName')" />
+          <el-table-column prop="drugType" label="药品类别" align="center"
+            v-if="OuWarehousetcolumns.showColumn('drugType')">
+            <template #default="scope">
+              <dict-tag :options="OuWarehousetoptions.drugTypeOuWarehousetoptions" :value="scope.row.drugType" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="drugQuality" label="药品性质" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('drugQuality')" />
+          <el-table-column prop="specs" label="规格" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('specs')" />
+          <el-table-column prop="packUnit" label="包装单位" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('packUnit')" />
+          <el-table-column prop="packQty" label="包装数" align="center" v-if="OuWarehousetcolumns.showColumn('packQty')" />
+          <el-table-column prop="minUnit" label="最小单位" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('minUnit')" />
+          <el-table-column prop="showFlag" label="显示的单位标记" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('showFlag')" />
+          <el-table-column prop="showUnit" label="显示的单位" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('showUnit')" />
+          <el-table-column prop="batchNo" label="批号" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('batchNo')" />
+          <el-table-column prop="validDate" label="有效期" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('validDate')" />
+          <el-table-column prop="producerCode" label="生产厂家" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('producerCode')" />
+          <el-table-column prop="companyCode" label="供货单位代码" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('companyCode')" />
+          <el-table-column prop="retailPrice" label="零售价" align="center"
+            v-if="OuWarehousetcolumns.showColumn('retailPrice')" />
+          <el-table-column prop="wholesalePrice" label="批发价" align="center"
+            v-if="OuWarehousetcolumns.showColumn('wholesalePrice')" />
+          <el-table-column prop="purchasePrice" label="购入价" align="center"
+            v-if="OuWarehousetcolumns.showColumn('purchasePrice')" />
+          <el-table-column prop="outNum" label="出库数量" align="center" v-if="OuWarehousetcolumns.showColumn('outNum')" />
+          <el-table-column prop="saleCost" label="零售金额" align="center"
+            v-if="OuWarehousetcolumns.showColumn('saleCost')" />
+          <el-table-column prop="tradeCost" label="批发金额" align="center"
+            v-if="OuWarehousetcolumns.showColumn('tradeCost')" />
+          <el-table-column prop="approveCost" label="购入金额" align="center"
+            v-if="OuWarehousetcolumns.showColumn('approveCost')" />
+          <el-table-column prop="storeNum" label="出库后库存数量" align="center"
+            v-if="OuWarehousetcolumns.showColumn('storeNum')" />
+          <el-table-column prop="storeCost" label="出库后库存总金额" align="center"
+            v-if="OuWarehousetcolumns.showColumn('storeCost')" />
+          <el-table-column prop="specialFlag" label="特殊标记" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('specialFlag')" />
+          <el-table-column prop="outState" label="出库状态" align="center"
+            v-if="OuWarehousetcolumns.showColumn('outState')">
+            <template #default="scope">
+              <dict-tag :options="OuWarehousetoptions.outStateOuWarehousetoptions" :value="scope.row.outState" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="applyNum" label="申请出库量" align="center"
+            v-if="OuWarehousetcolumns.showColumn('applyNum')" />
+          <el-table-column prop="applyOpercode" label="申请出库人" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('applyOpercode')" />
+          <el-table-column prop="applyDate" label="申请出库日期" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('applyDate')" />
+          <el-table-column prop="examNum" label="审批数量" align="center"
+            v-if="OuWarehousetcolumns.showColumn('examNum')" />
+          <el-table-column prop="examOpercode" label="审批人" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('examOpercode')" />
+          <el-table-column prop="examDate" label="审批日期" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('examDate')" />
+          <el-table-column prop="approveOpercode" label="核准人" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('approveOpercode')" />
+          <el-table-column prop="approveDate" label="核准日期" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('approveDate')" />
+          <el-table-column prop="placeCode" label="货位号" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('placeCode')" />
+          <el-table-column prop="returnNum" label="退库数量" align="center"
+            v-if="OuWarehousetcolumns.showColumn('returnNum')" />
+          <el-table-column prop="drugedBill" label="摆药单号" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('drugedBill')" />
+          <el-table-column prop="medId" label="制剂序号" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('medId')" />
+          <el-table-column prop="drugStorageCode" label="领药单位编码" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('drugStorageCode')" />
+          <el-table-column prop="recipeNo" label="处方号" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('recipeNo')" />
+          <el-table-column prop="sequenceNo" label="处方流水号" align="center"
+            v-if="OuWarehousetcolumns.showColumn('sequenceNo')" />
+          <el-table-column prop="signPerson" label="签字人" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('signPerson')" />
+          <el-table-column prop="getPerson" label="领药人" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('getPerson')" />
+          <el-table-column prop="strikeFlag" label="冲账标志" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('strikeFlag')" />
+          <el-table-column prop="mark" label="备注" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('mark')" />
+          <el-table-column prop="operCode" label="操作员" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('operCode')" />
+          <el-table-column prop="operDate" label="操作日期" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('operDate')" />
+          <el-table-column prop="arkFlag" label="是否药房向药柜出库记录" align="center" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('arkFlag')" />
+          <el-table-column prop="arkBillCode" label="药柜发药出库单流水号" align="center"
+            v-if="OuWarehousetcolumns.showColumn('arkBillCode')" />
+          <el-table-column prop="outDate" label="出库记录发生时间" :show-overflow-tooltip="true"
+            v-if="OuWarehousetcolumns.showColumn('outDate')" />
+          <el-table-column prop="applyNumber" label="申请单流水号" align="center"
+            v-if="OuWarehousetcolumns.showColumn('applyNumber')" />
           <el-table-column label="操作" width="160">
             <template #default="scope">
-              <el-button type="primary" size="small" icon="view" Outtitle="详情"
-                @click="OuthandlePreview(scope.row)"></el-button>
-              <el-button type="success" size="small" icon="edit" Outtitle="编辑" v-hasPermi="['ouwarehouset:edit']"
-                @click="OuthandleUpdate(scope.row)"></el-button>
-              <el-button type="danger" size="small" icon="delete" Outtitle="删除" v-hasPermi="['ouwarehouset:delete']"
-                @click="OuthandleDelete(scope.row)"></el-button>
+              <el-button type="primary" size="small" icon="view" title="详情"
+                @click="OuWarehousethandlePreview(scope.row)"></el-button>
+              <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['ouwarehouset:edit']"
+                @click="OuWarehousethandleUpdate(scope.row)"></el-button>
+              <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['ouwarehouset:delete']"
+                @click="OuWarehousethandleDelete(scope.row)"></el-button>
             </template>
           </el-table-column>
         </el-table>
-        <pagination :total="Outtotal" v-model:page="OutqueryParams.pageNum" v-model:limit="OutqueryParams.pageSize"
-          @pagination="OutgetList" />
+        <pagination :total="OuWarehousettotal" v-model:page="OuWarehousetqueryParams.pageNum"
+          v-model:limit="OuWarehousetqueryParams.pageSize" @pagination="OuWarehousetgetList" />
 
 
-        <el-dialog :Outtitle="Outtitle" :lock-scroll="false" v-model="Outopen">
-          <el-form ref="OutformRef" :model="Outform" :rules="Outrules" label-width="100px">
+        <el-dialog :title="OuWarehousettitle" :lock-scroll="false" v-model="OuWarehousetopen">
+          <el-form ref="OuWarehousetformRef" :model="OuWarehousetform" :rules="OuWarehousetrules" label-width="100px">
             <el-row :gutter="20">
 
-              <el-col :lg="12">
+              <el-col :lg="12" v-if="OuWarehousetopertype != 1">
                 <el-form-item label="Id" prop="id">
-                  <el-input v-model.number="Outform.id" placeholder="请输入Id" :disabled="opertype != 1" />
+                  <el-input-number v-model.number="OuWarehousetform.id" controls-position="right" placeholder="请输入Id"
+                    :disabled="true" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="药品" prop="drugId">
-                  <el-input v-model.number="Outform.drugId" placeholder="请输入药品" />
+                <el-form-item label="OutorderID" prop="outorderID">
+                  <el-input v-model.number="OuWarehousetform.outorderID" placeholder="请输入OutorderID" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="出库房" prop="outWarehouseID">
-                  <el-input v-model.number="Outform.outWarehouseID" placeholder="请输入出库房" />
+                <el-form-item label="出库科室编码" prop="drugDeptCode">
+                  <el-input v-model="OuWarehousetform.drugDeptCode" placeholder="请输入出库科室编码" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="入药房" prop="inpharmacyId">
-                  <el-input v-model.number="Outform.inpharmacyId" placeholder="请输入入药房" />
+                <el-form-item label="出库单流水号" prop="outBillCode">
+                  <el-input v-model.number="OuWarehousetform.outBillCode" placeholder="请输入出库单流水号" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="数量" prop="qty">
-                  <el-input v-model="Outform.qty" placeholder="请输入数量" />
+                <el-form-item label="序号" prop="serialCode">
+                  <el-input v-model.number="OuWarehousetform.serialCode" placeholder="请输入序号" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="申请计划" prop="pharmacyId">
-                  <el-input v-model.number="Outform.pharmacyId" placeholder="请输入申请计划" />
+                <el-form-item label="批次号" prop="groupCode">
+                  <el-input v-model="OuWarehousetform.groupCode" placeholder="请输入批次号" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="时间" prop="times">
-                  <el-date-picker v-model="Outform.times" type="datetime" placeholder="选择日期时间"
+                <el-form-item label="出库单据号" prop="outListCode">
+                  <el-input v-model="OuWarehousetform.outListCode" placeholder="请输入出库单据号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="出库类型" prop="outType">
+                  <el-select v-model="OuWarehousetform.outType" placeholder="请选择出库类型">
+                    <el-option v-for="item in OuWarehousetoptions.outTypeOuWarehousetoptions" :key="item.dictValue"
+                      :label="item.dictLabel" :value="item.dictValue"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="出库分类" prop="class3MeaningCode">
+                  <el-input v-model="OuWarehousetform.class3MeaningCode" placeholder="请输入出库分类" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="入库单号" prop="inBillCode">
+                  <el-input v-model.number="OuWarehousetform.inBillCode" placeholder="请输入入库单号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="入库单序号" prop="inSerialCode">
+                  <el-input v-model.number="OuWarehousetform.inSerialCode" placeholder="请输入入库单序号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="入库单据号" prop="inListCode">
+                  <el-input v-model="OuWarehousetform.inListCode" placeholder="请输入入库单据号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="药品编码" prop="drugCode">
+                  <el-input v-model="OuWarehousetform.drugCode" placeholder="请输入药品编码" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="药品商品名" prop="tradeName">
+                  <el-input v-model="OuWarehousetform.tradeName" placeholder="请输入药品商品名" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="药品类别" prop="drugType">
+                  <el-select v-model="OuWarehousetform.drugType" placeholder="请选择药品类别">
+                    <el-option v-for="item in OuWarehousetoptions.drugTypeOuWarehousetoptions" :key="item.dictValue"
+                      :label="item.dictLabel" :value="item.dictValue"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="药品性质" prop="drugQuality">
+                  <el-input v-model="OuWarehousetform.drugQuality" placeholder="请输入药品性质" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="规格" prop="specs">
+                  <el-input v-model="OuWarehousetform.specs" placeholder="请输入规格" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="包装单位" prop="packUnit">
+                  <el-input v-model="OuWarehousetform.packUnit" placeholder="请输入包装单位" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="包装数" prop="packQty">
+                  <el-input v-model.number="OuWarehousetform.packQty" placeholder="请输入包装数" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="最小单位" prop="minUnit">
+                  <el-input v-model="OuWarehousetform.minUnit" placeholder="请输入最小单位" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="显示的单位标记" prop="showFlag">
+                  <el-input v-model="OuWarehousetform.showFlag" placeholder="请输入显示的单位标记" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="显示的单位" prop="showUnit">
+                  <el-input v-model="OuWarehousetform.showUnit" placeholder="请输入显示的单位" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="批号" prop="batchNo">
+                  <el-input v-model="OuWarehousetform.batchNo" placeholder="请输入批号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="有效期" prop="validDate">
+                  <el-date-picker v-model="OuWarehousetform.validDate" type="datetime" placeholder="选择日期时间"
                     value-format="YYYY-MM-DD HH:mm:ss">
                   </el-date-picker>
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="药品名称" prop="drugname">
-                  <el-input v-model="Outform.drugname" placeholder="请输入药品名称" />
+                <el-form-item label="生产厂家" prop="producerCode">
+                  <el-input v-model="OuWarehousetform.producerCode" placeholder="请输入生产厂家" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="规格" prop="drugSpecifications">
-                  <el-input v-model="Outform.drugSpecifications" placeholder="请输入规格" />
-                </el-form-item>
-              </el-col>
-
-              <el-col :lg="12">
-                <el-form-item label="最小单位" prop="minunit">
-                  <el-input v-model="Outform.minunit" placeholder="请输入最小单位" />
-                </el-form-item>
-              </el-col>
-
-              <el-col :lg="12">
-                <el-form-item label="购入价" prop="buyprice">
-                  <el-input v-model="Outform.buyprice" placeholder="请输入购入价" />
-                </el-form-item>
-              </el-col>
-
-              <el-col :lg="12">
-                <el-form-item label="购入金额" prop="allbuyprice">
-                  <el-input v-model="Outform.allbuyprice" placeholder="请输入购入金额" />
+                <el-form-item label="供货单位代码" prop="companyCode">
+                  <el-input v-model="OuWarehousetform.companyCode" placeholder="请输入供货单位代码" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
                 <el-form-item label="零售价" prop="retailPrice">
-                  <el-input v-model="Outform.retailPrice" placeholder="请输入零售价" />
+                  <el-input v-model="OuWarehousetform.retailPrice" placeholder="请输入零售价" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="售价金额" prop="allRetailPrice">
-                  <el-input v-model="Outform.allRetailPrice" placeholder="请输入售价金额" />
-                </el-form-item>
-              </el-col>
-              <el-col :lg="12">
-                <el-form-item label="出库单" prop="outorderID">
-                  <el-input v-model="Outform.outorderID" placeholder="请输入出库单" />
-                </el-form-item>
-              </el-col>
-              <el-col :lg="12">
-                <el-form-item label="生产厂家" prop="manufacturerId">
-                  <el-input v-model.number="Outform.manufacturerId" placeholder="请输入生产厂家" />
+                <el-form-item label="批发价" prop="wholesalePrice">
+                  <el-input v-model="OuWarehousetform.wholesalePrice" placeholder="请输入批发价" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="批号" prop="batchNumber">
-                  <el-input v-model="Outform.batchNumber" placeholder="请输入批号" />
+                <el-form-item label="购入价" prop="purchasePrice">
+                  <el-input v-model="OuWarehousetform.purchasePrice" placeholder="请输入购入价" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="有效期" prop="exprie">
-                  <el-input v-model="Outform.exprie" placeholder="请输入有效期" />
+                <el-form-item label="出库数量" prop="outNum">
+                  <el-input v-model="OuWarehousetform.outNum" placeholder="请输入出库数量" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
-                <el-form-item label="货位号" prop="locationNumber">
-                  <el-input v-model="Outform.locationNumber" placeholder="请输入货位号" />
+                <el-form-item label="零售金额" prop="saleCost">
+                  <el-input v-model="OuWarehousetform.saleCost" placeholder="请输入零售金额" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="批发金额" prop="tradeCost">
+                  <el-input v-model="OuWarehousetform.tradeCost" placeholder="请输入批发金额" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="购入金额" prop="approveCost">
+                  <el-input v-model="OuWarehousetform.approveCost" placeholder="请输入购入金额" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="出库后库存数量" prop="storeNum">
+                  <el-input v-model="OuWarehousetform.storeNum" placeholder="请输入出库后库存数量" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="出库后库存总金额" prop="storeCost">
+                  <el-input v-model="OuWarehousetform.storeCost" placeholder="请输入出库后库存总金额" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="特殊标记" prop="specialFlag">
+                  <el-input v-model="OuWarehousetform.specialFlag" placeholder="请输入特殊标记" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="出库状态" prop="outState">
+                  <el-radio-group v-model="OuWarehousetform.outState">
+                    <el-radio v-for="item in OuWarehousetoptions.outStateOuWarehousetoptions" :key="item.dictValue"
+                      :value="item.dictValue">
+                      {{ item.dictLabel }}
+                    </el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="申请出库量" prop="applyNum">
+                  <el-input v-model="OuWarehousetform.applyNum" placeholder="请输入申请出库量" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="申请出库人" prop="applyOpercode">
+                  <el-input v-model="OuWarehousetform.applyOpercode" placeholder="请输入申请出库人" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="申请出库日期" prop="applyDate">
+                  <el-date-picker v-model="OuWarehousetform.applyDate" type="datetime" placeholder="选择日期时间"
+                    value-format="YYYY-MM-DD HH:mm:ss">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="审批数量" prop="examNum">
+                  <el-input v-model="OuWarehousetform.examNum" placeholder="请输入审批数量" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="审批人" prop="examOpercode">
+                  <el-input v-model="OuWarehousetform.examOpercode" placeholder="请输入审批人" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="审批日期" prop="examDate">
+                  <el-date-picker v-model="OuWarehousetform.examDate" type="datetime" placeholder="选择日期时间"
+                    value-format="YYYY-MM-DD HH:mm:ss">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="核准人" prop="approveOpercode">
+                  <el-input v-model="OuWarehousetform.approveOpercode" placeholder="请输入核准人" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="核准日期" prop="approveDate">
+                  <el-date-picker v-model="OuWarehousetform.approveDate" type="datetime" placeholder="选择日期时间"
+                    value-format="YYYY-MM-DD HH:mm:ss">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="货位号" prop="placeCode">
+                  <el-input v-model="OuWarehousetform.placeCode" placeholder="请输入货位号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="退库数量" prop="returnNum">
+                  <el-input v-model="OuWarehousetform.returnNum" placeholder="请输入退库数量" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="摆药单号" prop="drugedBill">
+                  <el-input v-model="OuWarehousetform.drugedBill" placeholder="请输入摆药单号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="制剂序号" prop="medId">
+                  <el-input v-model="OuWarehousetform.medId" placeholder="请输入制剂序号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="领药单位编码" prop="drugStorageCode">
+                  <el-input v-model="OuWarehousetform.drugStorageCode" placeholder="请输入领药单位编码" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="处方号" prop="recipeNo">
+                  <el-input v-model="OuWarehousetform.recipeNo" placeholder="请输入处方号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="处方流水号" prop="sequenceNo">
+                  <el-input v-model.number="OuWarehousetform.sequenceNo" placeholder="请输入处方流水号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="签字人" prop="signPerson">
+                  <el-input v-model="OuWarehousetform.signPerson" placeholder="请输入签字人" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="领药人" prop="getPerson">
+                  <el-input v-model="OuWarehousetform.getPerson" placeholder="请输入领药人" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="冲账标志" prop="strikeFlag">
+                  <el-input v-model="OuWarehousetform.strikeFlag" placeholder="请输入冲账标志" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="备注" prop="mark">
+                  <el-input v-model="OuWarehousetform.mark" placeholder="请输入备注" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="操作员" prop="operCode">
+                  <el-input v-model="OuWarehousetform.operCode" placeholder="请输入操作员" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="操作日期" prop="operDate">
+                  <el-date-picker v-model="OuWarehousetform.operDate" type="datetime" placeholder="选择日期时间"
+                    value-format="YYYY-MM-DD HH:mm:ss">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="是否药房向药柜出库记录" prop="arkFlag">
+                  <el-input v-model="OuWarehousetform.arkFlag" placeholder="请输入是否药房向药柜出库记录" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="药柜发药出库单流水号" prop="arkBillCode">
+                  <el-input v-model.number="OuWarehousetform.arkBillCode" placeholder="请输入药柜发药出库单流水号" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="出库记录发生时间" prop="outDate">
+                  <el-date-picker v-model="OuWarehousetform.outDate" type="datetime" placeholder="选择日期时间"
+                    value-format="YYYY-MM-DD HH:mm:ss">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+
+              <el-col :lg="12">
+                <el-form-item label="申请单流水号" prop="applyNumber">
+                  <el-input v-model.number="OuWarehousetform.applyNumber" placeholder="请输入申请单流水号" />
                 </el-form-item>
               </el-col>
             </el-row>
           </el-form>
-          <template #footer v-if="Outopertype != 3">
-            <el-button text @click="Outcancel">{{ $t('btn.cancel') }}</el-button>
-            <el-button type="primary" @click="OutsubmitForm">{{ $t('btn.submit') }}</el-button>
+          <template #footer v-if="OuWarehousetopertype != 3">
+            <el-button text @click="OuWarehousetcancel">{{ $t('btn.OuWarehousetcancel') }}</el-button>
+            <el-button type="primary" @click="OuWarehousetsubmitForm">{{ $t('btn.submit') }}</el-button>
           </template>
         </el-dialog>
       </div>
@@ -811,6 +1492,7 @@
 </template>
 
 <script setup name="outorder">
+//#region 出库单
 import {
   listOutOrder,
   addOutOrder, delOutOrder,
@@ -843,6 +1525,9 @@ const OutOrdercolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'outWarehouseID', label: '发出出库' },
   { visible: true, align: 'center', type: '', prop: 'times', label: '时间', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'remarks', label: '备注', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'outBillCode', label: 'his出库单流水号' },
+  { visible: false, align: 'center', type: '', prop: 'createTime', label: '创建时间', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'createBy', label: '创建人', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const OutOrdertotal = ref(0)
@@ -863,11 +1548,15 @@ function OutOrdergetList() {
   OutOrderloading.value = true
   listOutOrder(OutOrderqueryParams).then(res => {
     const { code, data } = res
+    console.log(data);
     if (code == 200) {
       OutOrderdataList.value = data.result
       OutOrdertotal.value = data.totalNum
       OutOrderloading.value = false
+      console.log(OutOrderdataList)
+
     }
+
   })
 }
 
@@ -939,6 +1628,9 @@ function OutOrderreset() {
     outWarehouseID: null,
     times: null,
     remarks: null,
+    outBillCode: null,
+    createTime: null,
+    createBy: null,
   };
   proxy.resetForm("OutOrderformRef")
 }
@@ -1073,6 +1765,8 @@ function OutOrderhandleExport() {
 }
 
 OutOrderhandleQuery()
+//#endregion
+//#region 出库详情
 
 import {
   listOuWarehouset,
@@ -1081,92 +1775,127 @@ import {
   clearOuWarehouset,
 }
   from '@/api/business/ouwarehouset.js'
-const Outids = ref([])
-const Outloading = ref(false)
-const OutshowSearch = ref(true)
-const OutqueryParams = reactive({
+const OuWarehousetids = ref([])
+const OuWarehousetloading = ref(false)
+const OuWarehousetshowSearch = ref(true)
+const OuWarehousetqueryParams = reactive({
   pageNum: 1,
   pageSize: 10,
-  sort: 'Id',
+  sort: '',
   sortType: 'asc',
-  drugId: undefined,
-  outWarehouseID: undefined,
-  inpharmacyId: undefined,
-  qty: undefined,
-  pharmacyId: undefined,
-  times: undefined,
   outorderID: undefined,
+  drugDeptCode: undefined,
+  outBillCode: undefined,
+  groupCode: undefined,
+  drugCode: undefined,
+  tradeName: undefined,
 })
-const Outcolumns = ref([
+const OuWarehousetcolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
-  { visible: true, align: 'center', type: '', prop: 'drugName', label: '药品' },
-  { visible: true, align: 'center', type: '', prop: 'outWarehouseName', label: '出库房' },
-  { visible: true, align: 'center', type: '', prop: 'inpharmacyName', label: '入药房' },
-  { visible: true, align: 'center', type: '', prop: 'qty', label: '数量' },
-  { visible: true, align: 'center', type: '', prop: 'pharmacyId', label: '申请计划' },
-  { visible: true, align: 'center', type: '', prop: 'times', label: '时间', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugname', label: '药品名称', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugSpecifications', label: '规格', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'minunit', label: '最小单位', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'buyprice', label: '购入价' },
-  { visible: true, align: 'center', type: '', prop: 'allbuyprice', label: '购入金额' },
-  { visible: true, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
-  { visible: true, align: 'center', type: '', prop: 'allRetailPrice', label: '售价金额' },
-  { visible: true, align: 'center', type: '', prop: 'manufacturerId', label: '生产厂家' },
-  { visible: true, align: 'center', type: '', prop: 'batchNumber', label: '批号', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'exprie', label: '有效期', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'locationNumber', laboel: '货位号', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'outorderID', label: '出库单', showOverflowTooltip: true },
-
+  { visible: true, align: 'center', type: '', prop: 'outorderID', label: 'OutorderID' },
+  { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
+  { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
+  { visible: true, align: 'center', type: '', prop: 'groupCode', label: '批次号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'outListCode', label: '出库单据号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: 'dict', prop: 'outType', label: '出库类型', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'class3MeaningCode', label: '出库分类', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'inBillCode', label: '入库单号' },
+  { visible: false, align: 'center', type: '', prop: 'inSerialCode', label: '入库单序号' },
+  { visible: false, align: 'center', type: '', prop: 'inListCode', label: '入库单据号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: 'dict', prop: 'drugType', label: '药品类别', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'packQty', label: '包装数' },
+  { visible: false, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'showFlag', label: '显示的单位标记', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'showUnit', label: '显示的单位', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'batchNo', label: '批号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'validDate', label: '有效期', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'producerCode', label: '生产厂家', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'companyCode', label: '供货单位代码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
+  { visible: false, align: 'center', type: '', prop: 'wholesalePrice', label: '批发价' },
+  { visible: false, align: 'center', type: '', prop: 'purchasePrice', label: '购入价' },
+  { visible: false, align: 'center', type: '', prop: 'outNum', label: '出库数量' },
+  { visible: false, align: 'center', type: '', prop: 'saleCost', label: '零售金额' },
+  { visible: false, align: 'center', type: '', prop: 'tradeCost', label: '批发金额' },
+  { visible: false, align: 'center', type: '', prop: 'approveCost', label: '购入金额' },
+  { visible: false, align: 'center', type: '', prop: 'storeNum', label: '出库后库存数量' },
+  { visible: false, align: 'center', type: '', prop: 'storeCost', label: '出库后库存总金额' },
+  { visible: false, align: 'center', type: '', prop: 'specialFlag', label: '特殊标记', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: 'dict', prop: 'outState', label: '出库状态', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'applyNum', label: '申请出库量' },
+  { visible: false, align: 'center', type: '', prop: 'applyOpercode', label: '申请出库人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'applyDate', label: '申请出库日期', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'examNum', label: '审批数量' },
+  { visible: false, align: 'center', type: '', prop: 'examOpercode', label: '审批人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'examDate', label: '审批日期', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'approveOpercode', label: '核准人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'approveDate', label: '核准日期', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'placeCode', label: '货位号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'returnNum', label: '退库数量' },
+  { visible: false, align: 'center', type: '', prop: 'drugedBill', label: '摆药单号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'medId', label: '制剂序号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'drugStorageCode', label: '领药单位编码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'recipeNo', label: '处方号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'sequenceNo', label: '处方流水号' },
+  { visible: false, align: 'center', type: '', prop: 'signPerson', label: '签字人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'getPerson', label: '领药人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'strikeFlag', label: '冲账标志', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'mark', label: '备注', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'operCode', label: '操作员', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'arkFlag', label: '是否药房向药柜出库记录', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'arkBillCode', label: '药柜发药出库单流水号' },
+  { visible: false, align: 'center', type: '', prop: 'outDate', label: '出库记录发生时间', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'applyNumber', label: '申请单流水号' },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
-const Outtotal = ref(0)
-const OutdataList = ref([])
-const OutqueryRef = ref()
-const OutdefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
-
-// 时间时间范围
-const OutdateRangeTimes = ref([])
+const OuWarehousettotal = ref(0)
+const OuWarehousetdataList = ref([])
+const OuWarehousetqueryRef = ref()
+const OuWarehousetdefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 
-var OutdictParams = [
+var OuWarehousetdictParams = [
 ]
 
 
-function OutgetList() {
-  proxy.addDateRange(OutqueryParams, OutdateRangeTimes.value, 'Times');
-  Outloading.value = true
-  listOuWarehouset(OutqueryParams).then(res => {
+function OuWarehousetgetList() {
+  OuWarehousetloading.value = true
+  listOuWarehouset(OuWarehousetqueryParams).then(res => {
     const { code, data } = res
     if (code == 200) {
-      OutdataList.value = data.result
-      Outtotal.value = data.totalNum
-      Outloading.value = false
+      OuWarehousetdataList.value = data.result
+      OuWarehousettotal.value = data.totalNum
+      OuWarehousetloading.value = false
     }
   })
 }
 
 // 查询
-function OuthandleQuery() {
-  OutqueryParams.pageNum = 1
-  OutgetList()
+function OuWarehousethandleQuery() {
+  OuWarehousetqueryParams.pageNum = 1
+  OuWarehousetgetList()
 }
 
 // 重置查询操作
-function OutresetQuery() {
-  // 时间时间范围
-  OutdateRangeTimes.value = []
-  proxy.resetForm("OutqueryRef")
-  OuthandleQuery()
+function OuWarehousetresetQuery() {
+  proxy.resetForm("OuWarehousetqueryRef")
+  OuWarehousethandleQuery()
 }
 // 多选框选中数据
-function OuthandleSelectionChange(selection) {
-  Outids.value = selection.map((item) => item.id);
-  Outsingle.value = selection.length != 1
-  Outmultiple.value = !selection.length;
+function OuWarehousethandleSelectionChange(selection) {
+  OuWarehousetids.value = selection.map((item) => item.id);
+  OuWarehousetsingle.value = selection.length != 1
+  OuWarehousetmultiple.value = !selection.length;
 }
 // 自定义排序
-function OutsortChange(column) {
+function OuWarehousetsortChange(column) {
   var sort = undefined
   var sortType = undefined
 
@@ -1175,76 +1904,120 @@ function OutsortChange(column) {
     sortType = column.order
 
   }
-  OutqueryParams.sort = sort
-  OutqueryParams.sortType = sortType
-  OuthandleQuery()
+  OuWarehousetqueryParams.sort = sort
+  OuWarehousetqueryParams.sortType = sortType
+  OuWarehousethandleQuery()
 }
 
 /*************** form操作 ***************/
-const OutformRef = ref()
-const Outtitle = ref('')
+const OuWarehousetformRef = ref()
+const OuWarehousettitle = ref('')
 // 操作类型 1、add 2、edit 3、view
-const Outopertype = ref(0)
-const Outopen = ref(false)
-const Outstate = reactive({
-  Outsingle: true,
-  Outmultiple: true,
-  Outform: {},
-  Outrules: {
-    id: [{ required: true, message: "Id不能为空", trigger: "blur", type: "number" }],
+const OuWarehousetopertype = ref(0)
+const OuWarehousetopen = ref(false)
+const OuWarehousetstate = reactive({
+  OuWarehousetsingle: true,
+  OuWarehousetmultiple: true,
+  OuWarehousetform: {},
+  OuWarehousetrules: {
   },
-  Outoptions: {
+  OuWarehousetoptions: {
+    // 出库类型 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
+    outTypeOuWarehousetoptions: [],
   }
 })
 
-const { Outform, Outrules, Outoptions, Outsingle, Outmultiple } = toRefs(Outstate)
+const { OuWarehousetform, OuWarehousetrules, OuWarehousetoptions, OuWarehousetsingle, OuWarehousetmultiple } = toRefs(OuWarehousetstate)
 
 // 关闭dialog
-function Outcancel() {
-  Outopen.value = false
-  Outreset()
+function OuWarehousetcancel() {
+  OuWarehousetopen.value = false
+  OuWarehousetreset()
 }
 
 // 重置表单
-function Outreset() {
-  Outform.value = {
+function OuWarehousetreset() {
+  OuWarehousetform.value = {
     id: null,
-    drugId: null,
-    outWarehouseID: null,
-    inpharmacyId: null,
-    qty: null,
-    pharmacyId: null,
-    times: null,
-    drugname: null,
-    drugSpecifications: null,
-    minunit: null,
-    buyprice: null,
-    allbuyprice: null,
-    retailPrice: null,
-    allRetailPrice: null,
-    manufacturerId: null,
-    batchNumber: null,
-    exprie: null,
-    locationNumber: null,
     outorderID: null,
+    drugDeptCode: null,
+    outBillCode: null,
+    serialCode: null,
+    groupCode: null,
+    outListCode: null,
+    outType: null,
+    class3MeaningCode: null,
+    inBillCode: null,
+    inSerialCode: null,
+    inListCode: null,
+    drugCode: null,
+    tradeName: null,
+    drugType: null,
+    drugQuality: null,
+    specs: null,
+    packUnit: null,
+    packQty: null,
+    minUnit: null,
+    showFlag: null,
+    showUnit: null,
+    batchNo: null,
+    validDate: null,
+    producerCode: null,
+    companyCode: null,
+    retailPrice: null,
+    wholesalePrice: null,
+    purchasePrice: null,
+    outNum: null,
+    saleCost: null,
+    tradeCost: null,
+    approveCost: null,
+    storeNum: null,
+    storeCost: null,
+    specialFlag: null,
+    outState: null,
+    applyNum: null,
+    applyOpercode: null,
+    applyDate: null,
+    examNum: null,
+    examOpercode: null,
+    examDate: null,
+    approveOpercode: null,
+    approveDate: null,
+    placeCode: null,
+    returnNum: null,
+    drugedBill: null,
+    medId: null,
+    drugStorageCode: null,
+    recipeNo: null,
+    sequenceNo: null,
+    signPerson: null,
+    getPerson: null,
+    strikeFlag: null,
+    mark: null,
+    operCode: null,
+    operDate: null,
+    arkFlag: null,
+    arkBillCode: null,
+    outDate: null,
+    applyNumber: null,
   };
-  proxy.resetForm("OutformRef")
+  proxy.resetForm("OuWarehousetformRef")
 }
 
 /**
  * 查看
  * @param {*} row
  */
-function OuthandlePreview(row) {
-  reset()
+function OuWarehousethandlePreview(row) {
+  OuWarehousetreset()
   const id = row.id
   getOuWarehouset(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
-      Outopen.value = true
-      Outtitle.value = '查看'
-      Outopertype.value = 3
-      Outform.value = {
+      OuWarehousetopen.value = true
+      OuWarehousettitle.value = '查看'
+      OuWarehousetopertype.value = 3
+      OuWarehousetform.value = {
         ...data,
       }
     }
@@ -1252,24 +2025,24 @@ function OuthandlePreview(row) {
 }
 
 // 添加按钮操作
-function OuthandleAdd() {
-  reset();
-  Outopen.value = true
-  Outtitle.value = '添加出库'
-  Outopertype.value = 1
+function OuWarehousethandleAdd() {
+  OuWarehousetreset();
+  OuWarehousetopen.value = true
+  OuWarehousettitle.value = '添加出库药品详情'
+  OuWarehousetopertype.value = 1
 }
 // 修改按钮操作
-function OuthandleUpdate(row) {
-  reset()
-  const id = row.id || Outids.value
+function OuWarehousethandleUpdate(row) {
+  OuWarehousetreset()
+  const id = row.id || OuWarehousetids.value
   getOuWarehouset(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
-      Outopen.value = true
-      Outtitle.value = '修改出库'
-      Outopertype.value = 2
+      OuWarehousetopen.value = true
+      OuWarehousettitle.value = '修改出库药品详情'
+      OuWarehousetopertype.value = 2
 
-      Outform.value = {
+      OuWarehousetform.value = {
         ...data,
       }
     }
@@ -1277,21 +2050,21 @@ function OuthandleUpdate(row) {
 }
 
 // 添加&修改 表单提交
-function OutsubmitForm() {
-  proxy.$refs["OutformRef"].validate((valid) => {
+function OuWarehousetsubmitForm() {
+  proxy.$refs["OuWarehousetformRef"].validate((valid) => {
     if (valid) {
 
-      if (Outform.value.id != undefined && Outopertype.value === 2) {
-        updateOuWarehouset(Outform.value).then((res) => {
+      if (OuWarehousetform.value.id != undefined && OuWarehousetopertype.value === 2) {
+        updateOuWarehouset(OuWarehousetform.value).then((res) => {
           proxy.$modal.msgSuccess("修改成功")
-          Outopen.value = false
-          OutgetList()
+          OuWarehousetopen.value = false
+          OuWarehousetgetList()
         })
       } else {
-        addOuWarehouset(Outform.value).then((res) => {
+        addOuWarehouset(OuWarehousetform.value).then((res) => {
           proxy.$modal.msgSuccess("新增成功")
-          Outopen.value = false
-          OutgetList()
+          OuWarehousetopen.value = false
+          OuWarehousetgetList()
         })
       }
     }
@@ -1299,43 +2072,43 @@ function OutsubmitForm() {
 }
 
 // 删除按钮操作
-function OuthandleDelete(row) {
-  const Outids = row.id || Outids.value
+function OuWarehousethandleDelete(row) {
+  const OuWarehousetids = row.id || OuWarehousetids.value
 
   proxy
-    .$confirm('是否确认删除参数编号为"' + Outids + '"的数据项？', "警告", {
+    .$confirm('是否确认删除参数编号为"' + OuWarehousetids + '"的数据项？', "警告", {
       confirmButtonText: proxy.$t('common.ok'),
-      OutcancelButtonText: proxy.$t('common.Outcancel'),
+      OuWarehousetcancelButtonText: proxy.$t('common.OuWarehousetcancel'),
       type: "warning",
     })
     .then(function () {
-      return delOuWarehouset(Outids)
+      return delOuWarehouset(OuWarehousetids)
     })
     .then(() => {
-      OutgetList()
+      OuWarehousetgetList()
       proxy.$modal.msgSuccess("删除成功")
     })
 }
 
 // 清空
-function OuthandleClear() {
+function OuWarehousethandleClear() {
   proxy
     .$confirm("是否确认清空所有数据项?", "警告", {
       confirmButtonText: proxy.$t('common.ok'),
-      OutcancelButtonText: proxy.$t('common.Outcancel'),
+      OuWarehousetcancelButtonText: proxy.$t('common.OuWarehousetcancel'),
       type: "warning",
     })
     .then(function () {
       return clearOuWarehouset()
     })
     .then(() => {
-      OuthandleQuery()
+      OuWarehousethandleQuery()
       proxy.$modal.msgSuccess('清空成功')
     })
 }
 
 // 导入数据成功处理
-const OuthandleFileSuccess = (response) => {
+const OuWarehousethandleFileSuccess = (response) => {
   const { item1, item2 } = response.data
   var error = ''
   item2.forEach((item) => {
@@ -1344,143 +2117,164 @@ const OuthandleFileSuccess = (response) => {
   proxy.$alert(item1 + '<p>' + error + '</p>', '导入结果', {
     dangerouslyUseHTMLString: true
   })
-  OutgetList()
+  OuWarehousetgetList()
 }
 
 // 导出按钮操作
-function OuthandleExport() {
+function OuWarehousethandleExport() {
   proxy
-    .$confirm("是否确认导出出库数据项?", "警告", {
+    .$confirm("是否确认导出出库药品详情数据项?", "警告", {
       confirmButtonText: "确定",
-      OutcancelButtonText: "取消",
+      OuWarehousetcancelButtonText: "取消",
       type: "warning",
     })
     .then(async () => {
-      await proxy.downFile('/business/OuWarehouset/export', { ...OutqueryParams })
+      await proxy.downFile('/business/OuWarehouset/export', { ...OuWarehousetqueryParams })
     })
 }
 
-OuthandleQuery()
-
+OuWarehousethandleQuery()
+//#endregion
+//#region his出库计划
 import {
-  listPhaInPlan,
-  addPhaInPlan, delPhaInPlan,
-  updatePhaInPlan, getPhaInPlan,
-  clearPhaInPlan,
+  listPhaOut,
+  addPhaOut, delPhaOut,
+  updatePhaOut, getPhaOut, addOut,
+  clearPhaOut,
 }
-  from '@/api/business/phainplan.js'
-const PhaInPlanids = ref([])
-const PhaInPlanloading = ref(false)
-const PhaInPlanshowSearch = ref(true)
-const PhaInPlanqueryParams = reactive({
+  from '@/api/business/phaout.js'
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+const PhaOutids = ref([])
+const PhaOutloading = ref(false)
+const PhaOutshowSearch = ref(true)
+const PhaOutqueryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   sort: '',
   sortType: 'asc',
-  planNo: undefined,
-  billCode: undefined,
-  state: undefined,
-  planType: undefined,
   drugDeptCode: undefined,
+  outBillCode: undefined,
+  serialCode: undefined,
+  groupCode: undefined,
+  outListCode: undefined,
+  outType: undefined,
+  class3MeaningCode: undefined,
+  inBillCode: undefined,
+  inSerialCode: undefined,
+  inListCode: undefined,
   drugCode: undefined,
   tradeName: undefined,
-  planDate: undefined,
-  stockDate: undefined,
-  stockNo: undefined,
-  operDate: undefined,
+  drugType: undefined,
+  producerCode: undefined,
+  companyCode: undefined,
 })
-const PhaInPlancolumns = ref([
-  { visible: true, align: 'center', type: '', prop: 'planNo', label: '入库计划流水号' },
-  { visible: true, align: 'center', type: '', prop: 'billCode', label: '采购单号', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: 'dict', prop: 'state', label: '单据状态 0 计划单，1 采购单', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: 'dict', prop: 'planType', label: '计划类型0手工计划，1警戒线，2消耗，3时间，4日消耗', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '科室编码', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'tradeName', label: '药品名称', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'retailPrice', label: '参考零售价' },
-  { visible: false, align: 'center', type: '', prop: 'wholesalePrice', label: '参考批发价' },
-  { visible: false, align: 'center', type: '', prop: 'purchasePrice', label: '最新购入价' },
+const PhaOutcolumns = ref([
+  { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
+  { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
+  { visible: true, align: 'center', type: '', prop: 'groupCode', label: '批次号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'outListCode', label: '出库单据号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: 'dict', prop: 'outType', label: '出库类型', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'class3MeaningCode', label: '出库分类', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'inBillCode', label: '入库单号' },
+  { visible: false, align: 'center', type: '', prop: 'inSerialCode', label: '入库单序号' },
+  { visible: false, align: 'center', type: '', prop: 'inListCode', label: '入库单据号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: 'dict', prop: 'drugType', label: '药品类别', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'packQty', label: '包装数量' },
+  { visible: false, align: 'center', type: '', prop: 'packQty', label: '包装数' },
   { visible: false, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'producerCode', label: '生产厂家编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'producerName', label: '生产厂家名称', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'storeNum', label: '本科室库存数量' },
-  { visible: false, align: 'center', type: '', prop: 'storeTotsum', label: '全院库存总和' },
-  { visible: false, align: 'center', type: '', prop: 'outputSum', label: '全院出库总量' },
-  { visible: false, align: 'center', type: '', prop: 'planNum', label: '计划入库量' },
-  { visible: false, align: 'center', type: '', prop: 'planEmpl', label: '计划人', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'planDate', label: '计划日期', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'stockEmpl', label: '采购人', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'stockDate', label: '采购日期', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'stockNo', label: '采购流水号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'replacePlanNo', label: '作废、替代计划单流水号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'showFlag', label: '显示的单位标记', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'showUnit', label: '显示的单位', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'batchNo', label: '批号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'validDate', label: '有效期', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'producerCode', label: '生产厂家', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'companyCode', label: '供货单位代码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
+  { visible: false, align: 'center', type: '', prop: 'wholesalePrice', label: '批发价' },
+  { visible: false, align: 'center', type: '', prop: 'purchasePrice', label: '购入价' },
+  { visible: false, align: 'center', type: '', prop: 'outNum', label: '出库数量' },
+  { visible: false, align: 'center', type: '', prop: 'saleCost', label: '零售金额' },
+  { visible: false, align: 'center', type: '', prop: 'tradeCost', label: '批发金额' },
+  { visible: false, align: 'center', type: '', prop: 'approveCost', label: '购入金额' },
+  { visible: false, align: 'center', type: '', prop: 'storeNum', label: '出库后库存数量' },
+  { visible: false, align: 'center', type: '', prop: 'storeCost', label: '出库后库存总金额' },
+  { visible: false, align: 'center', type: '', prop: 'specialFlag', label: '特殊标记', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: 'dict', prop: 'outState', label: '出库状态', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'applyNum', label: '申请出库量' },
+  { visible: false, align: 'center', type: '', prop: 'applyOpercode', label: '申请出库人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'applyDate', label: '申请出库日期', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'examNum', label: '审批数量' },
+  { visible: false, align: 'center', type: '', prop: 'examOpercode', label: '审批人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'examDate', label: '审批日期', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'approveOpercode', label: '核准人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'approveDate', label: '核准日期', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'placeCode', label: '货位号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'returnNum', label: '退库数量' },
+  { visible: false, align: 'center', type: '', prop: 'drugedBill', label: '摆药单号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'medId', label: '制剂序号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'drugStorageCode', label: '领药单位编码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'recipeNo', label: '处方号', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'sequenceNo', label: '处方流水号' },
+  { visible: false, align: 'center', type: '', prop: 'signPerson', label: '签字人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'getPerson', label: '领药人', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'strikeFlag', label: '冲账标志', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'mark', label: '备注', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'operCode', label: '操作员', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'extendField', label: '扩展字段', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'arkFlag', label: '是否药房向药柜出库记录', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'arkBillCode', label: '药柜发药出库单流水号' },
+  { visible: false, align: 'center', type: '', prop: 'outDate', label: '出库记录发生时间', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'applyNumber', label: '申请单流水号' },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
-const PhaInPlantotal = ref(0)
-const PhaInPlandataList = ref([])
-const PhaInPlanqueryRef = ref()
-const PhaInPlandefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
-
-// 计划日期时间范围
-const PhaInPlandateRangePlanDate = ref([])
-
-// 采购日期时间范围
-const PhaInPlandateRangeStockDate = ref([])
-
-// 操作日期时间范围
-const PhaInPlandateRangeOperDate = ref([])
+const PhaOuttotal = ref(0)
+const PhaOutdataList = ref([])
+const PhaOutqueryRef = ref()
+const PhaOutdefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 
-var PhaInPlandictParams = [
+var PhaOutdictParams = [
 ]
 
 
-function PhaInPlangetList() {
-  proxy.addDateRange(PhaInPlanqueryParams, PhaInPlandateRangePlanDate.value, 'PlanDate');
-  proxy.addDateRange(PhaInPlanqueryParams, PhaInPlandateRangeStockDate.value, 'StockDate');
-  proxy.addDateRange(PhaInPlanqueryParams, PhaInPlandateRangeOperDate.value, 'OperDate');
-  PhaInPlanloading.value = true
-  listPhaInPlan(PhaInPlanqueryParams).then(res => {
+function PhaOutgetList() {
+  PhaOutloading.value = true
+  listPhaOut(PhaOutqueryParams).then(res => {
     const { code, data } = res
     if (code == 200) {
-      PhaInPlandataList.value = data.result
-      PhaInPlantotal.value = data.totalNum
-      PhaInPlanloading.value = false
+      PhaOutdataList.value = data.result
+      PhaOuttotal.value = data.totalNum
+      PhaOutloading.value = false
     }
   })
 }
 
 // 查询
-function PhaInPlanhandleQuery() {
-  PhaInPlanqueryParams.pageNum = 1
-  PhaInPlangetList()
+function PhaOuthandleQuery() {
+  PhaOutqueryParams.pageNum = 1
+  PhaOutgetList()
 }
 
 // 重置查询操作
-function PhaInPlanresetQuery() {
-  // 计划日期时间范围
-  PhaInPlandateRangePlanDate.value = []
-  // 采购日期时间范围
-  PhaInPlandateRangeStockDate.value = []
-  // 操作日期时间范围
-  PhaInPlandateRangeOperDate.value = []
-  proxy.resetForm("PhaInPlanqueryRef")
-  PhaInPlanhandleQuery()
+function PhaOutresetQuery() {
+  proxy.resetForm("PhaOutqueryRef")
+  PhaOuthandleQuery()
 }
+const selectrows = ref(null)
 // 多选框选中数据
-function PhaInPlanhandleSelectionChange(selection) {
-  PhaInPlanids.value = selection.map((item) => item.planNo);
-  PhaInPlansingle.value = selection.length != 1
-  PhaInPlanmultiple.value = !selection.length;
+function PhaOuthandleSelectionChange(selection) {
+  PhaOutids.value = selection.map((item) => item.outBillCode);
+  selectrows.value = selection.map((item) => item);
+  console.log("select", selectrows)
+  PhaOutsingle.value = selection.length != 1
+  PhaOutmultiple.value = !selection.length;
 }
 // 自定义排序
-function PhaInPlansortChange(column) {
+function PhaOutsortChange(column) {
   var sort = undefined
   var sortType = undefined
 
@@ -1489,97 +2283,139 @@ function PhaInPlansortChange(column) {
     sortType = column.order
 
   }
-  PhaInPlanqueryParams.sort = sort
-  PhaInPlanqueryParams.sortType = sortType
-  PhaInPlanhandleQuery()
+  PhaOutqueryParams.sort = sort
+  PhaOutqueryParams.sortType = sortType
+  PhaOuthandleQuery()
 }
 
+function AlladdOut() {
+
+  // const PhaOutids = row.outBillCode || PhaOutids.value
+  proxy
+    .$confirm('是否确认生成"' + selectrows.value.length + '"条出库单？', "警告", {
+      confirmButtonText: proxy.$t('common.ok'),
+      PhaOutcancelButtonText: proxy.$t('common.cancel'),
+      type: "warning",
+    })
+    .then(function () {
+      console.log("select2", selectrows)
+      return addOut(selectrows.value)
+    })
+    .then(() => {
+      PhaOutgetList()
+      proxy.$modal.msgSuccess("成功")
+    })
+  // addOut().then((res) => {
+
+  // })
+}
 /*************** form操作 ***************/
-const PhaInPlanformRef = ref()
-const PhaInPlantitle = ref('')
+const PhaOutformRef = ref()
+const PhaOuttitle = ref('')
 // 操作类型 1、add 2、edit 3、view
-const PhaInPlanopertype = ref(0)
-const PhaInPlanopen = ref(false)
-const PhaInPlanstate = reactive({
-  PhaInPlansingle: true,
-  PhaInPlanmultiple: true,
-  PhaInPlanform: {},
-  PhaInPlanrules: {
-    planNo: [{ required: true, message: "入库计划流水号不能为空", trigger: "blur" }],
-    billCode: [{ required: true, message: "采购单号不能为空", trigger: "blur" }],
-    drugDeptCode: [{ required: true, message: "科室编码不能为空", trigger: "blur" }],
-    drugCode: [{ required: true, message: "药品编码不能为空", trigger: "blur" }],
+const PhaOutopertype = ref(0)
+const PhaOutopen = ref(false)
+const PhaOutstate = reactive({
+  PhaOutsingle: true,
+  PhaOutmultiple: true,
+  PhaOutform: {},
+  PhaOutrules: {
   },
-  PhaInPlanoptions: {
-    // 单据状态 0 计划单，1 采购单 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'} 计划类型0手工计划，1警戒线，2消耗，3时间，4日消耗
-    statePhaInPlanoptions: [{ dictLabel: '计划单', dictValue: '0' }, { dictLabel: '采购单', dictValue: '1' }],
-    planTypePhaInPlanoptions: [{ dictLabel: '手工计划', dictValue: '0' },
-    { dictLabel: '警戒线', dictValue: '1' },
-    { dictLabel: '消耗', dictValue: '2' },
-    { dictLabel: '时间', dictValue: '3' },
-    { dictLabel: '日消耗', dictValue: '4' }]
+  PhaOutoptions: {
+    // 出库类型 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
+    outTypePhaOutoptions: [],
   }
 })
 
-const { PhaInPlanform, PhaInPlanrules, PhaInPlanoptions, PhaInPlansingle, PhaInPlanmultiple } = toRefs(PhaInPlanstate)
+const { PhaOutform, PhaOutrules, PhaOutoptions, PhaOutsingle, PhaOutmultiple } = toRefs(PhaOutstate)
 
 // 关闭dialog
-function PhaInPlancancel() {
-  PhaInPlanopen.value = false
-  PhaInPlanreset()
+function PhaOutcancel() {
+  PhaOutopen.value = false
+  PhaOutreset()
 }
 
 // 重置表单
-function PhaInPlanreset() {
-  PhaInPlanform.value = {
-    planNo: null,
-    billCode: null,
-    state: null,
-    planType: null,
+function PhaOutreset() {
+  PhaOutform.value = {
     drugDeptCode: null,
+    outBillCode: null,
+    serialCode: null,
+    groupCode: null,
+    outListCode: null,
+    outType: null,
+    class3MeaningCode: null,
+    inBillCode: null,
+    inSerialCode: null,
+    inListCode: null,
     drugCode: null,
     tradeName: null,
+    drugType: null,
+    drugQuality: null,
     specs: null,
-    retailPrice: null,
-    wholesalePrice: null,
-    purchasePrice: null,
     packUnit: null,
     packQty: null,
     minUnit: null,
+    showFlag: null,
+    showUnit: null,
+    batchNo: null,
+    validDate: null,
     producerCode: null,
-    producerName: null,
+    companyCode: null,
+    retailPrice: null,
+    wholesalePrice: null,
+    purchasePrice: null,
+    outNum: null,
+    saleCost: null,
+    tradeCost: null,
+    approveCost: null,
     storeNum: null,
-    storeTotsum: null,
-    outputSum: null,
-    planNum: null,
-    planEmpl: null,
-    planDate: null,
-    stockEmpl: null,
-    stockDate: null,
-    stockNo: null,
-    replacePlanNo: null,
+    storeCost: null,
+    specialFlag: null,
+    outState: null,
+    applyNum: null,
+    applyOpercode: null,
+    applyDate: null,
+    examNum: null,
+    examOpercode: null,
+    examDate: null,
+    approveOpercode: null,
+    approveDate: null,
+    placeCode: null,
+    returnNum: null,
+    drugedBill: null,
+    medId: null,
+    drugStorageCode: null,
+    recipeNo: null,
+    sequenceNo: null,
+    signPerson: null,
+    getPerson: null,
+    strikeFlag: null,
     mark: null,
     operCode: null,
     operDate: null,
-    extendField: null,
+    arkFlag: null,
+    arkBillCode: null,
+    outDate: null,
+    applyNumber: null,
   };
-  proxy.resetForm("PhaInPlanformRef")
+  proxy.resetForm("PhaOutformRef")
 }
 
 /**
- * 查看
- * @param {*} row
- */
-function PhaInPlanhandlePreview(row) {
-  PhaInPlanreset()
-  const id = row.planNo
-  getPhaInPlan(id).then((res) => {
+* 查看
+* @param {*} row
+*/
+function PhaOuthandlePreview(row) {
+  PhaOutreset()
+  const id = row.id
+  getPhaOut(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
-      PhaInPlanopen.value = true
-      PhaInPlantitle.value = '查看'
-      PhaInPlanopertype.value = 3
-      PhaInPlanform.value = {
+      PhaOutopen.value = true
+      PhaOuttitle.value = '查看'
+      PhaOutopertype.value = 3
+      PhaOutform.value = {
         ...data,
       }
     }
@@ -1587,24 +2423,24 @@ function PhaInPlanhandlePreview(row) {
 }
 
 // 添加按钮操作
-function PhaInPlanhandleAdd() {
-  PhaInPlanreset();
-  PhaInPlanopen.value = true
-  PhaInPlantitle.value = '添加入库计划'
-  PhaInPlanopertype.value = 1
+function PhaOuthandleAdd() {
+  PhaOutreset();
+  PhaOutopen.value = true
+  PhaOuttitle.value = '添加出库记录'
+  PhaOutopertype.value = 1
 }
 // 修改按钮操作
-function PhaInPlanhandleUpdate(row) {
-  PhaInPlanreset()
-  const id = row.planNo || PhaInPlanids.value
-  getPhaInPlan(id).then((res) => {
+function PhaOuthandleUpdate(row) {
+  PhaOutreset()
+  const id = row.id || PhaOutids.value
+  getPhaOut(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
-      PhaInPlanopen.value = true
-      PhaInPlantitle.value = '修改入库计划'
-      PhaInPlanopertype.value = 2
+      PhaOutopen.value = true
+      PhaOuttitle.value = '修改出库记录'
+      PhaOutopertype.value = 2
 
-      PhaInPlanform.value = {
+      PhaOutform.value = {
         ...data,
       }
     }
@@ -1612,21 +2448,21 @@ function PhaInPlanhandleUpdate(row) {
 }
 
 // 添加&修改 表单提交
-function PhaInPlansubmitForm() {
-  proxy.$refs["PhaInPlanformRef"].validate((valid) => {
+function PhaOutsubmitForm() {
+  proxy.$refs["PhaOutformRef"].validate((valid) => {
     if (valid) {
 
-      if (PhaInPlanform.value.planNo != undefined && PhaInPlanopertype.value === 2) {
-        updatePhaInPlan(PhaInPlanform.value).then((res) => {
+      if (PhaOutform.value.id != undefined && PhaOutopertype.value === 2) {
+        updatePhaOut(PhaOutform.value).then((res) => {
           proxy.$modal.msgSuccess("修改成功")
-          PhaInPlanopen.value = false
-          PhaInPlangetList()
+          PhaOutopen.value = false
+          PhaOutgetList()
         })
       } else {
-        addPhaInPlan(PhaInPlanform.value).then((res) => {
+        addPhaOut(PhaOutform.value).then((res) => {
           proxy.$modal.msgSuccess("新增成功")
-          PhaInPlanopen.value = false
-          PhaInPlangetList()
+          PhaOutopen.value = false
+          PhaOutgetList()
         })
       }
     }
@@ -1634,43 +2470,43 @@ function PhaInPlansubmitForm() {
 }
 
 // 删除按钮操作
-function PhaInPlanhandleDelete(row) {
-  const PhaInPlanids = row.planNo || PhaInPlanids.value
+function PhaOuthandleDelete(row) {
+  const PhaOutids = row.id || PhaOutids.value
 
   proxy
-    .$confirm('是否确认删除参数编号为"' + PhaInPlanids + '"的数据项？', "警告", {
+    .$confirm('是否确认删除参数编号为"' + PhaOutids + '"的数据项？', "警告", {
       confirmButtonText: proxy.$t('common.ok'),
-      PhaInPlancancelButtonText: proxy.$t('common.PhaInPlancancel'),
+      PhaOutcancelButtonText: proxy.$t('common.cancel'),
       type: "warning",
     })
     .then(function () {
-      return delPhaInPlan(PhaInPlanids)
+      return delPhaOut(PhaOutids)
     })
     .then(() => {
-      PhaInPlangetList()
+      PhaOutgetList()
       proxy.$modal.msgSuccess("删除成功")
     })
 }
 
 // 清空
-function PhaInPlanhandleClear() {
+function PhaOuthandleClear() {
   proxy
     .$confirm("是否确认清空所有数据项?", "警告", {
       confirmButtonText: proxy.$t('common.ok'),
-      PhaInPlancancelButtonText: proxy.$t('common.PhaInPlancancel'),
+      PhaOutcancelButtonText: proxy.$t('common.cancel'),
       type: "warning",
     })
     .then(function () {
-      return clearPhaInPlan()
+      return clearPhaOut()
     })
     .then(() => {
-      PhaInPlanhandleQuery()
+      PhaOuthandleQuery()
       proxy.$modal.msgSuccess('清空成功')
     })
 }
 
 // 导入数据成功处理
-const PhaInPlanhandleFileSuccess = (response) => {
+const PhaOuthandleFileSuccess = (response) => {
   const { item1, item2 } = response.data
   var error = ''
   item2.forEach((item) => {
@@ -1679,23 +2515,24 @@ const PhaInPlanhandleFileSuccess = (response) => {
   proxy.$alert(item1 + '<p>' + error + '</p>', '导入结果', {
     dangerouslyUseHTMLString: true
   })
-  PhaInPlangetList()
+  PhaOutgetList()
 }
 
 // 导出按钮操作
-function PhaInPlanhandleExport() {
+function PhaOuthandleExport() {
   proxy
-    .$confirm("是否确认导出入库计划数据项?", "警告", {
+    .$confirm("是否确认导出出库记录数据项?", "警告", {
       confirmButtonText: "确定",
-      PhaInPlancancelButtonText: "取消",
+      PhaOutcancelButtonText: "取消",
       type: "warning",
     })
     .then(async () => {
-      await proxy.downFile('/business/PhaInPlan/export', { ...PhaInPlanqueryParams })
+      await proxy.downFile('/business/PhaOut/export', { ...PhaOutqueryParams })
     })
 }
 
-PhaInPlanhandleQuery()
+PhaOuthandleQuery()
+//#endregion
 </script>
 <style>
 .table-content {
