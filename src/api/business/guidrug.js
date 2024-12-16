@@ -12,7 +12,13 @@ export function listGuiDrug(query) {
     params: query,
   })
 }
-
+export function Tongbu(query) {
+  return request({
+    url: 'business/GuiDrug/TongBu',
+    method: 'get',
+    params: query,
+  })
+}
 /**
  * 新增药品
  * @param data

@@ -20,6 +20,11 @@
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
+        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="DrugStoreTongbu">
+          同步
+        </el-button>
+      </el-col>
+      <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['drugstore:add']" plain icon="plus" @click="handleAdd">
           {{ $t('btn.add') }}
         </el-button>
@@ -54,49 +59,46 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['drugstore:export']">
-          {{ $t('btn.export') }}
-        </el-button>
-      </el-col>
+</el-dropdown>
+</el-col>
+<el-col :span="1.5">
+  <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['drugstore:export']">
+    {{ $t('btn.export') }}
+  </el-button>
+</el-col> -->
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
-    <el-table
-      :data="dataList"
-      v-loading="loading"
-      ref="table"
-      border
-      header-cell-class-name="el-table-header-cell"
-      highlight-current-row
-      @sort-change="sortChange"
-      @selection-change="handleSelectionChange"
-      >
-      <el-table-column type="selection" width="50" align="center"/>
-      <el-table-column prop="drugDeptCode" label="药房代码" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugDeptCode')"/>
-      <el-table-column prop="drugDeptName" label="药房名称" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugDeptName')"/>
-      <el-table-column prop="storeSum" label="库存总量" align="center" v-if="columns.showColumn('storeSum')"/>
-      <el-table-column prop="preoutSum" label="预出总量" align="center" v-if="columns.showColumn('preoutSum')"/>
+    <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
+      highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="50" align="center" />
+      <el-table-column prop="drugDeptCode" label="药房代码" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugDeptCode')" />
+      <el-table-column prop="drugDeptName" label="药房名称" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugDeptName')" />
+      <el-table-column prop="storeSum" label="库存总量" align="center" v-if="columns.showColumn('storeSum')" />
+      <el-table-column prop="preoutSum" label="预出总量" align="center" v-if="columns.showColumn('preoutSum')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['drugstore:edit']" @click="handleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['drugstore:delete']" @click="handleDelete(scope.row)"></el-button>
+          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['drugstore:edit']"
+            @click="handleUpdate(scope.row)"></el-button>
+          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['drugstore:delete']"
+            @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+      @pagination="getList" />
 
 
-    <el-dialog :title="title" :lock-scroll="false" v-model="open" >
+    <el-dialog :title="title" :lock-scroll="false" v-model="open">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
 
           <el-col :lg="12">
             <el-form-item label="药房代码" prop="drugDeptCode">
-              <el-input v-model="form.drugDeptCode" placeholder="请输入药房代码" :disabled="opertype != 1"/>
+              <el-input v-model="form.drugDeptCode" placeholder="请输入药房代码" :disabled="opertype != 1" />
             </el-form-item>
           </el-col>
 
@@ -105,13 +107,13 @@
               <el-input v-model="form.drugDeptName" placeholder="请输入药房名称" />
             </el-form-item>
           </el-col>
-            
+
           <el-col :lg="12">
             <el-form-item label="库存总量" prop="storeSum">
               <el-input v-model.number="form.storeSum" placeholder="请输入库存总量" />
             </el-form-item>
           </el-col>
-            
+
           <el-col :lg="12">
             <el-form-item label="预出总量" prop="preoutSum">
               <el-input v-model.number="form.preoutSum" placeholder="请输入预出总量" />
@@ -128,11 +130,13 @@
 </template>
 
 <script setup name="drugstore">
-import { listDrugStore,
- addDrugStore, delDrugStore, 
- updateDrugStore,getDrugStore, 
- clearDrugStore,  } 
-from '@/api/business/drugstore.js'
+import {
+  listDrugStore,
+  addDrugStore, delDrugStore,
+  updateDrugStore, getDrugStore,
+  clearDrugStore, Tongbu,
+}
+  from '@/api/business/drugstore.js'
 import importData from '@/components/ImportData'
 const { proxy } = getCurrentInstance()
 const ids = ref([])
@@ -147,10 +151,10 @@ const queryParams = reactive({
   drugDeptName: undefined,
 })
 const columns = ref([
-  { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '药房代码'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'drugDeptName', label: '药房名称'  ,showOverflowTooltip: true  },
-  { visible: true, align: 'center', type: '', prop: 'storeSum', label: '库存总量'   },
-  { visible: true, align: 'center', type: '', prop: 'preoutSum', label: '预出总量'   },
+  { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '药房代码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugDeptName', label: '药房名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'storeSum', label: '库存总量' },
+  { visible: true, align: 'center', type: '', prop: 'preoutSum', label: '预出总量' },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
@@ -163,7 +167,7 @@ var dictParams = [
 ]
 
 
-function getList(){
+function getList() {
   loading.value = true
   listDrugStore(queryParams).then(res => {
     const { code, data } = res
@@ -182,7 +186,7 @@ function handleQuery() {
 }
 
 // 重置查询操作
-function resetQuery(){
+function resetQuery() {
   proxy.resetForm("queryRef")
   handleQuery()
 }
@@ -218,8 +222,8 @@ const state = reactive({
   multiple: true,
   form: {},
   rules: {
-    drugDeptCode: [{ required: true, message: "药房代码不能为空", trigger: "blur"     }],
-    drugDeptName: [{ required: true, message: "药房名称不能为空", trigger: "blur"     }],
+    drugDeptCode: [{ required: true, message: "药房代码不能为空", trigger: "blur" }],
+    drugDeptName: [{ required: true, message: "药房名称不能为空", trigger: "blur" }],
   },
   options: {
   }
@@ -228,7 +232,7 @@ const state = reactive({
 const { form, rules, options, single, multiple } = toRefs(state)
 
 // 关闭dialog
-function cancel(){
+function cancel() {
   open.value = false
   reset()
 }
@@ -250,8 +254,8 @@ function reset() {
  */
 function handlePreview(row) {
   reset()
-    const id = row.drugDeptCode
-    getDrugStore(id).then((res) => {
+  const id = row.drugDeptCode
+  getDrugStore(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
       open.value = true
@@ -302,10 +306,10 @@ function submitForm() {
         })
       } else {
         addDrugStore(form.value).then((res) => {
-            proxy.$modal.msgSuccess("新增成功")
-            open.value = false
-            getList()
-          })
+          proxy.$modal.msgSuccess("新增成功")
+          open.value = false
+          getList()
+        })
       }
     }
   })
@@ -374,4 +378,10 @@ function handleExport() {
 }
 
 handleQuery()
+function DrugStoreTongbu() {
+  Tongbu().then((res) => {
+
+
+  })
+}
 </script>

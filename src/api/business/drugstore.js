@@ -12,7 +12,13 @@ export function listDrugStore(query) {
     params: query,
   })
 }
-
+export function Tongbu(query) {
+  return request({
+    url: 'business/DrugStore/TongBu',
+    method: 'get',
+    params: query,
+  })
+}
 /**
  * 新增药房
  * @param data

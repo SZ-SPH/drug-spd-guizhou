@@ -26,6 +26,11 @@
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
+        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="DepartmentsTongbu">
+          同步
+        </el-button>
+      </el-col>
+      <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['departments:add']" plain icon="plus" @click="handleAdd">
           {{ $t('btn.add') }}
         </el-button>
@@ -60,13 +65,13 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['departments:export']">
-          {{ $t('btn.export') }}
-        </el-button>
-      </el-col>
+</el-dropdown>
+</el-col>
+<el-col :span="1.5">
+  <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['departments:export']">
+    {{ $t('btn.export') }}
+  </el-button>
+</el-col> -->
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
@@ -145,7 +150,7 @@ import {
   listDepartments,
   addDepartments, delDepartments,
   updateDepartments, getDepartments,
-  clearDepartments,
+  clearDepartments, Tongbu,
 }
   from '@/api/business/departments.js'
 import importData from '@/components/ImportData'
@@ -391,4 +396,11 @@ function handleExport() {
 }
 
 handleQuery()
+
+function DepartmentsTongbu() {
+  Tongbu().then((res) => {
+
+
+  })
+}
 </script>

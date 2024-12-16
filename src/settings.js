@@ -105,7 +105,7 @@ export default {
   /**
    * 导航模式 1、侧边栏 2、混合 3、纯顶部
    */
-  navType: 1,
+  navType: 3,
   /**
    * 前往通知地址
    */

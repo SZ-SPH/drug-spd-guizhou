@@ -12,7 +12,13 @@ export function listPhaStorage(query) {
     params: query,
   })
 }
-
+export function Tongbu(query) {
+  return request({
+    url: 'business/PhaStorage/TongBu',
+    method: 'post',
+    params: query,
+  })
+}
 /**
  * 新增库存
  * @param data

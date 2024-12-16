@@ -64,6 +64,11 @@
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
+        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="PhaInPlanTongbu">
+          同步
+        </el-button>
+      </el-col>
+      <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['phainplan:add']" plain icon="plus" @click="PhaInPlanhandleAdd">
           {{ $t('btn.add') }}
         </el-button>
@@ -98,14 +103,13 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="PhaInPlanhandleExport"
-          v-hasPermi="['phainplan:export']">
-          {{ $t('btn.export') }}
-        </el-button>
-      </el-col>
+</el-dropdown>
+</el-col>
+<el-col :span="1.5">
+  <el-button type="warning" plain icon="download" @click="PhaInPlanhandleExport" v-hasPermi="['phainplan:export']">
+    {{ $t('btn.export') }}
+  </el-button>
+</el-col> -->
       <right-toolbar v-model:showSearch="PhaInPlanshowSearch" @queryTable="PhaInPlangetList"
         :columns="PhaInPlancolumns"></right-toolbar>
     </el-row>
@@ -408,7 +412,7 @@ import {
   listPhaInPlan,
   addPhaInPlan, delPhaInPlan,
   updatePhaInPlan, getPhaInPlan,
-  clearPhaInPlan,
+  clearPhaInPlan, Tongbu,
 }
   from '@/api/business/phainplan.js'
 import importData from '@/components/ImportData'
@@ -742,4 +746,10 @@ function PhaInPlanhandleExport() {
 }
 
 PhaInPlanhandleQuery()
+function PhaInPlanTongbu() {
+  Tongbu().then((res) => {
+
+
+  })
+}
 </script>

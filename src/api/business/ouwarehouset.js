@@ -13,6 +13,13 @@ export function listOuWarehouset(query) {
   })
 }
 
+export function aLLADDplanStock(query) {
+  return request({
+    url: 'business/OuWarehouset',
+    method: 'get',
+    params: query,
+  })
+}
 /**
  * 新增出库药品详情
  * @param data

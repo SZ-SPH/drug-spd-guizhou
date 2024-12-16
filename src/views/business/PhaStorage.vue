@@ -38,6 +38,11 @@
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
+        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="PhaStorageTongbu">
+          同步
+        </el-button>
+      </el-col>
+      <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['phastorage:add']" plain icon="plus" @click="handleAdd">
           {{ $t('btn.add') }}
         </el-button>
@@ -72,13 +77,13 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['phastorage:export']">
-          {{ $t('btn.export') }}
-        </el-button>
-      </el-col>
+</el-dropdown>
+</el-col>
+<el-col :span="1.5">
+  <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['phastorage:export']">
+    {{ $t('btn.export') }}
+  </el-button>
+</el-col> -->
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
@@ -293,7 +298,7 @@ import {
   listPhaStorage,
   addPhaStorage, delPhaStorage,
   updatePhaStorage, getPhaStorage,
-  clearPhaStorage,
+  clearPhaStorage, Tongbu,
 }
   from '@/api/business/phastorage.js'
 import importData from '@/components/ImportData'
@@ -582,4 +587,10 @@ function handleExport() {
 }
 
 handleQuery()
+function PhaStorageTongbu() {
+  Tongbu().then((res) => {
+
+
+  })
+}
 </script>

@@ -21,12 +21,12 @@
       <el-form-item label="自定义码" prop="customCode">
         <el-input v-model="queryParams.customCode" placeholder="请输入自定义码" />
       </el-form-item>
-      <el-form-item label="公司类别：0－生产厂家，1－供销商" prop="companyType">
-        <el-select clearable v-model="queryParams.companyType" placeholder="请选择公司类别：0－生产厂家，1－供销商">
+      <el-form-item label="公司类别" prop="companyType">
+        <el-select clearable v-model="queryParams.companyType" placeholder="请选择公司类别">
           <el-option v-for="item in options.companyTypeOptions" :key="item.dictValue" :label="item.dictLabel"
             :value="item.dictValue">
             <span class="fl">{{ item.dictLabel }}</span>
-            <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
+            <!-- <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span> -->
           </el-option>
         </el-select>
       </el-form-item>
@@ -42,7 +42,7 @@
       </el-form-item>
     </el-form>
     <!-- 工具区域 -->
-    <el-row :gutter="15" class="mb10">
+    <!-- <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['companyinfo:add']" plain icon="plus" @click="handleAdd">
           {{ $t('btn.add') }}
@@ -78,14 +78,21 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
-        </el-dropdown>
-      </el-col>
+</el-dropdown>
+</el-col>
+<el-col :span="1.5">
+  <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['companyinfo:export']">
+    {{ $t('btn.export') }}
+  </el-button>
+</el-col>
+<right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
+</el-row> -->
+    <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['companyinfo:export']">
-          {{ $t('btn.export') }}
+        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="CompanyInfoTongbu">
+          同步
         </el-button>
       </el-col>
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
@@ -109,8 +116,7 @@
         v-if="columns.showColumn('wbCode')" />
       <el-table-column prop="customCode" label="自定义码" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('customCode')" />
-      <el-table-column prop="companyType" label="公司类别：0－生产厂家，1－供销商" align="center"
-        v-if="columns.showColumn('companyType')">
+      <el-table-column prop="companyType" label="公司类别" align="center" v-if="columns.showColumn('companyType')">
         <template #default="scope">
           <dict-tag :options="options.companyTypeOptions" :value="scope.row.companyType" />
         </template>
@@ -141,8 +147,6 @@
     </el-table>
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
       @pagination="getList" />
-
-
     <el-dialog :title="title" :lock-scroll="false" v-model="open">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
@@ -202,8 +206,8 @@
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="公司类别：0－生产厂家，1－供销商" prop="companyType">
-              <el-select v-model="form.companyType" placeholder="请选择公司类别：0－生产厂家，1－供销商">
+            <el-form-item label="公司类别" prop="companyType">
+              <el-select v-model="form.companyType" placeholder="请选择公司类别">
                 <el-option v-for="item in options.companyTypeOptions" :key="item.dictValue" :label="item.dictLabel"
                   :value="item.dictValue"></el-option>
               </el-select>
@@ -268,7 +272,7 @@ import {
   listCompanyInfo,
   addCompanyInfo, delCompanyInfo,
   updateCompanyInfo, getCompanyInfo,
-  clearCompanyInfo,
+  clearCompanyInfo, Tongbu,
 }
   from '@/api/business/companyinfo.js'
 import importData from '@/components/ImportData'
@@ -300,7 +304,7 @@ const columns = ref([
   { visible: true, align: 'center', type: '', prop: 'spellCode', label: '拼音码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'wbCode', label: '五笔码', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'customCode', label: '自定义码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: 'dict', prop: 'companyType', label: '公司类别：0－生产厂家，1－供销商', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: 'dict', prop: 'companyType', label: '公司类别', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'openBank', label: '开户银行', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'openAccounts', label: '开户账号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'actualRate', label: '政策扣率', showOverflowTooltip: true },
@@ -377,8 +381,12 @@ const state = reactive({
   rules: {
   },
   options: {
+    companyTypeOptions: [{ dictLabel: '生产厂家', dictValue: '0' }, { dictLabel: '供销商', dictValue: '1' }],
     // 公司类别：0－生产厂家，1－供销商 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    companyTypeOptions: [],
+    // companyTypeOptions: [
+    //   { dictLabel: '生产厂家', dictValue: '0' },
+    //   { dictLabel: '供销商', dictValue: '1' }
+    // ],
   }
 })
 
@@ -544,4 +552,10 @@ function handleExport() {
 }
 
 handleQuery()
+function CompanyInfoTongbu() {
+  Tongbu().then((res) => {
+
+
+  })
+}
 </script>

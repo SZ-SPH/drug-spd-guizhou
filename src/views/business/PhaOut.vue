@@ -71,7 +71,7 @@
     </el-form>
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="PhaOuthandleAdd">
           {{ $t('btn.add') }}
         </el-button>
@@ -106,13 +106,13 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="PhaOuthandleExport" v-hasPermi="['phaout:export']">
-          {{ $t('btn.export') }}
-        </el-button>
-      </el-col>
+</el-dropdown>
+</el-col>
+<el-col :span="1.5">
+  <el-button type="warning" plain icon="download" @click="PhaOuthandleExport" v-hasPermi="['phaout:export']">
+    {{ $t('btn.export') }}
+  </el-button>
+</el-col> -->
       <right-toolbar v-model:showSearch="PhaOutshowSearch" @queryTable="PhaOutgetList"
         :columns="PhaOutcolumns"></right-toolbar>
     </el-row>
@@ -653,7 +653,7 @@ import {
   listPhaOut,
   addPhaOut, delPhaOut,
   updatePhaOut, getPhaOut,
-  clearPhaOut,
+  clearPhaOut, Tongbu,
 }
   from '@/api/business/phaout.js'
 import importData from '@/components/ImportData'

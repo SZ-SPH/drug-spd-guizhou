@@ -12,6 +12,13 @@ export function listPhaOut(query) {
     params: query,
   })
 }
+export function Tongbu(query) {
+  return request({
+    url: 'business/PhaOut/TongBu',
+    method: 'get',
+    params: query,
+  })
+}
 
 /**
  * 新增出库记录

@@ -12,7 +12,13 @@ export function listPhaInPlan(query) {
     params: query,
   })
 }
-
+export function Tongbu(query) {
+  return request({
+    url: 'business/PhaInPlan/TongBu',
+    method: 'get',
+    params: query,
+  })
+}
 /**
  * 新增入库计划
  * @param data

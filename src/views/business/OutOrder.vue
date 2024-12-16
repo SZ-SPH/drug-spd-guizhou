@@ -77,7 +77,11 @@
             生成出库单据
           </el-button>
         </el-col>
-
+        <el-col :span="1.5">
+          <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="PhaoutTongbu">
+            同步
+          </el-button>
+        </el-col>
         <!-- <el-col :span="1.5">
           <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="PhaOuthandleAdd">
             {{ $t('btn.add') }}
@@ -664,24 +668,24 @@
           <el-form-item label="领取部门" prop="inpharmacyId">
             <el-input v-model.number="OutOrderqueryParams.inpharmacyId" placeholder="请输入领取部门" />
           </el-form-item>
-          <el-form-item label="领取人" prop="useReceive">
+          <!-- <el-form-item label="领取人" prop="useReceive">
             <el-input v-model="OutOrderqueryParams.useReceive" placeholder="请输入领取人" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="发出出库" prop="outWarehouseID">
             <el-input v-model.number="OutOrderqueryParams.outWarehouseID" placeholder="请输入发出出库" />
           </el-form-item>
-          <el-form-item label="his出库单流水号" prop="outBillCode">
+          <!-- <el-form-item label="his出库单流水号" prop="outBillCode">
             <el-input v-model.number="OutOrderqueryParams.outBillCode" placeholder="请输入his出库单流水号" />
-          </el-form-item>
-          <el-form-item label="时间">
+          </el-form-item> -->
+          <!-- <el-form-item label="时间">
             <el-date-picker v-model="OutOrderdateRangeTimes" type="datetimerange" start-placeholder="开始日期"
               end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="OutOrderdefaultTime"
               :shortcuts="dateOptions">
             </el-date-picker>
-          </el-form-item>
-          <el-form-item label="备注" prop="remarks">
+          </el-form-item> -->
+          <!-- <el-form-item label="备注" prop="remarks">
             <el-input v-model="OutOrderqueryParams.remarks" placeholder="请输入备注" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
             <el-button icon="search" type="primary" @click="OutOrderhandleQuery">{{ $t('btn.search') }}</el-button>
             <el-button icon="refresh" @click="OutOrderhandleresetQuery">{{ $t('btn.reset') }}</el-button>
@@ -689,7 +693,7 @@
         </el-form>
         <!-- 工具区域 -->
         <el-row :gutter="15" class="mb10">
-          <el-col :span="1.5">
+          <!--  <el-col :span="1.5">
             <el-button type="primary" v-hasPermi="['outorder:add']" plain icon="plus" @click="OutOrderhandleAdd">
               {{ $t('btn.add') }}
             </el-button>
@@ -710,7 +714,7 @@
             <el-button type="danger" v-hasPermi="['outorder:delete']" plain icon="delete" @click="OutOrderhandleClear">
               {{ $t('btn.clean') }}
             </el-button>
-          </el-col>
+          </el-col> -->
           <!-- <el-col :span="1.5">
             <el-dropdown trigger="click" v-hasPermi="['outorder:import']">
               <el-button type="primary" plain icon="Upload">
@@ -736,8 +740,8 @@
             :columns="OutOrdercolumns"></right-toolbar>
         </el-row>
 
-        <el-table :data="OutOrderdataList" v-loading="OutOrderloading" ref="OutOrdertable" border
-          header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutOrdersortChange"
+        <el-table @row-click="PhaOutQedatalist" :data="OutOrderdataList" v-loading="OutOrderloading" ref="OutOrdertable"
+          border header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutOrdersortChange"
           @selection-change="OutOrderhandleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="id" label="Id" align="center" v-if="OutOrdercolumns.showColumn('id')" />
@@ -853,9 +857,9 @@
       <div class="table-item2">
         <el-form :model="OuWarehousetqueryParams" label-position="right" inline ref="OuWarehousetqueryRef"
           v-show="OuWarehousetshowSearch" @submit.prevent>
-          <el-form-item label="OutorderID" prop="outorderID">
+          <!-- <el-form-item label="OutorderID" prop="outorderID">
             <el-input v-model.number="OuWarehousetqueryParams.outorderID" placeholder="请输入OutorderID" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="出库科室编码" prop="drugDeptCode">
             <el-input v-model="OuWarehousetqueryParams.drugDeptCode" placeholder="请输入出库科室编码" />
           </el-form-item>
@@ -878,7 +882,7 @@
         </el-form>
         <!-- 工具区域 -->
         <el-row :gutter="15" class="mb10">
-          <el-col :span="1.5">
+          <!-- <el-col :span="1.5">
             <el-button type="primary" v-hasPermi="['ouwarehouset:add']" plain icon="plus"
               @click="OuWarehousethandleAdd">
               {{ $t('btn.add') }}
@@ -923,7 +927,7 @@
               v-hasPermi="['ouwarehouset:export']">
               {{ $t('btn.export') }}
             </el-button>
-          </el-col>
+          </el-col> -->
           <right-toolbar v-model:showSearch="OuWarehousetshowSearch" @queryTable="OuWarehousetgetList"
             :columns="OuWarehousetcolumns"></right-toolbar>
         </el-row>
@@ -1518,16 +1522,16 @@ const OutOrderqueryParams = reactive({
   remarks: undefined,
 })
 const OutOrdercolumns = ref([
-  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
+  { visible: false, align: 'center', type: '', prop: 'id', label: 'Id' },
   { visible: true, align: 'center', type: '', prop: 'outOrderCode', label: '出库单据', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'inpharmacyId', label: '领取部门' },
   { visible: true, align: 'center', type: '', prop: 'useReceive', label: '领取人', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outWarehouseID', label: '发出出库' },
   { visible: true, align: 'center', type: '', prop: 'times', label: '时间', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'remarks', label: '备注', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'remarks', label: '备注', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outBillCode', label: 'his出库单流水号' },
-  { visible: false, align: 'center', type: '', prop: 'createTime', label: '创建时间', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'createBy', label: '创建人', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'createTime', label: '创建时间', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'createBy', label: '创建人', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const OutOrdertotal = ref(0)
@@ -1791,8 +1795,8 @@ const OuWarehousetqueryParams = reactive({
   tradeName: undefined,
 })
 const OuWarehousetcolumns = ref([
-  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
-  { visible: true, align: 'center', type: '', prop: 'outorderID', label: 'OutorderID' },
+  { visible: false, align: 'center', type: '', prop: 'id', label: 'Id' },
+  { visible: false, align: 'center', type: '', prop: 'outorderID', label: 'OutorderID' },
   { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
   { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
@@ -1803,8 +1807,8 @@ const OuWarehousetcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'inBillCode', label: '入库单号' },
   { visible: false, align: 'center', type: '', prop: 'inSerialCode', label: '入库单序号' },
   { visible: false, align: 'center', type: '', prop: 'inListCode', label: '入库单据号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
   { visible: false, align: 'center', type: 'dict', prop: 'drugType', label: '药品类别', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
@@ -1820,12 +1824,12 @@ const OuWarehousetcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
   { visible: false, align: 'center', type: '', prop: 'wholesalePrice', label: '批发价' },
   { visible: false, align: 'center', type: '', prop: 'purchasePrice', label: '购入价' },
-  { visible: false, align: 'center', type: '', prop: 'outNum', label: '出库数量' },
-  { visible: false, align: 'center', type: '', prop: 'saleCost', label: '零售金额' },
-  { visible: false, align: 'center', type: '', prop: 'tradeCost', label: '批发金额' },
-  { visible: false, align: 'center', type: '', prop: 'approveCost', label: '购入金额' },
-  { visible: false, align: 'center', type: '', prop: 'storeNum', label: '出库后库存数量' },
-  { visible: false, align: 'center', type: '', prop: 'storeCost', label: '出库后库存总金额' },
+  { visible: true, align: 'center', type: '', prop: 'outNum', label: '出库数量' },
+  { visible: true, align: 'center', type: '', prop: 'saleCost', label: '零售金额' },
+  { visible: true, align: 'center', type: '', prop: 'tradeCost', label: '批发金额' },
+  { visible: true, align: 'center', type: '', prop: 'approveCost', label: '购入金额' },
+  { visible: true, align: 'center', type: '', prop: 'storeNum', label: '出库后库存数量' },
+  { visible: true, align: 'center', type: '', prop: 'storeCost', label: '出库后库存总金额' },
   { visible: false, align: 'center', type: '', prop: 'specialFlag', label: '特殊标记', showOverflowTooltip: true },
   { visible: false, align: 'center', type: 'dict', prop: 'outState', label: '出库状态', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'applyNum', label: '申请出库量' },
@@ -2139,7 +2143,7 @@ OuWarehousethandleQuery()
 import {
   listPhaOut,
   addPhaOut, delPhaOut,
-  updatePhaOut, getPhaOut, addOut,
+  updatePhaOut, getPhaOut, addOut, Tongbu,
   clearPhaOut,
 }
   from '@/api/business/phaout.js'
@@ -2532,7 +2536,22 @@ function PhaOuthandleExport() {
 }
 
 PhaOuthandleQuery()
+
+
 //#endregion
+function PhaOutQedatalist(row) {
+
+  OuWarehousetqueryParams.outorderID = row.id;
+  OuWarehousetgetList()
+}
+
+function PhaoutTongbu() {
+  Tongbu().then((res) => {
+
+
+  })
+}
+
 </script>
 <style>
 .table-content {

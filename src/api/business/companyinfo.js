@@ -13,6 +13,13 @@ export function listCompanyInfo(query) {
   })
 }
 
+export function Tongbu(query) {
+  return request({
+    url: 'business/CompanyInfo/TongBu',
+    method: 'get',
+    params: query,
+  })
+}
 /**
  * 新增厂家和供应商
  * @param data

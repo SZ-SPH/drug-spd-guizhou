@@ -13,6 +13,13 @@ export function listDepartments(query) {
   })
 }
 
+export function Tongbu(query) {
+  return request({
+    url: 'business/Departments/TongBu',
+    method: 'get',
+    params: query,
+  })
+}
 /**
  * 新增科室
  * @param data

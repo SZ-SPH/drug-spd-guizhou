@@ -6,8 +6,8 @@
 <template>
   <div>
     <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
-      <el-form-item label="药品术语编码" prop="drugtermId">
-        <el-input v-model="queryParams.drugtermId" placeholder="请输入药品术语编码" />
+      <el-form-item label="药品术语编码" prop="drugTermId">
+        <el-input v-model="queryParams.drugTermId" placeholder="请输入药品术语编码" />
       </el-form-item>
       <el-form-item label="英文名" prop="englishFormal">
         <el-input v-model="queryParams.englishFormal" placeholder="请输入英文名" />
@@ -38,6 +38,11 @@
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
+        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="GuiDrugTongbu">
+          同步
+        </el-button>
+      </el-col>
+      <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['guidrug:add']" plain icon="plus" @click="handleAdd">
           {{ $t('btn.add') }}
         </el-button>
@@ -72,25 +77,36 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
-        </el-dropdown>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['guidrug:export']">
-          {{ $t('btn.export') }}
-        </el-button>
-      </el-col>
+</el-dropdown>
+</el-col>
+<el-col :span="1.5">
+  <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['guidrug:export']">
+    {{ $t('btn.export') }}
+  </el-button>
+</el-col> -->
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
       highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
+      <el-table-column prop="regularName" label="通用名" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('regularName')" />
+      <el-table-column prop="regularSpellCode" label="通用名拼音码" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('regularSpellCode')" />
+      <el-table-column prop="regularWbCode" label="通用名五笔码" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('regularWbCode')" />
       <el-table-column prop="additiveDays" label="累计天数" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('additiveDays')" />
       <el-table-column prop="additiveQty" label="累计数量" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('additiveQty')" />
       <el-table-column prop="antibioticsFlag" label="是否抗生素" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('antibioticsFlag')" />
+        v-if="columns.showColumn('antibioticsFlag')">
+        <template v-slot="scope">
+          {{ scope.row.antibioticsFlag == 1 ? '是' : '否' }}
+        </template>
+      </el-table-column>
+
       <el-table-column prop="antibioticsLv" label="抗生素等级" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('antibioticsLv')" />
       <el-table-column prop="bakBaseDose" label="备用基本剂量" align="center" :show-overflow-tooltip="true"
@@ -119,8 +135,8 @@
         v-if="columns.showColumn('doseUnit')" />
       <el-table-column prop="drugQuality" label="药品性质" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('drugQuality')" />
-      <el-table-column prop="drugtermId" label="药品术语编码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('drugtermId')" />
+      <el-table-column prop="drugTermId" label="药品术语编码" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('drugTermId')" />
       <el-table-column prop="englishFormal" label="英文名" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('englishFormal')" />
       <el-table-column prop="englishName" label="英文品名" align="center" :show-overflow-tooltip="true"
@@ -142,11 +158,23 @@
       <el-table-column prop="hypoKindName" label="皮试类别名称" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('hypoKindName')" />
       <el-table-column prop="hypoReagentFlag" label="是否皮试剂" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('hypoReagentFlag')" />
+        v-if="columns.showColumn('hypoReagentFlag')">
+        <template v-slot="scope">
+          {{ scope.row.hypoReagentFlag == 1 ? '是' : '否' }}
+        </template>
+      </el-table-column>
       <el-table-column prop="hypoTestFlag" label="是否需皮试" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('hypoTestFlag')" />
+        v-if="columns.showColumn('hypoTestFlag')">
+        <template v-slot="scope">
+          {{ scope.row.hypoTestFlag == 1 ? '是' : '否' }}
+        </template>
+      </el-table-column>
       <el-table-column prop="importFlag" label="是否进口药" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('importFlag')" />
+        v-if="columns.showColumn('importFlag')">
+        <template v-slot="scope">
+          {{ scope.row.importFlag == 1 ? '是' : '否' }}
+        </template>
+      </el-table-column>
       <el-table-column prop="inDrugUnitLv" label="住院默认取药单位等级" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('inDrugUnitLv')" />
       <el-table-column prop="internationalCode" label="国际编码" align="center" :show-overflow-tooltip="true"
@@ -168,7 +196,11 @@
       <el-table-column prop="minUnit" label="最小单位" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('minUnit')" />
       <el-table-column prop="nostrumFlag" label="是否协定处方" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('nostrumFlag')" />
+        v-if="columns.showColumn('nostrumFlag')">
+        <template v-slot="scope">
+          {{ scope.row.nostrumFlag == 1 ? '是' : '否' }}
+        </template>
+      </el-table-column>
       <el-table-column prop="otcFlag" label="OTC标志" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('otcFlag')" />
       <el-table-column prop="packQty" label="包装数量" align="center" :show-overflow-tooltip="true"
@@ -191,12 +223,7 @@
         v-if="columns.showColumn('putDrugUnitLv')" />
       <el-table-column prop="reagentCode" label="皮试剂编码" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('reagentCode')" />
-      <el-table-column prop="regularName" label="通用名" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('regularName')" />
-      <el-table-column prop="regularSpellCode" label="通用名拼音码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('regularSpellCode')" />
-      <el-table-column prop="regularWbCode" label="通用名五笔码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('regularWbCode')" />
+
       <el-table-column prop="sexClass" label="性别限制用药标志" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('sexClass')" />
       <el-table-column prop="siGrade" label="医保等级" align="center" :show-overflow-tooltip="true"
@@ -231,10 +258,10 @@
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['guidrug:edit']"
+          <!-- <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['guidrug:edit']"
             @click="handleUpdate(scope.row)"></el-button>
           <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['guidrug:delete']"
-            @click="handleDelete(scope.row)"></el-button>
+            @click="handleDelete(scope.row)"></el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -349,8 +376,8 @@
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="药品术语编码" prop="drugtermId">
-              <el-input v-model="form.drugtermId" placeholder="请输入药品术语编码" />
+            <el-form-item label="药品术语编码" prop="drugTermId">
+              <el-input v-model="form.drugTermId" placeholder="请输入药品术语编码" />
             </el-form-item>
           </el-col>
 
@@ -683,7 +710,7 @@ import {
   listGuiDrug,
   addGuiDrug, delGuiDrug,
   updateGuiDrug, getGuiDrug,
-  clearGuiDrug,
+  clearGuiDrug, Tongbu,
 }
   from '@/api/business/guidrug.js'
 import importData from '@/components/ImportData'
@@ -696,7 +723,7 @@ const queryParams = reactive({
   pageSize: 10,
   sort: '',
   sortType: 'asc',
-  drugtermId: undefined,
+  drugTermId: undefined,
   englishFormal: undefined,
   regularName: undefined,
   regularSpellCode: undefined,
@@ -706,76 +733,76 @@ const queryParams = reactive({
   wbCode: undefined,
 })
 const columns = ref([
-  { visible: true, align: 'center', type: '', prop: 'additiveDays', label: '累计天数', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'additiveQty', label: '累计数量', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'additiveDays', label: '累计天数', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'additiveQty', label: '累计数量', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'antibioticsFlag', label: '是否抗生素', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'antibioticsLv', label: '抗生素等级', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'bakBaseDose', label: '备用基本剂量', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'bakDoseUnit', label: '备用剂量单位', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'baseDose', label: '基本剂量', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'childFlag', label: '儿童用药限制标志', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'antibioticsLv', label: '抗生素等级', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'bakBaseDose', label: '备用基本剂量', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'bakDoseUnit', label: '备用剂量单位', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'baseDose', label: '基本剂量', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'childFlag', label: '儿童用药限制标志', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'dangerFlag', label: '高危药标志', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'defFreqCode', label: '默认频次编码', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'defOnceDose', label: '默认每次计量', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'defUsageCode', label: '默认给药途径编码', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'defUsageName', label: '默认给药途径名称', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'doseModel', label: '剂型', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'doseModelName', label: '剂型名称', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'doseUnit', label: '剂量单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'drugtermId', label: '药品术语编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'englishFormal', label: '英文名', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'englishName', label: '英文品名', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'doseModel', label: '剂型', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'doseModelName', label: '剂型名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'doseUnit', label: '剂量单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugTermId', label: '药品术语编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'englishFormal', label: '英文名', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'englishName', label: '英文品名', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'englishRegular', label: '英文通用名', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'familyplanFlag', label: '计划生育药品标志', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'gbCode', label: '国家编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'gmpFlag', label: 'GMP标志', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'gbCode', label: '国家编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'gmpFlag', label: 'GMP标志', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'herbProcCode', label: '默认特殊煎制法编码', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'herbProcName', label: '默认特殊煎制法名称', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'hypoKindCode', label: '皮试类别编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'hypoKindName', label: '皮试类别名称', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'hypoReagentFlag', label: '是否皮试剂', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'hypoTestFlag', label: '是否需皮试', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'importFlag', label: '是否进口药', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'inDrugUnitLv', label: '住院默认取药单位等级', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'internationalCode', label: '国际编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'liquidFlag', label: '大输液标志', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'hypoKindCode', label: '皮试类别编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'hypoKindName', label: '皮试类别名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'hypoReagentFlag', label: '是否皮试剂', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'hypoTestFlag', label: '是否需皮试', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'importFlag', label: '是否进口药', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'inDrugUnitLv', label: '住院默认取药单位等级', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'internationalCode', label: '国际编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'liquidFlag', label: '大输液标志', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'maxDayDose', label: '每天最大用量', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'maxDays', label: '最大天数', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'maxFrequency', label: '单日最大频次', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'maxOnceDose', label: '最大每次量', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'midQty', label: '中间数量', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'midUnit', label: '中间单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'nostrumFlag', label: '是否协定处方', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'otcFlag', label: 'OTC标志', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'packQty', label: '包装数量', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'pefDoseUnitLv', label: '默认每次量单位等级', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'phaFunCode', label: '药理作用编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'phaFunPath', label: '药理作用路径', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'preciousFlag', label: '贵重药标志', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'priceRef', label: '参考价格', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'producerName', label: '生产厂家', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'putDrugUnitLv', label: '门诊默认取药单位等级', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'reagentCode', label: '皮试剂编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'regularName', label: '通用名', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'regularSpellCode', label: '通用名拼音码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'regularWbCode', label: '通用名五笔码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'sexClass', label: '性别限制用药标志', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'siGrade', label: '医保等级', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'siMark', label: '适应症', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'spellCode', label: '商品名拼音码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: 'dict', prop: 'splitType', label: '拆分类型', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'stimulantFlag', label: '兴奋剂标志', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'surfaceFactor', label: '与每平米体表面积换算系数', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'termClassId', label: '术语类型编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'termClassName', label: '术语类型名称', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'tradeName', label: '商品名', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'useTip', label: '药品使用提示', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'wbCode', label: '商品名五笔码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'weightFactor', label: '与每千克体重换算系数', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'nostrumFlag', label: '是否协定处方', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'otcFlag', label: 'OTC标志', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'packQty', label: '包装数量', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'pefDoseUnitLv', label: '默认每次量单位等级', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'phaFunCode', label: '药理作用编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'phaFunPath', label: '药理作用路径', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'preciousFlag', label: '贵重药标志', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'priceRef', label: '参考价格', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'producerName', label: '生产厂家', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'putDrugUnitLv', label: '门诊默认取药单位等级', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'reagentCode', label: '皮试剂编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'regularName', label: '通用名', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'regularSpellCode', label: '通用名拼音码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'regularWbCode', label: '通用名五笔码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'sexClass', label: '性别限制用药标志', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'siGrade', label: '医保等级', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'siMark', label: '适应症', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'spellCode', label: '商品名拼音码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: 'dict', prop: 'splitType', label: '拆分类型', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'stimulantFlag', label: '兴奋剂标志', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'surfaceFactor', label: '与每平米体表面积换算系数', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'termClassId', label: '术语类型编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'termClassName', label: '术语类型名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'tradeName', label: '商品名', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'useTip', label: '药品使用提示', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'wbCode', label: '商品名五笔码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'weightFactor', label: '与每千克体重换算系数', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
@@ -792,6 +819,7 @@ function getList() {
   loading.value = true
   listGuiDrug(queryParams).then(res => {
     const { code, data } = res
+    console.log(data)
     if (code == 200) {
       dataList.value = data.result
       total.value = data.totalNum
@@ -878,7 +906,7 @@ function reset() {
     doseModelName: null,
     doseUnit: null,
     drugQuality: null,
-    drugtermId: null,
+    drugTermId: null,
     englishFormal: null,
     englishName: null,
     englishRegular: null,
@@ -1065,4 +1093,10 @@ function handleExport() {
 }
 
 handleQuery()
+
+function GuiDrugTongbu() {
+  Tongbu().then((res) => {
+
+  })
+}
 </script>

@@ -7,9 +7,9 @@
   <div>
     <el-form :model="OuWarehousetqueryParams" label-position="right" inline ref="OuWarehousetqueryRef"
       v-show="OuWarehousetshowSearch" @submit.prevent>
-      <el-form-item label="OutorderID" prop="outorderID">
+      <!-- <el-form-item label="OutorderID" prop="outorderID">
         <el-input v-model.number="OuWarehousetqueryParams.outorderID" placeholder="请输入OutorderID" />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="出库科室编码" prop="drugDeptCode">
         <el-input v-model="OuWarehousetqueryParams.drugDeptCode" placeholder="请输入出库科室编码" />
       </el-form-item>
@@ -661,8 +661,8 @@ const OuWarehousetqueryParams = reactive({
   tradeName: undefined,
 })
 const OuWarehousetcolumns = ref([
-  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id' },
-  { visible: true, align: 'center', type: '', prop: 'outorderID', label: 'OutorderID' },
+  { visible: false, align: 'center', type: '', prop: 'id', label: 'Id' },
+  { visible: false, align: 'center', type: '', prop: 'outorderID', label: 'OutorderID' },
   { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
   { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
