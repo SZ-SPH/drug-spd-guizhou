@@ -49,6 +49,23 @@ export function generateInwarehouse(data) {
   })
 }
 
+export function generateSelectiveInwarehouse(data) {
+  return request({
+    url: 'business/TGInwarehouse/generateSelectiveInwarehouse',
+    method: 'post',
+    data: data
+  })
+}
+
+//追加采购单
+export function AppendSelectiveInwarehouse(data) {
+  return request({
+    url: 'business/TGInwarehouse/AppendSelectiveInwarehouse',
+    method: 'post',
+    data: data
+  })
+}
+
 /**
  * 修改采购计划入库
  * @param data
@@ -104,5 +121,14 @@ export function pushInwarehouseOrder(data) {
     url: 'business/TGInwarehouse/push',
     method: 'post',
     data: data
+  })
+}
+
+//查询进销商
+export function getSupplierInfoList(query) {
+  return request({
+    url: 'Guiz/CompanyInfo/list',
+    method: 'get',
+    params: query
   })
 }
