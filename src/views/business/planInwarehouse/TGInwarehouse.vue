@@ -163,7 +163,7 @@
       <div style='max-width: 50%;'>
         <el-row :gutter="15" class="mb10">
           <el-col :span="1.5">
-            <el-button v-hasPermi="['tginwarehouse:delete']" @click="handleInwarehouseDelete(inwarehousestate.ids)"
+            <el-button v-hasPermi="['tginwarehouse:delete']" @click="handleInwarehouseDelete(inwarehousestate.itemIds)"
               type="danger" :disabled="inwarehousestate.multiple" plain icon="delete">
               删除
             </el-button>
@@ -222,6 +222,7 @@
           v-model:limit="inwarehouseQueryParams.pageSize" @pagination="inwarehouseGetList" />
       </div>
 
+      <!-- 第三个表格 -->
       <div style="width: 48%;">
         <el-row :gutter="15" class="mb10">
           <right-toolbar v-model:showSearch="showSearch" @queryTable="inwarehouseitemGetList"
@@ -283,6 +284,14 @@
             v-if="inwarehouseitemColumns.showColumn('approveDate')" />
           <el-table-column prop="stockNo" width="180" label="采购流水号" align="center"
             :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="操作" width="160">
+            <template #default="scope">
+              <el-button type="success" size="small" icon="edit" title="编辑"
+                @click="handleInwarehoueDetailUpdate(scope.row)"></el-button>
+              <el-button type="danger" size="small" icon="delete" title="删除"
+                @click="handleInwarehoueDetailDelete(scope.row)"></el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <pagination :total="inwarehouseitemTotal" v-model:page="inwarehouseitemQueryParams.pageNum"
           v-model:limit="inwarehouseitemQueryParams.pageSize" @pagination="inwarehouseitemGetList" />
@@ -320,6 +329,82 @@
       <template #footer>
         <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
         <el-button type="primary" @click="submitInwarehouseForm">{{ $t('btn.submit') }}</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 入库单明细修改 -->
+    <!-- :rules="inwarehouseDetailrules" -->
+    <el-dialog title="入库单明细修改" :lock-scroll="false" v-model="inwarehouseDetailDialogOpen">
+      <el-form ref="inwarehouseDetailFormRef" :model="inwarehouseDetailForm" label-width="100px">
+        <el-row :gutter="20">
+
+          <el-col :lg="12" v-if="opertype != 1">
+            <el-form-item label="Id" prop="id">
+              <el-input-number v-model.number="inwarehouseDetailForm.id" controls-position="right" placeholder="请输入Id"
+                :disabled="true" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="药品编码 关联 " prop="drugCode">
+              <el-input v-model="inwarehouseDetailForm.drugCode" placeholder="请输入药品编码 关联 " />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="入库数量" prop="inwarehouseQty">
+              <el-input v-model.number="inwarehouseDetailForm.inwarehouseQty" placeholder="请输入入库数量" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="inwarehouseDetailForm.remark" placeholder="请输入备注" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="创建时间" prop="createTime">
+              <el-date-picker v-model="inwarehouseDetailForm.createTime" type="datetime" placeholder="选择日期时间"
+                value-format="YYYY-MM-DD HH:mm:ss">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="入库单ID" prop="inwarehouseId">
+              <el-input v-model.number="inwarehouseDetailForm.inwarehouseId" placeholder="请输入入库单ID" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="流水号" prop="serialNum">
+              <el-input v-model="inwarehouseDetailForm.serialNum" placeholder="请输入流水号" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="批号" prop="batchNo">
+              <el-input v-model="inwarehouseDetailForm.batchNo" placeholder="请输入批号" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="批次号" prop="batchId">
+              <el-input v-model="inwarehouseDetailForm.batchId" placeholder="请输入批次号" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="批文信息" prop="approveInfo">
+              <el-input v-model="inwarehouseDetailForm.approveInfo" placeholder="请输入批文信息" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template #footer v-if="opertype != 3">
+        <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
+        <el-button type="primary" @click="submitInwarehouseDetailForm">{{ $t('btn.submit') }}</el-button>
       </template>
     </el-dialog>
 
@@ -593,7 +678,8 @@ import {
   generateInwarehouse, listInwarehouse,
   listInwarehouseitem, delInwarehouse,
   pushInwarehouseOrder, getSupplierInfoList,
-  generateSelectiveInwarehouse, AppendSelectiveInwarehouse
+  generateSelectiveInwarehouse, AppendSelectiveInwarehouse,
+  updateInwarehouseDetailItem, getTInwarehousedetail
 }
   from '@/api/business/tginwarehouse.js'
 const { proxy } = getCurrentInstance()
@@ -604,6 +690,37 @@ const inwarehouseLoading = ref(false)
 const inwarehouseInLoading = ref(false)
 const inwarehouseitemLoading = ref(false)
 const showSearch = ref(true)
+
+
+//入库明细相关变量
+const inwarehouseDetailDialogOpen = ref(false)
+const inwarehouseDetailForm = reactive({})
+const { inwarehouseDeitalFormRef } = toRefs(inwarehouseDetailForm)
+const submitInwarehouseDetailForm = () => {
+  updateInwarehouseDetailItem(inwarehouseDetailForm).then((res) => {
+    if (res?.code != 200) return proxy.$message.error(res?.msg)
+    proxy.$message.success('操作成功')
+  }).catch((err) => {
+    proxy.$message.error(err)
+  }).finally(() => {
+    inwarehouseDetailDialogOpen.value = false
+  })
+}
+//dialog 打开
+const handleInwarehoueDetailUpdate = (row) => {
+  reset()
+  const id = row.id || ids.value
+  getTInwarehousedetail(id).then((res) => {
+    const { code, data } = res
+    if (code == 200) {
+      inwarehouseDetailDialogOpen.value = true
+      inwarehouseDetailForm.value = {
+        ...data,
+      }
+    }
+  })
+}
+
 
 const queryParams = reactive({
   pageNum: 1,
@@ -752,13 +869,8 @@ const handleAppendInwarehouse = (data) => {
     type: 'error',
     message: '同一采购单号只能追加到同一张入库单'
   })
-  // inwarehouseSelectionItem.value = inwarehouseSelectionItem.value.map(item => ({
-  //   ...item,
-  //   purchaseNum: inwarehousetableCurrent.value.inwarehouseNum// 追加字段和值
-  // }));
   const selectedItem = inwarehouseSelectionItem.value[0];
   selectedItem.purchaseNum = inwarehousetableCurrent.value.inwarehouseNum; // 动态追加字段和值
-
   // 将对象直接赋值（去掉数组结构）
   inwarehouseSelectionItem.value = selectedItem;
   AppendSelectiveInwarehouse(selectedItem).then((res) => {
@@ -1021,6 +1133,7 @@ function handleInwarehouseInSelectionChange(selection) {
 
 const inwarehousestate = reactive({
   ids: [],
+  itemIds: [],
   inwarehouseNums: [],
   single: true,
   multiple: true,
@@ -1028,6 +1141,7 @@ const inwarehousestate = reactive({
 
 function handleInwarehousetableSelectionChange(selection) {
   inwarehousestate.ids = selection.map((item) => item.planNo);
+  inwarehousestate.itemIds = selection.map((item) => item.id);
   inwarehousestate.inwarehouseNums = selection.map((item) => item.inwarehouseNum);
   inwarehousestate.single = selection.length != 1
   inwarehousestate.multiple = !selection.length;
@@ -1148,6 +1262,7 @@ const { form, rules, options, single, multiple, multipleAndSend, generateInwareh
 function cancel() {
   open.value = false
   generateInwarehouseDialogOpen.value = false
+  inwarehouseDetailDialogOpen.value = false
   reset()
 }
 
@@ -1182,7 +1297,6 @@ const initSelectSupplierInfo = () => {
 
 onMounted(() => {
   initSelectSupplierInfo()
-  console.log(supplierOptions)
 });
 
 // 重置表单
@@ -1226,7 +1340,6 @@ function reset() {
   proxy.resetForm("formRef")
 }
 
-
 // 添加按钮操作
 function handleAdd() {
   reset();
@@ -1234,6 +1347,7 @@ function handleAdd() {
   title.value = '添加采购计划入库'
   opertype.value = 1
 }
+
 // 修改按钮操作
 function handleUpdate(row) {
   reset()

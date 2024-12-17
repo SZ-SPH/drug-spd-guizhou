@@ -29,6 +29,22 @@ export function listInwarehouseitem(query) {
   })
 }
 
+export function updateInwarehouseDetailItem(query) {
+  return request({
+    url: 'business/Inwarehousedetail',
+    method: 'PUT',
+    params: query
+  })
+}
+
+//获取入库明细详情
+export function getTInwarehousedetail(id) {
+  return request({
+    url: 'business/Inwarehousedetail/' + id,
+    method: 'get'
+  })
+}
+
 /**
  * 新增采购计划入库
  * @param data
