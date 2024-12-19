@@ -33,7 +33,7 @@ export function updateInwarehouseDetailItem(query) {
   return request({
     url: 'business/Inwarehousedetail',
     method: 'PUT',
-    params: query
+    data: query
   })
 }
 
@@ -42,6 +42,30 @@ export function getTInwarehousedetail(id) {
   return request({
     url: 'business/Inwarehousedetail/' + id,
     method: 'get'
+  })
+}
+
+//修改主单
+export function updateInwarehouse(data) {
+  return request({
+    url: 'business/Inwarehouse',
+    method: 'PUT',
+    data: data
+  })
+}
+
+//获取主单详情
+export function getInwarehouse(id) {
+  return request({
+    url: 'business/Inwarehouse/' + id,
+    method: 'get'
+  })
+}
+
+export function delTInwarehousedetail(id) {
+  return request({
+    url: 'business/Inwarehousedetail/delete/' + id,
+    method: 'delete'
   })
 }
 
