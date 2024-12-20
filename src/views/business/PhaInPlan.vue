@@ -412,7 +412,7 @@ import {
   listPhaInPlan,
   addPhaInPlan, delPhaInPlan,
   updatePhaInPlan, getPhaInPlan,
-  clearPhaInPlan, Tongbu,
+  clearPhaInPlan, TongBu,
 }
   from '@/api/business/phainplan.js'
 import importData from '@/components/ImportData'
@@ -747,8 +747,10 @@ function PhaInPlanhandleExport() {
 
 PhaInPlanhandleQuery()
 function PhaInPlanTongbu() {
-  Tongbu().then((res) => {
+  proxy.$modal.loading("请稍等")
+  TongBu().then((res) => {
 
+    proxy.$modal.closeLoading()
 
   })
 }

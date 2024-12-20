@@ -12,7 +12,7 @@ export function listPhaInPlan(query) {
     params: query,
   })
 }
-export function Tongbu(query) {
+export function TongBu(query) {
   return request({
     url: 'business/PhaInPlan/TongBu',
     method: 'get',

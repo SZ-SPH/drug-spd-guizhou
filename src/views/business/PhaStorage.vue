@@ -298,7 +298,7 @@ import {
   listPhaStorage,
   addPhaStorage, delPhaStorage,
   updatePhaStorage, getPhaStorage,
-  clearPhaStorage, Tongbu,
+  clearPhaStorage, TongBu,
 }
   from '@/api/business/phastorage.js'
 import importData from '@/components/ImportData'
@@ -588,8 +588,10 @@ function handleExport() {
 
 handleQuery()
 function PhaStorageTongbu() {
-  Tongbu().then((res) => {
+  proxy.$modal.loading("请稍等")
+  TongBu().then((res) => {
 
+    proxy.$modal.closeLoading()
 
   })
 }

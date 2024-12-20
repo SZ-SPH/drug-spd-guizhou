@@ -12,7 +12,13 @@ export function listCompanyInfo(query) {
     params: query,
   })
 }
-
+export function TongBu(query) {
+  return request({
+    url: 'Guiz/CompanyInfo/TongBu',
+    method: 'get',
+    params: query,
+  })
+}
 /**
  * 新增厂家和供应商
  * @param data

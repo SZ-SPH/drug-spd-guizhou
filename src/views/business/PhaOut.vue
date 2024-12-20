@@ -71,6 +71,11 @@
     </el-form>
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
+      <el-col :span="1.5">
+        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="PhaOutTongBu">
+          同步
+        </el-button>
+      </el-col>
       <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="PhaOuthandleAdd">
           {{ $t('btn.add') }}
@@ -653,7 +658,7 @@ import {
   listPhaOut,
   addPhaOut, delPhaOut,
   updatePhaOut, getPhaOut,
-  clearPhaOut, Tongbu,
+  clearPhaOut, TongBu,
 }
   from '@/api/business/phaout.js'
 import importData from '@/components/ImportData'
@@ -1022,5 +1027,11 @@ function PhaOuthandleExport() {
 }
 
 PhaOuthandleQuery()
+function PhaOutTongbu() {
+  proxy.$modal.loading("请稍等")
+  TongBu().then((res) => {
+    proxy.$modal.closeLoading()
+  })
+}
 //#endregion
 </script>

@@ -134,7 +134,7 @@ import {
   listDrugStore,
   addDrugStore, delDrugStore,
   updateDrugStore, getDrugStore,
-  clearDrugStore, Tongbu,
+  clearDrugStore, TongBu,
 }
   from '@/api/business/drugstore.js'
 import importData from '@/components/ImportData'
@@ -379,8 +379,10 @@ function handleExport() {
 
 handleQuery()
 function DrugStoreTongbu() {
-  Tongbu().then((res) => {
+  proxy.$modal.loading("请稍等")
+  TongBu().then((res) => {
 
+    proxy.$modal.closeLoading()
 
   })
 }

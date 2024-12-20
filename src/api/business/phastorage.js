@@ -12,7 +12,7 @@ export function listPhaStorage(query) {
     params: query,
   })
 }
-export function Tongbu(query) {
+export function TongBu(query) {
   return request({
     url: 'business/PhaStorage/TongBu',
     method: 'post',

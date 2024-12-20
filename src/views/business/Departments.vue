@@ -150,7 +150,7 @@ import {
   listDepartments,
   addDepartments, delDepartments,
   updateDepartments, getDepartments,
-  clearDepartments, Tongbu,
+  clearDepartments, TongBu,
 }
   from '@/api/business/departments.js'
 import importData from '@/components/ImportData'
@@ -398,8 +398,10 @@ function handleExport() {
 handleQuery()
 
 function DepartmentsTongbu() {
-  Tongbu().then((res) => {
+  proxy.$modal.loading("请稍等")
+  TongBu().then((res) => {
 
+    proxy.$modal.closeLoading()
 
   })
 }

@@ -710,7 +710,7 @@ import {
   listGuiDrug,
   addGuiDrug, delGuiDrug,
   updateGuiDrug, getGuiDrug,
-  clearGuiDrug, Tongbu,
+  clearGuiDrug, TongBu,
 }
   from '@/api/business/guidrug.js'
 import importData from '@/components/ImportData'
@@ -1095,7 +1095,10 @@ function handleExport() {
 handleQuery()
 
 function GuiDrugTongbu() {
-  Tongbu().then((res) => {
+  proxy.$modal.loading("请稍等")
+  TongBu().then((res) => {
+
+    proxy.$modal.closeLoading()
 
   })
 }

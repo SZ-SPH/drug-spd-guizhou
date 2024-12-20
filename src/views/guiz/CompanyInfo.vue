@@ -43,6 +43,11 @@
     </el-form>
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
+      <el-col :span="1.5">
+        <el-button type="primary" v-hasPermi="['companyinfo:add']" plain icon="plus" @click="CompanyInfoTongbu">
+          同步
+        </el-button>
+      </el-col>
       <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['companyinfo:add']" plain icon="plus" @click="handleAdd">
           {{ $t('btn.add') }}
@@ -265,7 +270,7 @@ import {
   listCompanyInfo,
   addCompanyInfo, delCompanyInfo,
   updateCompanyInfo, getCompanyInfo,
-  clearCompanyInfo, Tongbu,
+  clearCompanyInfo, TongBu,
 }
   from '@/api/guiz/companyinfo.js'
 import importData from '@/components/ImportData'
@@ -545,4 +550,13 @@ function handleExport() {
 }
 
 handleQuery()
+
+function CompanyInfoTongbu() {
+  proxy.$modal.loading("请稍等")
+  TongBu().then((res) => {
+
+    proxy.$modal.closeLoading()
+
+  })
+}
 </script>

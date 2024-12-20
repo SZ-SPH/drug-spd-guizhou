@@ -2143,7 +2143,7 @@ OuWarehousethandleQuery()
 import {
   listPhaOut,
   addPhaOut, delPhaOut,
-  updatePhaOut, getPhaOut, addOut, Tongbu,
+  updatePhaOut, getPhaOut, addOut, TongBu,
   clearPhaOut,
 }
   from '@/api/business/phaout.js'
@@ -2546,8 +2546,10 @@ function PhaOutQedatalist(row) {
 }
 
 function PhaoutTongbu() {
-  Tongbu().then((res) => {
+  proxy.$modal.loading("请稍等")
+  TongBu().then((res) => {
 
+    proxy.$modal.closeLoading()
 
   })
 }

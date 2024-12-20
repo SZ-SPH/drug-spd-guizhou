@@ -7,26 +7,27 @@ import { downFile } from '@/utils/request'
  */
 export function listCompanyInfo(query) {
   return request({
-    url: 'business/CompanyInfo/list',
+    url: 'guiz/CompanyInfo/list',
     method: 'get',
     params: query,
   })
 }
 
-export function Tongbu(query) {
+export function TongBu(query) {
   return request({
-    url: 'business/CompanyInfo/TongBu',
+    url: 'guiz/CompanyInfo/TongBu',
     method: 'get',
     params: query,
   })
 }
+
 /**
  * 新增厂家和供应商
  * @param data
  */
 export function addCompanyInfo(data) {
   return request({
-    url: 'business/CompanyInfo',
+    url: 'guiz/CompanyInfo',
     method: 'post',
     data: data,
   })
@@ -37,7 +38,7 @@ export function addCompanyInfo(data) {
  */
 export function updateCompanyInfo(data) {
   return request({
-    url: 'business/CompanyInfo',
+    url: 'guiz/CompanyInfo',
     method: 'PUT',
     data: data,
   })
@@ -48,7 +49,7 @@ export function updateCompanyInfo(data) {
  */
 export function getCompanyInfo(id) {
   return request({
-    url: 'business/CompanyInfo/' + id,
+    url: 'guiz/CompanyInfo/' + id,
     method: 'get'
   })
 }
@@ -59,18 +60,18 @@ export function getCompanyInfo(id) {
  */
 export function delCompanyInfo(pid) {
   return request({
-    url: 'business/CompanyInfo/delete/' + pid,
+    url: 'guiz/CompanyInfo/delete/' + pid,
     method: 'delete'
   })
 }
 // 清空厂家和供应商
 export function clearCompanyInfo() {
   return request({
-    url: 'business/CompanyInfo/clean',
+    url: 'guiz/CompanyInfo/clean',
     method: 'delete'
   })
 }
 // 导出厂家和供应商
 export async function exportCompanyInfo(query) {
-  await downFile('business/CompanyInfo/export', { ...query })
+  await downFile('guiz/CompanyInfo/export', { ...query })
 }
