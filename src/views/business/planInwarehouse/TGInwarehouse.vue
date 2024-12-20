@@ -6,6 +6,9 @@
 <template>
   <div>
     <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
+      <el-form-item label="采购单号" prop="billCode">
+        <el-input v-model="queryParams.billCode" placeholder="请输入采购单号" />
+      </el-form-item>
       <el-form-item label="入库计划流水号" prop="planNo">
         <el-input v-model="queryParams.planNo" placeholder="请输入入库计划流水号" />
       </el-form-item>
@@ -178,7 +181,7 @@
           <el-col :span="1.5">
             <el-button v-hasPermi="['tginwarehouse:delete']"
               @click="handleGenerateInwarehouseDialogVisible(inwarehousestate.inwarehouseNums)" type="primary" plain
-              icon="upload">
+              icon="download">
               生成入库单
             </el-button>
           </el-col>
@@ -209,10 +212,8 @@
             v-if="inwarehouseColumns.showColumn('inwarehouseArea')" />
           <el-table-column label="操作" width="160">
             <template #default="scope">
-              <el-button type="primary" size="small" icon="plus" title="添加" v-hasPermi="['tginwarehouse:add']"
-                @click="handleInwarehouseConfirm(scope.row)"></el-button>
-              <!-- <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['tginwarehouse:edit']"
-                @click="handleUpdate(scope.row)"></el-button> -->
+              <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['tginwarehouse:edit']"
+                @click="handleInwarehouseUpdate(scope.row)"></el-button>
               <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['tginwarehouse:delete']"
                 @click="handleInwarehouseDelete(scope.row)"></el-button>
             </template>
@@ -346,14 +347,14 @@
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="药品编码 关联 " prop="drugCode">
+            <el-form-item label="药品编码" prop="drugCode">
               <el-input v-model="inwarehouseDetailForm.drugCode" placeholder="请输入药品编码 关联 " />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="入库数量" prop="inwarehouseQty">
-              <el-input v-model.number="inwarehouseDetailForm.inwarehouseQty" placeholder="请输入入库数量" />
+              <el-input :disabled="true" v-model.number="inwarehouseDetailForm.inwarehouseQty" placeholder="请输入入库数量" />
             </el-form-item>
           </el-col>
 
@@ -373,13 +374,7 @@
 
           <el-col :lg="12">
             <el-form-item label="入库单ID" prop="inwarehouseId">
-              <el-input v-model.number="inwarehouseDetailForm.inwarehouseId" placeholder="请输入入库单ID" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="流水号" prop="serialNum">
-              <el-input v-model="inwarehouseDetailForm.serialNum" placeholder="请输入流水号" />
+              <el-input :disabled="true" v-model.number="inwarehouseDetailForm.inwarehouseId" placeholder="请输入入库单ID" />
             </el-form-item>
           </el-col>
 
@@ -390,8 +385,14 @@
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="批次号" prop="batchId">
-              <el-input v-model="inwarehouseDetailForm.batchId" placeholder="请输入批次号" />
+            <el-form-item label="生产日期" prop="productionDate">
+              <el-input v-model="inwarehouseDetailForm.productionDate" placeholder="请输入生产日期" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="有效期" prop="valiDate">
+              <el-input v-model="inwarehouseDetailForm.valiDate" placeholder="请输入有效期" />
             </el-form-item>
           </el-col>
 
@@ -667,6 +668,40 @@
 
     </el-dialog>
 
+    <!-- 修改采购计划 -->
+    <el-dialog title="修改采购计划" :lock-scroll="false" v-model="inwarehouseDialogOpen">
+      <el-form ref="inwarehouseFormRef" :model="inwarehouseForm" label-width="100px">
+        <el-row :gutter="20">
+          <el-col :lg="12">
+            <el-form-item label="发票号" prop="billCode">
+              <el-input v-model="inwarehouseForm.billCode" placeholder="请输入发票号" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="发票时间" prop="billTime">
+              <el-input v-model="inwarehouseForm.billTime" placeholder="请输入发票时间" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="供销商" prop="supplier">
+              <el-select clearable v-model="inwarehouseForm.supplierCode" placeholder="请选择供销商 :">
+                <el-option v-for="item in supplierOptions" :key="item.value" :label="item.label" :value="item.value">
+                  <span class="fl">{{ item.label }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+      </el-form>
+      <template #footer>
+        <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
+        <el-button type="primary" @click="submitInwarehouseUpdateForm">{{ $t('btn.submit') }}</el-button>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -679,7 +714,9 @@ import {
   listInwarehouseitem, delInwarehouse,
   pushInwarehouseOrder, getSupplierInfoList,
   generateSelectiveInwarehouse, AppendSelectiveInwarehouse,
-  updateInwarehouseDetailItem, getTInwarehousedetail
+  updateInwarehouseDetailItem, getTInwarehousedetail,
+  delTInwarehousedetail, getInwarehouse,
+  updateInwarehouse
 }
   from '@/api/business/tginwarehouse.js'
 const { proxy } = getCurrentInstance()
@@ -694,8 +731,18 @@ const showSearch = ref(true)
 
 //入库明细相关变量
 const inwarehouseDetailDialogOpen = ref(false)
-const inwarehouseDetailForm = reactive({})
-const { inwarehouseDeitalFormRef } = toRefs(inwarehouseDetailForm)
+const inwarehouseDetailForm = reactive({
+  id: undefined,
+  drugCode: undefined,
+  inwarehouseQty: undefined,
+  remark: undefined,
+  createTime: undefined,
+  inwarehouseId: undefined,
+  batchNo: undefined,
+  productionDate: undefined,
+  valiDate: undefined,
+  approveInfo: undefined
+})
 const submitInwarehouseDetailForm = () => {
   updateInwarehouseDetailItem(inwarehouseDetailForm).then((res) => {
     if (res?.code != 200) return proxy.$message.error(res?.msg)
@@ -714,11 +761,28 @@ const handleInwarehoueDetailUpdate = (row) => {
     const { code, data } = res
     if (code == 200) {
       inwarehouseDetailDialogOpen.value = true
-      inwarehouseDetailForm.value = {
-        ...data,
-      }
+      Object.assign(inwarehouseDetailForm, data)
     }
   })
+}
+
+
+const handleInwarehoueDetailDelete = (row) => {
+  const Ids = row.id || ids.value
+  proxy
+    .$confirm('是否确认删除参数编号为"' + Ids + '"的数据项？', "警告", {
+      confirmButtonText: proxy.$t('common.ok'),
+      cancelButtonText: proxy.$t('common.cancel'),
+      type: "warning",
+    })
+    .then(function () {
+      return delTInwarehousedetail(Ids)
+    })
+    .then(() => {
+      proxy.$modal.msgSuccess("删除成功")
+    }).finally(() => {
+      inwarehouseitemGetList();
+    })
 }
 
 
@@ -730,6 +794,7 @@ const queryParams = reactive({
   state: undefined,
   planType: undefined,
   planNo: undefined,
+  billCode: undefined,
 })
 
 const inwarehouseQueryParams = reactive({
@@ -831,7 +896,6 @@ const columns = ref([
   { visible: false, align: 'center', type: '', prop: 'approveEmpl', label: '审批人', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'approveDate', label: '审批时间', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'stockNo', label: '采购流水号', showOverflowTooltip: true },
-  //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
 const inwarehouseTotal = ref(0)
@@ -863,17 +927,56 @@ const handleGenerateInwarehouseDialogVisible = (row) => {
   generateInwarehouseDialogOpen.value = true
 }
 
+
+const inwarehouseForm = reactive({
+  stockNum: undefined,
+  billCode: undefined,
+  billTime: undefined,
+  supplierCode: undefined,
+  id: undefined,
+})
+const inwarehouseDialogOpen = ref(false)
+//修改入库单
+const handleInwarehouseUpdate = (row) => {
+  reset()
+  const id = row.id || ids.value
+  getInwarehouse(id).then((res) => {
+    const { code, data } = res
+    if (code == 200) {
+      inwarehouseDialogOpen.value = true
+      inwarehouseForm.id = data.id
+      inwarehouseForm.stockNum = data.stockNum
+      inwarehouseForm.billCode = data.billCode
+      inwarehouseForm.billTime = data.billTime
+      inwarehouseForm.supplierCode = data.supplierCode
+    }
+  })
+}
+
+const submitInwarehouseUpdateForm = (data) => {
+  proxy.$refs["inwarehouseFormRef"].validate((valid) => {
+    if (valid) {
+      updateInwarehouse(inwarehouseForm).then((res) => {
+        proxy.$modal.msgSuccess("修改成功")
+        inwarehouseDialogOpen.value = false
+        inwarehouseGetList()
+      })
+    }
+  })
+}
+
 //追加入库单明细
 const handleAppendInwarehouse = (data) => {
-  if (inwarehouseSelectionItem.value.length != 1) return proxy.$message({
-    type: 'error',
-    message: '同一采购单号只能追加到同一张入库单'
+  const formatPurchaseOrderSelectionList = purchaseOrderSelectionList.value.map((item) => {
+    return {
+      planNo: item.planNo,
+      billCode: item.billCode,
+      stockNum: Number(item.planNum),
+      drugCode: item.drugCode,
+      inwarehouseNum: inwarehousetableCurrent.value.inwarehouseNum
+    }
   })
-  const selectedItem = inwarehouseSelectionItem.value[0];
-  selectedItem.purchaseNum = inwarehousetableCurrent.value.inwarehouseNum; // 动态追加字段和值
-  // 将对象直接赋值（去掉数组结构）
-  inwarehouseSelectionItem.value = selectedItem;
-  AppendSelectiveInwarehouse(selectedItem).then((res) => {
+  AppendSelectiveInwarehouse(formatPurchaseOrderSelectionList).then((res) => {
     if (res.code != 200) return proxy.$message({
       type: 'error',
       message: res.msg
@@ -894,10 +997,18 @@ const handleInwarehousetableCurrentChange = (currentRow, oldCurrentRow) => {
   inwarehousetableCurrent.value = currentRow
 }
 
-
+//&& inwarehouseSelectionItem.value.length == 1
 const isAppednInwarehoueEnable = computed(() => {
-  return inwarehousetableCurrent.value != null && inwarehouseSelectionItem.value.length == 1
-})
+  // 如果表当前值为空，直接返回 false
+  if (!inwarehousetableCurrent.value) return false;
+
+  // 如果选择列表为空，返回 false
+  if (purchaseOrderSelectionList.value.length === 0) return false;
+
+  // 如果存在状态为 '1' 的项，返回 false；否则返回 true
+  return !purchaseOrderSelectionList.value.some(item => item.status == '1');
+});
+
 
 const submitInwarehouseForm = (data) => {
   generateSelectiveInwarehouse(generateInwarehouseForm.value).then((res => {
@@ -1090,8 +1201,11 @@ const billCodes = reactive({
 
 const inwarehouseSelectionItem = ref(null)
 
+const purchaseOrderSelectionList = ref([])
 // 多选框选中数据
 function handleSelectionChange(selection) {
+  purchaseOrderSelectionList.value = selection
+  //console.log(purchaseOrderSelectionList.value)
   // 计算数值相加减
   if (selection.length != 0) {
     planNos.value = selection.map((item) => item.planNo).join(',')
@@ -1263,6 +1377,7 @@ function cancel() {
   open.value = false
   generateInwarehouseDialogOpen.value = false
   inwarehouseDetailDialogOpen.value = false
+  inwarehouseDialogOpen.value = false
   reset()
 }
 
@@ -1301,6 +1416,10 @@ onMounted(() => {
 
 // 重置表单
 function reset() {
+  inwarehouseForm.stockNum = null
+  inwarehouseForm.billCode = null
+  inwarehouseForm.billTime = null
+  inwarehouseForm.supplierCode = null
   form.value = {
     id: null,
     planNo: null,
