@@ -265,7 +265,7 @@ import {
   listCompanyInfo,
   addCompanyInfo, delCompanyInfo,
   updateCompanyInfo, getCompanyInfo,
-  clearCompanyInfo,
+  clearCompanyInfo, Tongbu,
 }
   from '@/api/guiz/companyinfo.js'
 import importData from '@/components/ImportData'
