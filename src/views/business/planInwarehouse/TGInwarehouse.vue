@@ -385,8 +385,8 @@
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="生产日期" prop="productionDate">
-              <el-input v-model="inwarehouseDetailForm.productionDate" placeholder="请输入生产日期" />
+            <el-form-item label="生产日期" prop="productDate">
+              <el-input v-model="inwarehouseDetailForm.productDate" placeholder="请输入生产日期" />
             </el-form-item>
           </el-col>
 
@@ -414,208 +414,33 @@
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
 
-          <el-col :lg="12" v-if="opertype != 1">
-            <el-form-item label="自增ID" prop="id">
-              <el-input-number v-model.number="form.id" controls-position="right" placeholder="请输入自增ID"
-                :disabled="true" />
-            </el-form-item>
-          </el-col>
-
           <el-col :lg="12">
             <el-form-item label="入库计划流水号" prop="planNo">
-              <el-input v-model="form.planNo" placeholder="请输入入库计划流水号" />
+              <el-input :disabled="true" v-model="form.planNo" placeholder="请输入入库计划流水号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="采购单号" prop="billCode">
-              <el-input v-model="form.billCode" placeholder="请输入采购单号" />
+            <el-form-item label="批号" prop="batchNo">
+              <el-input v-model="form.batchNo" placeholder="请输入批号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="单据状态" prop="state">
-              <el-select v-model="form.state" placeholder="请选择单据状态">
-                <el-option v-for="item in options.sys_inwarehouse_state" :key="item.dictValue" :label="item.dictLabel"
-                  :value="item.dictValue"></el-option>
-              </el-select>
+            <el-form-item label="有效期" prop="valiDate">
+              <el-input v-model="form.valiDate" placeholder="请输入有效期" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="计划类型" prop="planType">
-              <el-select v-model="form.planType" placeholder="请选择计划类型">
-                <el-option v-for="item in options.sys_inwarehouse_plantype" :key="item.dictValue"
-                  :label="item.dictLabel" :value="item.dictValue"></el-option>
-              </el-select>
+            <el-form-item label="生产日期" prop="productDate">
+              <el-input v-model="form.productDate" placeholder="请输入生产日期" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="科室编码" prop="drugDeptCode">
-              <el-input v-model="form.drugDeptCode" placeholder="请输入科室编码" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品编码" prop="drugCode">
-              <el-input v-model="form.drugCode" placeholder="请输入药品编码" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="药品名称" prop="tradeName">
-              <el-input v-model="form.tradeName" placeholder="请输入药品名称" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="规格" prop="specs">
-              <el-input v-model="form.specs" placeholder="请输入规格" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="参考零售价" prop="retailPrice">
-              <el-input v-model="form.retailPrice" placeholder="请输入参考零售价" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="参考批发价" prop="wholesalePrice">
-              <el-input v-model="form.wholesalePrice" placeholder="请输入参考批发价" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="最新购入价" prop="purchasePrice">
-              <el-input v-model="form.purchasePrice" placeholder="请输入最新购入价" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="包装单位" prop="packUnit">
-              <el-input v-model="form.packUnit" placeholder="请输入包装单位" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="包装数量" prop="packQty">
-              <el-input v-model="form.packQty" placeholder="请输入包装数量" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="最小单位" prop="minUnit">
-              <el-input v-model="form.minUnit" placeholder="请输入最小单位" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="生产厂家编码" prop="producerCode">
-              <el-input v-model="form.producerCode" placeholder="请输入生产厂家编码" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="生产厂家名称" prop="producerName">
-              <el-input v-model="form.producerName" placeholder="请输入生产厂家名称" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="本科室库存数量" prop="storeNum">
-              <el-input v-model="form.storeNum" placeholder="请输入本科室库存数量" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="全院库存总和" prop="storeTotsum">
-              <el-input v-model="form.storeTotsum" placeholder="请输入全院库存总和" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="全院出库总量" prop="outputSum">
-              <el-input v-model="form.outputSum" placeholder="请输入全院出库总量" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="计划入库量" prop="planNum">
-              <el-input v-model="form.planNum" placeholder="请输入计划入库量" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="计划人" prop="planEmpl">
-              <el-input v-model="form.planEmpl" placeholder="请输入计划人" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="计划日期" prop="planDate">
-              <el-input v-model="form.planDate" placeholder="请输入计划日期" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="采购数量" prop="stockNum">
-              <el-input v-model="form.stockNum" placeholder="请输入采购数量" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="采购人" prop="stockEmpl">
-              <el-input v-model="form.stockEmpl" placeholder="请输入采购人" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="采购日期" prop="stockDate">
-              <el-input v-model="form.stockDate" placeholder="请输入采购日期" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="审批人" prop="approveEmpl">
-              <el-input v-model="form.approveEmpl" placeholder="请输入审批人" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="审批时间" prop="approveDate">
-              <el-input v-model="form.approveDate" placeholder="请输入审批时间" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="采购流水号" prop="stockNo">
-              <el-input v-model="form.stockNo" placeholder="请输入采购流水号" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="备注" prop="mark">
-              <el-input v-model="form.mark" placeholder="请输入备注" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="操作员" prop="operCode">
-              <el-input v-model="form.operCode" placeholder="请输入操作员" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="操作日期" prop="operDate">
-              <el-input v-model="form.operDate" placeholder="请输入操作日期" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="12">
-            <el-form-item label="扩展字段" prop="extendField">
-              <el-input v-model="form.extendField" placeholder="请输入扩展字段" />
+            <el-form-item label="批文信息" prop="approveInfo">
+              <el-input v-model="form.approveInfo" placeholder="请输入批文信息" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -739,7 +564,7 @@ const inwarehouseDetailForm = reactive({
   createTime: undefined,
   inwarehouseId: undefined,
   batchNo: undefined,
-  productionDate: undefined,
+  productDate: undefined,
   valiDate: undefined,
   approveInfo: undefined
 })
@@ -1455,6 +1280,10 @@ function reset() {
     operCode: null,
     operDate: null,
     extendField: null,
+    batchNo: null,
+    valiDate: null,
+    productDate: null,
+    approveInfo: null
   };
   proxy.resetForm("formRef")
 }
@@ -1489,20 +1318,11 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["formRef"].validate((valid) => {
     if (valid) {
-
-      if (form.value.id != undefined && opertype.value === 2) {
-        updateTGInwarehouse(form.value).then((res) => {
-          proxy.$modal.msgSuccess("修改成功")
-          open.value = false
-          getList()
-        })
-      } else {
-        addTGInwarehouse(form.value).then((res) => {
-          proxy.$modal.msgSuccess("新增成功")
-          open.value = false
-          getList()
-        })
-      }
+      updateTGInwarehouse(form.value).then((res) => {
+        proxy.$modal.msgSuccess("修改成功")
+        open.value = false
+        getList()
+      })
     }
   })
 }
