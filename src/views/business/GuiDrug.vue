@@ -1099,7 +1099,10 @@ function GuiDrugTongbu() {
   TongBu().then((res) => {
 
     proxy.$modal.closeLoading()
-
+    if (res.data == "true") {
+      proxy.$modal.msgSuccess("同步成功")
+      getList()
+    }
   })
 }
 </script>

@@ -858,6 +858,7 @@ const handleInwarehouseItemRowClick = (row) => {
 
 const handleInwarehousePush = (data) => {
   pushInwarehouseOrder({ billCodes: data }).then((res) => {
+    console.log(res)
     if (res.code != 200) return proxy.$message({
       type: 'error',
       message: res.msg

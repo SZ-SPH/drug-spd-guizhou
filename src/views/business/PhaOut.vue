@@ -1027,10 +1027,16 @@ function PhaOuthandleExport() {
 }
 
 PhaOuthandleQuery()
-function PhaOutTongbu() {
+function PhaOutTongBu() {
   proxy.$modal.loading("请稍等")
   TongBu().then((res) => {
     proxy.$modal.closeLoading()
+    if (res.data == "true") {
+      proxy.$modal.msgSuccess("同步成功")
+      PhaOutgetList()
+    } else {
+      proxy.$modal.msgError("出现错误请联系开发人员")
+    }
   })
 }
 //#endregion

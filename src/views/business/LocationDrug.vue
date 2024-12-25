@@ -1,22 +1,16 @@
 <!--
- * @Descripttion: (科室/Departments)
+ * @Descripttion: (货位药品/LocationDrug)
  * @Author: (admin)
- * @Date: (2024-11-27)
+ * @Date: (2024-12-23)
 -->
 <template>
   <div>
     <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
-      <el-form-item label="科室编码" prop="deptCode">
-        <el-input v-model="queryParams.deptCode" placeholder="请输入科室编码" />
+      <el-form-item label="货位" prop="locationId">
+        <el-input v-model.number="queryParams.locationId" placeholder="请输入货位" />
       </el-form-item>
-      <el-form-item label="科室名称" prop="deptName">
-        <el-input v-model="queryParams.deptName" placeholder="请输入科室名称" />
-      </el-form-item>
-      <el-form-item label="科室拼音码" prop="spellCode">
-        <el-input v-model="queryParams.spellCode" placeholder="请输入科室拼音码" />
-      </el-form-item>
-      <el-form-item label="科室五笔码" prop="wbCode">
-        <el-input v-model="queryParams.wbCode" placeholder="请输入科室五笔码" />
+      <el-form-item label="药品编号" prop="drugtermId">
+        <el-input v-model="queryParams.drugtermId" placeholder="请输入药品编号" />
       </el-form-item>
       <el-form-item>
         <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
@@ -26,113 +20,132 @@
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['phaout:add']" plain icon="plus" @click="DepartmentsTongbu">
-          同步
-        </el-button>
-      </el-col>
-      <!-- <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['departments:add']" plain icon="plus" @click="handleAdd">
+        <el-button type="primary" v-hasPermi="['locationdrug:add']" plain icon="plus" @click="handleAdd">
           {{ $t('btn.add') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" :disabled="single" v-hasPermi="['departments:edit']" plain icon="edit"
-          @click="handleUpdate">
+        <el-button type="success" :disabled="single" v-hasPermi="['locationdrug:edit']" plain icon="edit" @click="handleUpdate">
           {{ $t('btn.edit') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" :disabled="multiple" v-hasPermi="['departments:delete']" plain icon="delete"
-          @click="handleDelete">
+        <el-button type="danger" :disabled="multiple" v-hasPermi="['locationdrug:delete']" plain icon="delete" @click="handleDelete">
           {{ $t('btn.delete') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" v-hasPermi="['departments:delete']" plain icon="delete" @click="handleClear">
+        <el-button type="danger" v-hasPermi="['locationdrug:delete']" plain icon="delete" @click="handleClear">
           {{ $t('btn.clean') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-dropdown trigger="click" v-hasPermi="['departments:import']">
+        <el-dropdown trigger="click" v-hasPermi="['locationdrug:import']">
           <el-button type="primary" plain icon="Upload">
             {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="upload">
-                <importData templateUrl="business/Departments/importTemplate"
-                  importUrl="/business/Departments/importData" @success="handleFileSuccess"></importData>
+                <importData
+                  templateUrl="business/LocationDrug/importTemplate"
+                  importUrl="/business/LocationDrug/importData"
+                  @success="handleFileSuccess"></importData>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
-</el-dropdown>
-</el-col>
-<el-col :span="1.5">
-  <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['departments:export']">
-    {{ $t('btn.export') }}
-  </el-button>
-</el-col> -->
+        </el-dropdown>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['locationdrug:export']">
+          {{ $t('btn.export') }}
+        </el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
-    <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
-      highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="deptCode" label="科室编码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('deptCode')" />
-      <el-table-column prop="deptEname" label="科室英文" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('deptEname')" />
-      <el-table-column prop="deptName" label="科室名称" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('deptName')" />
-      <el-table-column prop="spellCode" label="科室拼音码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('spellCode')" />
-      <el-table-column prop="wbCode" label="科室五笔码" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('wbCode')" />
+    <el-table
+      :data="dataList"
+      v-loading="loading"
+      ref="table"
+      border
+      header-cell-class-name="el-table-header-cell"
+      highlight-current-row
+      @sort-change="sortChange"
+      @selection-change="handleSelectionChange"
+      >
+      <el-table-column type="selection" width="50" align="center"/>
+      <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')"/>
+      <el-table-column prop="locationId" label="货位" align="center" v-if="columns.showColumn('locationId')"/>
+      <el-table-column prop="drugtermId" label="药品编号" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('drugtermId')"/>
+      <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="true"  v-if="columns.showColumn('createTime')"/>
+      <el-table-column prop="createBy" label="创建人" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('createBy')"/>
+      <el-table-column prop="updateTime" label="修改时间" :show-overflow-tooltip="true"  v-if="columns.showColumn('updateTime')"/>
+      <el-table-column prop="updateBy" label="修改人" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('updateBy')"/>
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <!-- <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['departments:edit']"
-            @click="handleUpdate(scope.row)"></el-button>
-          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['departments:delete']"
-            @click="handleDelete(scope.row)"></el-button> -->
+          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['locationdrug:edit']" @click="handleUpdate(scope.row)"></el-button>
+          <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['locationdrug:delete']" @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
 
-    <el-dialog :title="title" :lock-scroll="false" v-model="open">
+    <el-dialog :title="title" :lock-scroll="false" v-model="open" >
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
-
+            
+          <el-col :lg="12" v-if="opertype != 1">
+            <el-form-item label="Id" prop="id">
+              <el-input-number v-model.number="form.id" controls-position="right" placeholder="请输入Id" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+            
           <el-col :lg="12">
-            <el-form-item label="科室编码" prop="deptCode">
-              <el-input v-model="form.deptCode" placeholder="请输入科室编码" />
+            <el-form-item label="货位" prop="locationId">
+              <el-input v-model.number="form.locationId" placeholder="请输入货位" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="科室英文" prop="deptEname">
-              <el-input v-model="form.deptEname" placeholder="请输入科室英文" />
+            <el-form-item label="药品编号" prop="drugtermId">
+              <el-input v-model="form.drugtermId" placeholder="请输入药品编号" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="科室名称" prop="deptName">
-              <el-input v-model="form.deptName" placeholder="请输入科室名称" />
+            <el-form-item label="创建时间" prop="createTime">
+              <el-date-picker
+                v-model="form.createTime"
+                type="datetime"
+                placeholder="选择日期时间"
+                value-format="YYYY-MM-DD HH:mm:ss">
+              </el-date-picker>
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="科室拼音码" prop="spellCode">
-              <el-input v-model="form.spellCode" placeholder="请输入科室拼音码" />
+            <el-form-item label="创建人" prop="createBy">
+              <el-input v-model="form.createBy" placeholder="请输入创建人" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
-            <el-form-item label="科室五笔码" prop="wbCode">
-              <el-input v-model="form.wbCode" placeholder="请输入科室五笔码" />
+            <el-form-item label="修改时间" prop="updateTime">
+              <el-date-picker
+                v-model="form.updateTime"
+                type="datetime"
+                placeholder="选择日期时间"
+                value-format="YYYY-MM-DD HH:mm:ss">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <el-form-item label="修改人" prop="updateBy">
+              <el-input v-model="form.updateBy" placeholder="请输入修改人" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -145,14 +158,12 @@
   </div>
 </template>
 
-<script setup name="departments">
-import {
-  listDepartments,
-  addDepartments, delDepartments,
-  updateDepartments, getDepartments,
-  clearDepartments, TongBu,
-}
-  from '@/api/business/departments.js'
+<script setup name="locationdrug">
+import { listLocationDrug,
+ addLocationDrug, delLocationDrug, 
+ updateLocationDrug,getLocationDrug, 
+ clearLocationDrug,  } 
+from '@/api/business/locationdrug.js'
 import importData from '@/components/ImportData'
 const { proxy } = getCurrentInstance()
 const ids = ref([])
@@ -161,19 +172,19 @@ const showSearch = ref(true)
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
-  sort: '',
+  sort: 'Id',
   sortType: 'asc',
-  deptCode: undefined,
-  deptName: undefined,
-  spellCode: undefined,
-  wbCode: undefined,
+  locationId: undefined,
+  drugtermId: undefined,
 })
 const columns = ref([
-  { visible: true, align: 'center', type: '', prop: 'deptCode', label: '科室编码', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'deptEname', label: '科室英文', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'deptName', label: '科室名称', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'spellCode', label: '科室拼音码', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'wbCode', label: '科室五笔码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'id', label: 'Id'   },
+  { visible: true, align: 'center', type: '', prop: 'locationId', label: '货位'   },
+  { visible: true, align: 'center', type: '', prop: 'drugtermId', label: '药品编号'  ,showOverflowTooltip: true  },
+  { visible: true, align: 'center', type: '', prop: 'createTime', label: '创建时间'  ,showOverflowTooltip: true  },
+  { visible: true, align: 'center', type: '', prop: 'createBy', label: '创建人'  ,showOverflowTooltip: true  },
+  { visible: true, align: 'center', type: '', prop: 'updateTime', label: '修改时间'  ,showOverflowTooltip: true  },
+  { visible: true, align: 'center', type: '', prop: 'updateBy', label: '修改人'  ,showOverflowTooltip: true  },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
@@ -186,9 +197,9 @@ var dictParams = [
 ]
 
 
-function getList() {
+function getList(){
   loading.value = true
-  listDepartments(queryParams).then(res => {
+  listLocationDrug(queryParams).then(res => {
     const { code, data } = res
     if (code == 200) {
       dataList.value = data.result
@@ -205,7 +216,7 @@ function handleQuery() {
 }
 
 // 重置查询操作
-function resetQuery() {
+function resetQuery(){
   proxy.resetForm("queryRef")
   handleQuery()
 }
@@ -249,7 +260,7 @@ const state = reactive({
 const { form, rules, options, single, multiple } = toRefs(state)
 
 // 关闭dialog
-function cancel() {
+function cancel(){
   open.value = false
   reset()
 }
@@ -257,11 +268,13 @@ function cancel() {
 // 重置表单
 function reset() {
   form.value = {
-    deptCode: null,
-    deptEname: null,
-    deptName: null,
-    spellCode: null,
-    wbCode: null,
+    id: null,
+    locationId: null,
+    drugtermId: null,
+    createTime: null,
+    createBy: null,
+    updateTime: null,
+    updateBy: null,
   };
   proxy.resetForm("formRef")
 }
@@ -272,8 +285,8 @@ function reset() {
  */
 function handlePreview(row) {
   reset()
-  const id = row.id
-  getDepartments(id).then((res) => {
+    const id = row.id
+    getLocationDrug(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
       open.value = true
@@ -290,18 +303,18 @@ function handlePreview(row) {
 function handleAdd() {
   reset();
   open.value = true
-  title.value = '添加科室'
+  title.value = '添加货位药品'
   opertype.value = 1
 }
 // 修改按钮操作
 function handleUpdate(row) {
   reset()
   const id = row.id || ids.value
-  getDepartments(id).then((res) => {
+  getLocationDrug(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
       open.value = true
-      title.value = '修改科室'
+      title.value = '修改货位药品'
       opertype.value = 2
 
       form.value = {
@@ -317,17 +330,17 @@ function submitForm() {
     if (valid) {
 
       if (form.value.id != undefined && opertype.value === 2) {
-        updateDepartments(form.value).then((res) => {
+        updateLocationDrug(form.value).then((res) => {
           proxy.$modal.msgSuccess("修改成功")
           open.value = false
           getList()
         })
       } else {
-        addDepartments(form.value).then((res) => {
-          proxy.$modal.msgSuccess("新增成功")
-          open.value = false
-          getList()
-        })
+        addLocationDrug(form.value).then((res) => {
+            proxy.$modal.msgSuccess("新增成功")
+            open.value = false
+            getList()
+          })
       }
     }
   })
@@ -344,7 +357,7 @@ function handleDelete(row) {
       type: "warning",
     })
     .then(function () {
-      return delDepartments(Ids)
+      return delLocationDrug(Ids)
     })
     .then(() => {
       getList()
@@ -361,7 +374,7 @@ function handleClear() {
       type: "warning",
     })
     .then(function () {
-      return clearDepartments()
+      return clearLocationDrug()
     })
     .then(() => {
       handleQuery()
@@ -385,26 +398,15 @@ const handleFileSuccess = (response) => {
 // 导出按钮操作
 function handleExport() {
   proxy
-    .$confirm("是否确认导出科室数据项?", "警告", {
+    .$confirm("是否确认导出货位药品数据项?", "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning",
     })
     .then(async () => {
-      await proxy.downFile('/business/Departments/export', { ...queryParams })
+      await proxy.downFile('/business/LocationDrug/export', { ...queryParams })
     })
 }
 
 handleQuery()
-
-function DepartmentsTongbu() {
-  proxy.$modal.loading("请稍等")
-  TongBu().then((res) => {
-    proxy.$modal.closeLoading()
-    if (res.data == "true") {
-      proxy.$modal.msgSuccess("同步成功")
-      getList()
-    }
-  })
-}
 </script>

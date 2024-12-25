@@ -136,10 +136,10 @@
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['companyinfo:edit']"
+          <!-- <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['companyinfo:edit']"
             @click="handleUpdate(scope.row)"></el-button>
           <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['companyinfo:delete']"
-            @click="handleDelete(scope.row)"></el-button>
+            @click="handleDelete(scope.row)"></el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -556,7 +556,12 @@ function CompanyInfoTongbu() {
   TongBu().then((res) => {
 
     proxy.$modal.closeLoading()
-
+    if (res.data == "true") {
+      proxy.$modal.msgSuccess("同步成功")
+      getList()
+    } else {
+      proxy.$modal.msgError("出现错误请联系开发人员")
+    }
   })
 }
 </script>

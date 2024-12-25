@@ -14,16 +14,22 @@
         <el-form-item label="出库单流水号" prop="outBillCode">
           <el-input v-model.number="PhaOutqueryParams.outBillCode" placeholder="请输入出库单流水号" />
         </el-form-item>
-        <el-form-item label="序号" prop="serialCode">
+        <el-form-item label="出库科室" prop="drugDeptName">
+          <el-input v-model="PhaOutqueryParams.drugDeptName" placeholder="请输入出库科室" />
+        </el-form-item>
+        <el-form-item label="领取科室" prop="drugStorageName">
+          <el-input v-model="PhaOutqueryParams.drugStorageName" placeholder="请输入领取科室" />
+        </el-form-item>
+        <!-- <el-form-item label="序号" prop="serialCode">
           <el-input v-model.number="PhaOutqueryParams.serialCode" placeholder="请输入序号" />
-        </el-form-item>
-        <el-form-item label="批次号" prop="groupCode">
+        </el-form-item> -->
+        <!-- <el-form-item label="批次号" prop="groupCode">
           <el-input v-model="PhaOutqueryParams.groupCode" placeholder="请输入批次号" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="出库单据号" prop="outListCode">
           <el-input v-model="PhaOutqueryParams.outListCode" placeholder="请输入出库单据号" />
         </el-form-item>
-        <el-form-item label="出库类型" prop="outType">
+        <!-- <el-form-item label="出库类型" prop="outType">
           <el-select clearable v-model="PhaOutqueryParams.outType" placeholder="请选择出库类型">
             <el-option v-for="item in PhaOutoptions.outTypePhaOutoptions" :key="item.dictValue" :label="item.dictLabel"
               :value="item.dictValue">
@@ -31,11 +37,11 @@
               <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
             </el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="出库分类" prop="class3MeaningCode">
+        </el-form-item> -->
+        <!-- <el-form-item label="出库分类" prop="class3MeaningCode">
           <el-input v-model="PhaOutqueryParams.class3MeaningCode" placeholder="请输入出库分类" />
-        </el-form-item>
-        <el-form-item label="入库单号" prop="inBillCode">
+        </el-form-item> -->
+        <!-- <el-form-item label="入库单号" prop="inBillCode">
           <el-input v-model.number="PhaOutqueryParams.inBillCode" placeholder="请输入入库单号" />
         </el-form-item>
         <el-form-item label="入库单序号" prop="inSerialCode">
@@ -43,14 +49,14 @@
         </el-form-item>
         <el-form-item label="入库单据号" prop="inListCode">
           <el-input v-model="PhaOutqueryParams.inListCode" placeholder="请输入入库单据号" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="药品编码" prop="drugCode">
           <el-input v-model="PhaOutqueryParams.drugCode" placeholder="请输入药品编码" />
         </el-form-item>
         <el-form-item label="药品商品名" prop="tradeName">
           <el-input v-model="PhaOutqueryParams.tradeName" placeholder="请输入药品商品名" />
         </el-form-item>
-        <el-form-item label="药品类别" prop="drugType">
+        <!-- <el-form-item label="药品类别" prop="drugType">
           <el-select clearable v-model="PhaOutqueryParams.drugType" placeholder="请选择药品类别">
             <el-option v-for="item in PhaOutoptions.drugTypePhaOutoptions" :key="item.dictValue" :label="item.dictLabel"
               :value="item.dictValue">
@@ -58,13 +64,13 @@
               <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
             </el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="生产厂家" prop="producerCode">
+        </el-form-item> -->
+        <!-- <el-form-item label="生产厂家" prop="producerCode">
           <el-input v-model="PhaOutqueryParams.producerCode" placeholder="请输入生产厂家" />
         </el-form-item>
         <el-form-item label="供货单位代码" prop="companyCode">
           <el-input v-model="PhaOutqueryParams.companyCode" placeholder="请输入供货单位代码" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button icon="search" type="primary" @click="PhaOuthandleQuery">{{ $t('btn.search') }}</el-button>
           <el-button icon="refresh" @click="PhaOutresetQuery">{{ $t('btn.reset') }}</el-button>
@@ -134,8 +140,14 @@
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column prop="drugDeptCode" label="出库科室编码" align="center" :show-overflow-tooltip="true"
           v-if="PhaOutcolumns.showColumn('drugDeptCode')" />
+        <el-table-column prop="drugDeptName" label="出库科室编码" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('drugDeptName')" />
         <el-table-column prop="outBillCode" label="出库单流水号" align="center"
           v-if="PhaOutcolumns.showColumn('outBillCode')" />
+        <el-table-column prop="drugStorageName" label="领药单位编码" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('drugStorageName')" />
+        <el-table-column prop="drugStorageCode" label="领药单位编码" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('drugStorageCode')" />
         <el-table-column prop="serialCode" label="序号" align="center" v-if="PhaOutcolumns.showColumn('serialCode')" />
         <el-table-column prop="groupCode" label="批次号" align="center" :show-overflow-tooltip="true"
           v-if="PhaOutcolumns.showColumn('groupCode')" />
@@ -224,8 +236,7 @@
           v-if="PhaOutcolumns.showColumn('drugedBill')" />
         <el-table-column prop="medId" label="制剂序号" align="center" :show-overflow-tooltip="true"
           v-if="PhaOutcolumns.showColumn('medId')" />
-        <el-table-column prop="drugStorageCode" label="领药单位编码" align="center" :show-overflow-tooltip="true"
-          v-if="PhaOutcolumns.showColumn('drugStorageCode')" />
+
         <el-table-column prop="recipeNo" label="处方号" align="center" :show-overflow-tooltip="true"
           v-if="PhaOutcolumns.showColumn('recipeNo')" />
         <el-table-column prop="sequenceNo" label="处方流水号" align="center" v-if="PhaOutcolumns.showColumn('sequenceNo')" />
@@ -253,10 +264,10 @@
           <template #default="scope">
             <el-button type="primary" size="small" icon="view" title="详情"
               @click="PhaOuthandlePreview(scope.row)"></el-button>
-            <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['phaout:edit']"
+            <!-- <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['phaout:edit']"
               @click="PhaOuthandleUpdate(scope.row)"></el-button>
             <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['phaout:delete']"
-              @click="PhaOuthandleDelete(scope.row)"></el-button>
+              @click="PhaOuthandleDelete(scope.row)"></el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -747,12 +758,12 @@
           <el-table-column prop="id" label="Id" align="center" v-if="OutOrdercolumns.showColumn('id')" />
           <el-table-column prop="outOrderCode" label="出库单据" align="center" :show-overflow-tooltip="true"
             v-if="OutOrdercolumns.showColumn('outOrderCode')" />
-          <el-table-column prop="inpharmacyId" label="领取部门" align="center"
-            v-if="OutOrdercolumns.showColumn('inpharmacyId')" />
+          <el-table-column prop="inpharmacyName" label="领取部门" align="center"
+            v-if="OutOrdercolumns.showColumn('inpharmacyName')" />
           <el-table-column prop="useReceive" label="领取人" align="center" :show-overflow-tooltip="true"
             v-if="OutOrdercolumns.showColumn('useReceive')" />
-          <el-table-column prop="outWarehouseID" label="发出出库" align="center"
-            v-if="OutOrdercolumns.showColumn('outWarehouseID')" />
+          <el-table-column prop="outWarehouseName" label="发出出库" align="center"
+            v-if="OutOrdercolumns.showColumn('outWarehouseName')" />
           <el-table-column prop="times" label="时间" :show-overflow-tooltip="true"
             v-if="OutOrdercolumns.showColumn('times')" />
           <el-table-column prop="remarks" label="备注" align="center" :show-overflow-tooltip="true"
@@ -860,12 +871,12 @@
           <!-- <el-form-item label="OutorderID" prop="outorderID">
             <el-input v-model.number="OuWarehousetqueryParams.outorderID" placeholder="请输入OutorderID" />
           </el-form-item> -->
-          <el-form-item label="出库科室编码" prop="drugDeptCode">
+          <!-- <el-form-item label="出库科室编码" prop="drugDeptCode">
             <el-input v-model="OuWarehousetqueryParams.drugDeptCode" placeholder="请输入出库科室编码" />
-          </el-form-item>
-          <el-form-item label="出库单流水号" prop="outBillCode">
+          </el-form-item> -->
+          <!-- <el-form-item label="出库单流水号" prop="outBillCode">
             <el-input v-model.number="OuWarehousetqueryParams.outBillCode" placeholder="请输入出库单流水号" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="批次号" prop="groupCode">
             <el-input v-model="OuWarehousetqueryParams.groupCode" placeholder="请输入批次号" />
           </el-form-item>
@@ -1524,9 +1535,11 @@ const OutOrderqueryParams = reactive({
 const OutOrdercolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'id', label: 'Id' },
   { visible: true, align: 'center', type: '', prop: 'outOrderCode', label: '出库单据', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'inpharmacyId', label: '领取部门' },
+  { visible: false, align: 'center', type: '', prop: 'inpharmacyId', label: '领取部门' },
+  { visible: true, align: 'center', type: '', prop: 'inpharmacyName', label: '领取部门' },
+  { visible: true, align: 'center', type: '', prop: 'outWarehouseName', label: '发出出库' },
   { visible: true, align: 'center', type: '', prop: 'useReceive', label: '领取人', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'outWarehouseID', label: '发出出库' },
+  { visible: false, align: 'center', type: '', prop: 'outWarehouseID', label: '发出出库' },
   { visible: true, align: 'center', type: '', prop: 'times', label: '时间', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'remarks', label: '备注', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outBillCode', label: 'his出库单流水号' },
@@ -1797,9 +1810,10 @@ const OuWarehousetqueryParams = reactive({
 const OuWarehousetcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'id', label: 'Id' },
   { visible: false, align: 'center', type: '', prop: 'outorderID', label: 'OutorderID' },
-  { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
-  { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
+  { visible: false, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
+
+  { visible: false, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
+  { visible: false, align: 'center', type: '', prop: 'serialCode', label: '序号' },
   { visible: true, align: 'center', type: '', prop: 'groupCode', label: '批次号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outListCode', label: '出库单据号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: 'dict', prop: 'outType', label: '出库类型', showOverflowTooltip: true },
@@ -1844,7 +1858,7 @@ const OuWarehousetcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'returnNum', label: '退库数量' },
   { visible: false, align: 'center', type: '', prop: 'drugedBill', label: '摆药单号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'medId', label: '制剂序号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'drugStorageCode', label: '领药单位编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugStorageCode', label: '领药单位编码', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'recipeNo', label: '处方号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'sequenceNo', label: '处方流水号' },
   { visible: false, align: 'center', type: '', prop: 'signPerson', label: '签字人', showOverflowTooltip: true },
@@ -2171,9 +2185,13 @@ const PhaOutqueryParams = reactive({
   drugType: undefined,
   producerCode: undefined,
   companyCode: undefined,
+  drugDeptName: undefined,
+  drugStorageName: undefined,
 })
 const PhaOutcolumns = ref([
-  { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugDeptName', label: '出库科室编码', showOverflowTooltip: true },
+
   { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
   { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
   { visible: true, align: 'center', type: '', prop: 'groupCode', label: '批次号', showOverflowTooltip: true },
@@ -2221,6 +2239,8 @@ const PhaOutcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'drugedBill', label: '摆药单号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'medId', label: '制剂序号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'drugStorageCode', label: '领药单位编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugStorageName', label: '领药单位编码', showOverflowTooltip: true },
+
   { visible: false, align: 'center', type: '', prop: 'recipeNo', label: '处方号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'sequenceNo', label: '处方流水号' },
   { visible: false, align: 'center', type: '', prop: 'signPerson', label: '签字人', showOverflowTooltip: true },
@@ -2307,6 +2327,8 @@ function AlladdOut() {
     })
     .then(() => {
       PhaOutgetList()
+      OutOrdergetList()
+      OuWarehousetgetList()
       proxy.$modal.msgSuccess("成功")
     })
   // addOut().then((res) => {
@@ -2548,9 +2570,11 @@ function PhaOutQedatalist(row) {
 function PhaoutTongbu() {
   proxy.$modal.loading("请稍等")
   TongBu().then((res) => {
-
     proxy.$modal.closeLoading()
-
+    if (res.data == "true") {
+      proxy.$modal.msgSuccess("同步成功")
+      PhaOutgetList()
+    }
   })
 }
 
