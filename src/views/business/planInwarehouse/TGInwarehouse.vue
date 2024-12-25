@@ -322,7 +322,9 @@
           <!-- 发票时间 -->
           <el-col :lg="12">
             <el-form-item label="发票时间" prop="billTime">
-              <el-input v-model="generateInwarehouseForm.BillTime" placeholder="请输入发票时间" />
+              <el-date-picker v-model="generateInwarehouseForm.BillTime" type="datetime" placeholder="请选择发票时间"
+                value-format="YYYY-MM-DD HH:mm:ss">
+              </el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -505,7 +507,9 @@
 
           <el-col :lg="12">
             <el-form-item label="发票时间" prop="billTime">
-              <el-input v-model="inwarehouseForm.billTime" placeholder="请输入发票时间" />
+              <el-date-picker v-model="inwarehouseForm.billTime" type="datetime" placeholder="请选择发票时间"
+                value-format="YYYY-MM-DD HH:mm:ss">
+              </el-date-picker>
             </el-form-item>
           </el-col>
 
