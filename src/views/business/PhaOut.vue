@@ -141,7 +141,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="class3MeaningCode" label="出库分类" align="center" :show-overflow-tooltip="true"
-        v-if="PhaOutcolumns.showColumn('class3MeaningCode')" />
+        v-if="PhaOutcolumns.showColumn('class3MeaningCode')">
+        <template #default="scope">
+          <dict-tag :options="PhaOutoptions.outTypePhaOutoptions" :value="scope.row.outType" />
+        </template>
+      </el-table-column>
       <el-table-column prop="inBillCode" label="入库单号" align="center" v-if="PhaOutcolumns.showColumn('inBillCode')" />
       <el-table-column prop="inSerialCode" label="入库单序号" align="center"
         v-if="PhaOutcolumns.showColumn('inSerialCode')" />
@@ -152,9 +156,9 @@
       <el-table-column prop="tradeName" label="药品商品名" align="center" :show-overflow-tooltip="true"
         v-if="PhaOutcolumns.showColumn('tradeName')" />
       <el-table-column prop="drugType" label="药品类别" align="center" v-if="PhaOutcolumns.showColumn('drugType')">
-        <template #default="scope">
+        <!-- <template #default="scope">
           <dict-tag :options="PhaOutoptions.drugTypePhaOutoptions" :value="scope.row.drugType" />
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column prop="drugQuality" label="药品性质" align="center" :show-overflow-tooltip="true"
         v-if="PhaOutcolumns.showColumn('drugQuality')" />
@@ -818,7 +822,27 @@ const PhaOutstate = reactive({
   },
   PhaOutoptions: {
     // 出库类型 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    outTypePhaOutoptions: [],
+    outTypePhaOutoptions: [{ dictValue: "1", dictLabel: '一般出库' },
+    { dictValue: "20", dictLabel: '科室借药' },
+    { dictValue: "26", dictLabel: '特殊出库' },
+    { dictValue: 'G1', dictLabel: '个人借药' },
+    { dictValue: 'K3', dictLabel: '出库退药' },
+    { dictValue: "2", dictLabel: '出库审批' },
+    { dictValue: "27", dictLabel: '科室还药' },
+    { dictValue: 'G2', dictLabel: '个人还药' },
+    { dictValue: "4", dictLabel: '报损' },
+    { dictValue: "11", dictLabel: '特别出库' },
+    { dictValue: "12", dictLabel: '门诊摆药' },
+    { dictValue: 'M1', dictLabel: '门诊摆药' },
+    { dictValue: 'M2', dictLabel: '门诊咨询' },
+    { dictValue: 'Z1', dictLabel: '住院摆药' },
+    { dictValue: 'Z2', dictLabel: '住院还药' },
+    { dictValue: "21", dictLabel: '一般出库' }, // 新增
+    { dictValue: "22", dictLabel: '出库退货' }, // 新增
+    { dictValue: '25', dictLabel: '出库审批' }, // 新增
+    { dictValue: '33', dictLabel: '特别出库' }, // 新增
+    ],
+
   }
 })
 
@@ -1032,6 +1056,7 @@ function PhaOutTongBu() {
   TongBu().then((res) => {
     proxy.$modal.closeLoading()
     if (res.data == "true") {
+      console.log(res)
       proxy.$modal.msgSuccess("同步成功")
       PhaOutgetList()
     } else {
@@ -1040,4 +1065,7 @@ function PhaOutTongBu() {
   })
 }
 //#endregion
+
+
+
 </script>

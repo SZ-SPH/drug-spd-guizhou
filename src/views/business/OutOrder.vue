@@ -159,7 +159,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="class3MeaningCode" label="出库分类" align="center" :show-overflow-tooltip="true"
-          v-if="PhaOutcolumns.showColumn('class3MeaningCode')" />
+          v-if="PhaOutcolumns.showColumn('class3MeaningCode')">
+          <template #default="scope">
+            <dict-tag :options="PhaOutoptions.outTypePhaOutoptions" :value="scope.row.class3MeaningCode" />
+          </template>
+        </el-table-column>
         <el-table-column prop="inBillCode" label="入库单号" align="center" v-if="PhaOutcolumns.showColumn('inBillCode')" />
         <el-table-column prop="inSerialCode" label="入库单序号" align="center"
           v-if="PhaOutcolumns.showColumn('inSerialCode')" />
@@ -211,9 +215,9 @@
         <el-table-column prop="specialFlag" label="特殊标记" align="center" :show-overflow-tooltip="true"
           v-if="PhaOutcolumns.showColumn('specialFlag')" />
         <el-table-column prop="outState" label="出库状态" align="center" v-if="PhaOutcolumns.showColumn('outState')">
-          <template #default="scope">
+          <!-- <template #default="scope">
             <dict-tag :options="PhaOutoptions.outStatePhaOutoptions" :value="scope.row.outState" />
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="applyNum" label="申请出库量" align="center" v-if="PhaOutcolumns.showColumn('applyNum')" />
         <el-table-column prop="applyOpercode" label="申请出库人" align="center" :show-overflow-tooltip="true"
@@ -260,7 +264,7 @@
           v-if="PhaOutcolumns.showColumn('outDate')" />
         <el-table-column prop="applyNumber" label="申请单流水号" align="center"
           v-if="PhaOutcolumns.showColumn('applyNumber')" />
-        <el-table-column label="操作" width="160">
+        <el-table-column fixed="right" label="操作" width="60">
           <template #default="scope">
             <el-button type="primary" size="small" icon="view" title="详情"
               @click="PhaOuthandlePreview(scope.row)"></el-button>
@@ -740,13 +744,23 @@
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-          </el-col>
-          <el-col :span="1.5">
+          </el-col>-->
+          <!-- <el-col :span="1.5">
             <el-button type="warning" plain icon="download" @click="OutOrderhandleExport"
               v-hasPermi="['outorder:export']">
               {{ $t('btn.export') }}
             </el-button>
+          </el-col>  -->
+          <!-- <el-col :span="1.5">
+            <el-button type="warning" plain icon="download" @click="Exports" v-hasPermi="['outorder:export']">
+              {{ $t('btn.export') }}
+            </el-button>
           </el-col> -->
+          <el-col :span="1.5">
+            <el-button type="warning" plain icon="download" @click="FExports" v-hasPermi="['outorder:export']">
+              {{ $t('btn.export') }}
+            </el-button>
+          </el-col>
           <right-toolbar v-model:showSearch="OutOrderhandleshowSearch" @queryTable="OutOrdergetList"
             :columns="OutOrdercolumns"></right-toolbar>
         </el-row>
@@ -756,6 +770,11 @@
           @selection-change="OutOrderhandleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="id" label="Id" align="center" v-if="OutOrdercolumns.showColumn('id')" />
+          <el-table-column prop="type" label="出库类型" align="center" v-if="OutOrdercolumns.showColumn('出库类型')">
+            <template #default="scope">
+              <dict-tag :options="PhaOutoptions.outTypePhaOutoptions" :value="scope.row.type" />
+            </template>
+          </el-table-column>
           <el-table-column prop="outOrderCode" label="出库单据" align="center" :show-overflow-tooltip="true"
             v-if="OutOrdercolumns.showColumn('outOrderCode')" />
           <el-table-column prop="inpharmacyName" label="领取部门" align="center"
@@ -774,7 +793,9 @@
             v-if="OutOrdercolumns.showColumn('createTime')" />
           <el-table-column prop="createBy" label="创建人" align="center" :show-overflow-tooltip="true"
             v-if="OutOrdercolumns.showColumn('createBy')" />
-          <el-table-column label="操作" width="160">
+          <el-table-column prop="remarks" label="备注" align="center" :show-overflow-tooltip="true"
+            v-if="OutOrdercolumns.showColumn('remarks')" />
+          <el-table-column fixed="right" label="操作" width="160">
             <template #default="scope">
               <el-button type="primary" size="small" icon="view" OutOrdertitle="详情"
                 @click="OutOrderhandlePreview(scope.row)"></el-button>
@@ -793,7 +814,7 @@
           <el-form ref="OutOrderformRef" :model="OutOrderform" :rules="OutOrderrules" label-width="100px">
             <el-row :gutter="20">
 
-              <el-col :lg="12" v-if="OutOrderopertype != 1">
+              <el-col :lg="12" v-show="false">
                 <el-form-item label="Id" prop="id">
                   <el-input-number v-model.number="OutOrderform.id" controls-position="right" placeholder="请输入Id"
                     :disabled="true" />
@@ -802,31 +823,31 @@
 
               <el-col :lg="12">
                 <el-form-item label="出库单据" prop="outOrderCode">
-                  <el-input v-model="OutOrderform.outOrderCode" placeholder="请输入出库单据" />
+                  <el-input v-model="OutOrderform.outOrderCode" placeholder="请输入出库单据" :disabled="true" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
                 <el-form-item label="领取部门" prop="inpharmacyId">
-                  <el-input v-model.number="OutOrderform.inpharmacyId" placeholder="请输入领取部门" />
+                  <el-input v-model.number="OutOrderform.inpharmacyId" placeholder="请输入领取部门" :disabled="true" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
                 <el-form-item label="领取人" prop="useReceive">
-                  <el-input v-model="OutOrderform.useReceive" placeholder="请输入领取人" />
+                  <el-input v-model="OutOrderform.useReceive" placeholder="请输入领取人" :disabled="true" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
                 <el-form-item label="发出出库" prop="outWarehouseID">
-                  <el-input v-model.number="OutOrderform.outWarehouseID" placeholder="请输入发出出库" />
+                  <el-input v-model.number="OutOrderform.outWarehouseID" placeholder="请输入发出出库" :disabled="true" />
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
                 <el-form-item label="时间" prop="times">
-                  <el-date-picker v-model="OutOrderform.times" type="datetime" placeholder="选择日期时间"
+                  <el-date-picker :disabled="true" v-model="OutOrderform.times" type="datetime" placeholder="选择日期时间"
                     value-format="YYYY-MM-DD HH:mm:ss">
                   </el-date-picker>
                 </el-form-item>
@@ -837,7 +858,7 @@
                   <el-input v-model="OutOrderform.remarks" placeholder="请输入备注" />
                 </el-form-item>
               </el-col>
-              <el-col :lg="12">
+              <el-col :lg="12" v-show="false">
                 <el-form-item label="his出库单流水号" prop="outBillCode">
                   <el-input v-model.number="OutOrderform.outBillCode" placeholder="请输入his出库单流水号" />
                 </el-form-item>
@@ -845,15 +866,15 @@
 
               <el-col :lg="12">
                 <el-form-item label="创建时间" prop="createTime">
-                  <el-date-picker v-model="OutOrderform.createTime" type="datetime" placeholder="选择日期时间"
-                    value-format="YYYY-MM-DD HH:mm:ss">
+                  <el-date-picker :disabled="true" v-model="OutOrderform.createTime" type="datetime"
+                    placeholder="选择日期时间" value-format="YYYY-MM-DD HH:mm:ss">
                   </el-date-picker>
                 </el-form-item>
               </el-col>
 
               <el-col :lg="12">
                 <el-form-item label="创建人" prop="createBy">
-                  <el-input v-model="OutOrderform.createBy" placeholder="请输入创建人" />
+                  <el-input :disabled="true" v-model="OutOrderform.createBy" placeholder="请输入创建人" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -1512,7 +1533,7 @@ import {
   listOutOrder,
   addOutOrder, delOutOrder,
   updateOutOrder, getOutOrder,
-  clearOutOrder,
+  clearOutOrder, fextendss
 }
   from '@/api/business/outorder.js'
 import importData from '@/components/ImportData'
@@ -1529,20 +1550,21 @@ const OutOrderqueryParams = reactive({
   inpharmacyId: undefined,
   useReceive: undefined,
   outWarehouseID: undefined,
+  outBillCode: 100,
   times: undefined,
   remarks: undefined,
 })
 const OutOrdercolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'id', label: 'Id' },
   { visible: true, align: 'center', type: '', prop: 'outOrderCode', label: '出库单据', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'inpharmacyId', label: '领取部门' },
+  { visible: true, align: 'center', type: '', prop: 'inpharmacyId', label: '领取部门' },
   { visible: true, align: 'center', type: '', prop: 'inpharmacyName', label: '领取部门' },
   { visible: true, align: 'center', type: '', prop: 'outWarehouseName', label: '发出出库' },
   { visible: true, align: 'center', type: '', prop: 'useReceive', label: '领取人', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'outWarehouseID', label: '发出出库' },
+  { visible: true, align: 'center', type: '', prop: 'outWarehouseID', label: '发出出库' },
   { visible: true, align: 'center', type: '', prop: 'times', label: '时间', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'remarks', label: '备注', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'outBillCode', label: 'his出库单流水号' },
+  { visible: false, align: 'center', type: '', prop: 'outBillCode', label: 'his出库单流水号' },
   { visible: true, align: 'center', type: '', prop: 'createTime', label: '创建时间', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'createBy', label: '创建人', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
@@ -1596,6 +1618,7 @@ function OutOrderhandleSelectionChange(selection) {
   OutOrdersingle.value = selection.length != 1
   OutOrdermultiple.value = !selection.length;
 }
+
 // 自定义排序
 function OutOrdersortChange(column) {
   var sort = undefined
@@ -2161,7 +2184,6 @@ import {
   clearPhaOut,
 }
   from '@/api/business/phaout.js'
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 const PhaOutids = ref([])
 const PhaOutloading = ref(false)
 const PhaOutshowSearch = ref(true)
@@ -2190,19 +2212,19 @@ const PhaOutqueryParams = reactive({
 })
 const PhaOutcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugDeptName', label: '出库科室编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugDeptName', label: '出库科室名称', showOverflowTooltip: true },
 
-  { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
+  { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
   { visible: true, align: 'center', type: '', prop: 'groupCode', label: '批次号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outListCode', label: '出库单据号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: 'dict', prop: 'outType', label: '出库类型', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'class3MeaningCode', label: '出库分类', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'inBillCode', label: '入库单号' },
+  { visible: true, align: 'center', type: '', prop: 'inBillCode', label: '入库单号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'inSerialCode', label: '入库单序号' },
   { visible: false, align: 'center', type: '', prop: 'inListCode', label: '入库单据号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
   { visible: false, align: 'center', type: 'dict', prop: 'drugType', label: '药品类别', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
@@ -2211,8 +2233,8 @@ const PhaOutcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'showFlag', label: '显示的单位标记', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'showUnit', label: '显示的单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'batchNo', label: '批号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'validDate', label: '有效期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'batchNo', label: '批号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'validDate', label: '有效期', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'producerCode', label: '生产厂家', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'companyCode', label: '供货单位代码', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
@@ -2239,7 +2261,7 @@ const PhaOutcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'drugedBill', label: '摆药单号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'medId', label: '制剂序号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'drugStorageCode', label: '领药单位编码', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'drugStorageName', label: '领药单位编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugStorageName', label: '领药单位名称', showOverflowTooltip: true },
 
   { visible: false, align: 'center', type: '', prop: 'recipeNo', label: '处方号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'sequenceNo', label: '处方流水号' },
@@ -2349,7 +2371,29 @@ const PhaOutstate = reactive({
   },
   PhaOutoptions: {
     // 出库类型 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    outTypePhaOutoptions: [],
+    outTypePhaOutoptions: [
+      { dictValue: "01", dictLabel: '一般出库' },
+      { dictValue: "20", dictLabel: '科室借药' },
+      { dictValue: "26", dictLabel: '特殊出库' },
+      { dictValue: "G1", dictLabel: '个人借药' },
+      { dictValue: "K3", dictLabel: '出库退药' },
+      { dictValue: "02", dictLabel: '出库退库' },
+      { dictValue: "27", dictLabel: '科室还药' },
+      { dictValue: "G2", dictLabel: '个人还药' },
+      { dictValue: "04", dictLabel: '出库审批' },
+      { dictValue: "05", dictLabel: '报损' },
+      { dictValue: "11", dictLabel: '特别出库审批' },
+      { dictValue: "12", dictLabel: '特别出库核准' },
+      { dictValue: "M1", dictLabel: '门诊摆药' },
+      { dictValue: "M2", dictLabel: '门诊咨询' },
+      { dictValue: "Z1", dictLabel: '住院摆药' },
+      { dictValue: "Z", dictLabel: '住院摆药' },
+      { dictValue: "Z2", dictLabel: '住院退药' },
+      { dictValue: "21", dictLabel: '一般出库' }, // 新增
+      { dictValue: "22", dictLabel: '出库退货' }, // 新增
+      { dictValue: "25", dictLabel: '出库审批' }, // 新增
+      { dictValue: "33", dictLabel: '特别出库' }, // 新增
+    ],
   }
 })
 
@@ -2435,7 +2479,7 @@ function PhaOutreset() {
 function PhaOuthandlePreview(row) {
   PhaOutreset()
   const id = row.id
-  getPhaOut(id).then((res) => {
+  getPhaOut(row.outBillCode, row.groupCode).then((res) => {
     const { code, data } = res
     if (code == 200) {
       PhaOutopen.value = true
@@ -2562,7 +2606,6 @@ PhaOuthandleQuery()
 
 //#endregion
 function PhaOutQedatalist(row) {
-
   OuWarehousetqueryParams.outorderID = row.id;
   OuWarehousetgetList()
 }
@@ -2574,10 +2617,50 @@ function PhaoutTongbu() {
     if (res.data == "true") {
       proxy.$modal.msgSuccess("同步成功")
       PhaOutgetList()
+    } else {
+      proxy.$modal.msgError("出现错误请联系开发人员")
     }
   })
 }
+function Exports() {
+  proxy
+    .$confirm("是否确认导出出库单?", "警告", {
+      confirmButtonText: "确定",
+      PhaOutcancelButtonText: "取消",
+      type: "warning",
+    })
+    .then(async () => {
+      console.log(OutOrderids.value)
+      const outOrderIds = OutOrderids.value; // 假设这是一个数组
+      const queryString = outOrderIds.map(id => `parm=${id}`).join('&');
+      const url = `/business/OutOrder/Exports?${queryString}`;
+      await proxy.downFile(url)
+    })
+}
+function FExports() {
+  // console.log(OutOrderids.value)
 
+  // const outOrderIds = OutOrderids.value; // 假设这是一个数组
+  // const queryString = outOrderIds.map(id => `parm=${id}`).join('&');
+  // console.log(queryString)
+
+  // // const url = `/business/OutOrder/Exports?${queryString}`;
+  // fextendss(queryString).then()
+
+  proxy
+    .$confirm("是否确认导出出库单?", "警告", {
+      confirmButtonText: "确定",
+      PhaOutcancelButtonText: "取消",
+      type: "warning",
+    })
+    .then(async () => {
+      console.log(OutOrderids.value)
+      const outOrderIds = OutOrderids.value; // 假设这是一个数组
+      const queryString = outOrderIds.map(id => `parm=${id}`).join('&');
+      const url = `/business/OutOrder/GenerateExcel?${queryString}`;
+      await proxy.downFile(url)
+    })
+}
 </script>
 <style>
 .table-content {

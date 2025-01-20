@@ -83,6 +83,9 @@
           <dict-tag :options="options.stateOptions" :value="scope.row.state" />
         </template>
       </el-table-column>
+      <el-table-column prop="orderby" label="优先级" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('orderby')" />
+
       <el-table-column label="操作" width="160">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
@@ -118,7 +121,11 @@
               <el-input v-model="form.locationName" placeholder="请输入货位名称" />
             </el-form-item>
           </el-col>
-
+          <el-col :lg="12">
+            <el-form-item label="优先级" prop="orderby">
+              <el-input v-model.number="form.orderby" placeholder="请输入优先级" />
+            </el-form-item>
+          </el-col>
           <el-col :lg="12">
             <el-form-item label="状态" prop="state">
               <el-radio-group v-model="form.state">
@@ -165,6 +172,9 @@ const columns = ref([
   { visible: true, align: 'center', type: '', prop: 'locationNumber', label: '货位号' },
   { visible: true, align: 'center', type: '', prop: 'locationName', label: '货位名称', showOverflowTooltip: true },
   { visible: true, align: 'center', type: 'dict', prop: 'state', label: '状态', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'orderby', label: '优先级', showOverflowTooltip: true },
+
+
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
@@ -255,6 +265,7 @@ function reset() {
     locationNumber: null,
     locationName: null,
     state: null,
+    orderby: null,
   };
   proxy.resetForm("formRef")
 }

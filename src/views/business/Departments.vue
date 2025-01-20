@@ -404,6 +404,8 @@ function DepartmentsTongbu() {
     if (res.data == "true") {
       proxy.$modal.msgSuccess("同步成功")
       getList()
+    } else {
+      proxy.$modal.msgError("出现错误请联系开发人员")
     }
   })
 }

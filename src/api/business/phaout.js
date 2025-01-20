@@ -55,9 +55,9 @@ export function updatePhaOut(data) {
  * 获取出库记录详情
  * @param {Id}
  */
-export function getPhaOut(id) {
+export function getPhaOut(outBillCode,gr) {
   return request({
-    url: 'business/PhaOut/' + id,
+   url: `business/PhaOut/${outBillCode}/${gr}`,
     method: 'get'
   })
 }

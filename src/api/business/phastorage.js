@@ -19,6 +19,20 @@ export function TongBu(query) {
     params: query,
   })
 }
+export function SUMPrices(query) {
+  return request({
+    url: 'business/PhaStorage/allprice',
+    method: 'get',
+    params: query,
+  })
+}
+// export function SUMPrices(code) {
+//   return request({
+//     url: 'business/PhaStorage/allprice' + code,
+//     method: 'get'
+//   })
+// }
+
 /**
  * 新增库存
  * @param data

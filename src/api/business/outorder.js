@@ -67,3 +67,18 @@ export function clearOutOrder() {
 export async function exportOutOrder(query) {
   await downFile('business/OutOrder/export', { ...query })
 }
+
+// 导出出库单
+export async function Exports(query) {
+  await downFile('business/OutOrder/Exports', { ...query })
+}
+
+
+export function fextendss(data) {
+  return request({
+     url: 'business/OutOrder/gets',
+     method: 'get',
+    data: data,
+
+  })
+}

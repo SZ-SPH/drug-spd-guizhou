@@ -7,7 +7,7 @@ import { downFile } from '@/utils/request'
  */
 export function listCompanyInfo(query) {
   return request({
-    url: 'guiz/CompanyInfo/list',
+    url: 'business/CompanyInfo/list',
     method: 'get',
     params: query,
   })
@@ -15,7 +15,7 @@ export function listCompanyInfo(query) {
 
 export function TongBu(query) {
   return request({
-    url: 'guiz/CompanyInfo/TongBu',
+    url: 'business/CompanyInfo/TongBu',
     method: 'get',
     params: query,
   })
@@ -27,7 +27,7 @@ export function TongBu(query) {
  */
 export function addCompanyInfo(data) {
   return request({
-    url: 'guiz/CompanyInfo',
+    url: 'business/CompanyInfo',
     method: 'post',
     data: data,
   })
@@ -38,7 +38,7 @@ export function addCompanyInfo(data) {
  */
 export function updateCompanyInfo(data) {
   return request({
-    url: 'guiz/CompanyInfo',
+    url: 'business/CompanyInfo',
     method: 'PUT',
     data: data,
   })
@@ -49,7 +49,7 @@ export function updateCompanyInfo(data) {
  */
 export function getCompanyInfo(id) {
   return request({
-    url: 'guiz/CompanyInfo/' + id,
+    url: 'business/CompanyInfo/' + id,
     method: 'get'
   })
 }
@@ -60,18 +60,18 @@ export function getCompanyInfo(id) {
  */
 export function delCompanyInfo(pid) {
   return request({
-    url: 'guiz/CompanyInfo/delete/' + pid,
+    url: 'business/CompanyInfo/delete/' + pid,
     method: 'delete'
   })
 }
 // 清空厂家和供应商
 export function clearCompanyInfo() {
   return request({
-    url: 'guiz/CompanyInfo/clean',
+    url: 'business/CompanyInfo/clean',
     method: 'delete'
   })
 }
 // 导出厂家和供应商
 export async function exportCompanyInfo(query) {
-  await downFile('guiz/CompanyInfo/export', { ...query })
+  await downFile('business/CompanyInfo/export', { ...query })
 }

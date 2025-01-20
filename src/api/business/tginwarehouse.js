@@ -162,12 +162,50 @@ export function pushInwarehouseOrder(data) {
     method: 'post',
     data: data
   })
+}//推送入库单
+export function returnPush(data) {
+  return request({
+    url: 'business/TGInwarehouse/returnPush',
+    method: 'post',
+    data: data
+  })
 }
 
 //查询进销商
 export function getSupplierInfoList(query) {
   return request({
     url: 'Guiz/CompanyInfo/list',
+    method: 'get',
+    params: query
+  })
+}
+// 导出出库单
+export async function Exports(query) {
+  await downFile('business/TGInwarehouse/Exports', { ...query })
+}
+
+
+export function addplan(query) {
+  return request({
+    url: 'business/TGInwarehouse/Addplan',
+    method: 'get',
+    params: query
+  })
+}
+export function TongBu(query) {
+  return request({
+    url: 'business/PhaInPlan/TongBu',
+    method: 'get',
+    params: query,
+  })
+}
+
+
+
+
+export function getDepartmentsList(query) {
+  return request({
+    url: 'business/Departments/list',
     method: 'get',
     params: query
   })

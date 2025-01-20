@@ -42,6 +42,10 @@
           同步
         </el-button>
       </el-col>
+
+      <el-col :span="1.5">
+        <span class="classprice1">零售总金额:<span class="classprice2">{{ prices }}</span></span>
+      </el-col>
       <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['phastorage:add']" plain icon="plus" @click="handleAdd">
           {{ $t('btn.add') }}
@@ -129,13 +133,13 @@
         v-if="columns.showColumn('batchNo')" />
       <el-table-column prop="producerCode" label="生产厂家" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('producerCode')" />
-      <el-table-column label="操作" width="160">
+      <el-table-column label="操作" width="60">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['phastorage:edit']"
+          <!-- <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['phastorage:edit']"
             @click="handleUpdate(scope.row)"></el-button>
           <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['phastorage:delete']"
-            @click="handleDelete(scope.row)"></el-button>
+            @click="handleDelete(scope.row)"></el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -298,7 +302,7 @@ import {
   listPhaStorage,
   addPhaStorage, delPhaStorage,
   updatePhaStorage, getPhaStorage,
-  clearPhaStorage, TongBu,
+  clearPhaStorage, TongBu, SUMPrices
 }
   from '@/api/business/phastorage.js'
 import importData from '@/components/ImportData'
@@ -311,7 +315,7 @@ const queryParams = reactive({
   pageSize: 10,
   sort: '',
   sortType: 'asc',
-  drugDeptCode: undefined,
+  drugDeptCode: "西药库",
   drugCode: undefined,
   tradeName: undefined,
   drugType: undefined,
@@ -368,7 +372,10 @@ function getList() {
 // 查询
 function handleQuery() {
   queryParams.pageNum = 1
+  // 确保 drugDeptCode 有效
+  SUMPrice(queryParams.drugDeptCode)
   getList()
+
 }
 
 // 重置查询操作
@@ -600,4 +607,45 @@ function PhaStorageTongbu() {
     }
   })
 }
+
+const prices = ref(0)
+
+function SUMPrice(code) {
+
+  if (code == "") {
+    prices.value = 0
+    return
+  }
+  SUMPrices({ code }).then((res) => {
+
+    const { code, data } = res
+    if (code == 200) {
+      prices.value = data
+      console.log(prices.value)
+    }
+  })
+}
+
+
+
 </script>
+
+<style>
+.classprice1 {}
+
+.classprice2 {
+  font-size: 1.2em;
+  /* 稍微大一点 */
+  font-weight: bold;
+  /* 加粗 */
+  color: #e44d26;
+  /* 红色 */
+}
+
+.classprice2::before {
+  content: "￥";
+  /* 添加人民币符号 */
+  margin-right: 2px;
+  /* 符号和价格之间留点间距 */
+}
+</style>

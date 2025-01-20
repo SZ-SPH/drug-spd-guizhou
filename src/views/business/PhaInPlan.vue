@@ -179,7 +179,7 @@
         v-if="PhaInPlancolumns.showColumn('operDate')" />
       <el-table-column prop="extendField" label="扩展字段" align="center" :show-overflow-tooltip="true"
         v-if="PhaInPlancolumns.showColumn('extendField')" />
-      <el-table-column prop="stockNum" label="库存数量" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="stockNum" label="采购数量" align="center" :show-overflow-tooltip="true"
         v-if="PhaInPlancolumns.showColumn('stockNum')" />
       <el-table-column label="操作" width="160">
         <template #default="scope">
@@ -388,8 +388,8 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="库存数量" prop="stockNum">
-              <el-input v-model="PhaInPlanform.stockNum" placeholder="请输入库存数量" />
+            <el-form-item label="采购数量" prop="stockNum">
+              <el-input v-model="PhaInPlanform.stockNum" placeholder="请输入采购数量" />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
@@ -468,7 +468,7 @@ const PhaInPlancolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'operCode', label: '操作员', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'extendField', label: '扩展字段', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'stockNum', label: '库存数量', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'stockNum', label: '采购数量', showOverflowTooltip: true },
 
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
@@ -751,7 +751,12 @@ function PhaInPlanTongbu() {
   TongBu().then((res) => {
 
     proxy.$modal.closeLoading()
-
+    if (res.data == "true") {
+      proxy.$modal.msgSuccess("同步成功")
+      PhaInPlangetList()
+    } else {
+      proxy.$modal.msgError("出现错误请联系开发人员")
+    }
   })
 }
 </script>
