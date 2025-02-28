@@ -16,13 +16,15 @@
         <el-input v-model="queryParams.tradeName" placeholder="请输入药品商品名" />
       </el-form-item>
       <el-form-item label="药品类别" prop="drugType">
-        <el-select clearable v-model="queryParams.drugType" placeholder="请选择药品类别">
+        <el-input v-model="queryParams.drugType" placeholder="请输入药品类别" />
+
+        <!-- <el-select clearable v-model="queryParams.drugType" placeholder="请输入药品类别">
           <el-option v-for="item in options.drugTypeOptions" :key="item.dictValue" :label="item.dictLabel"
             :value="item.dictValue">
             <span class="fl">{{ item.dictLabel }}</span>
             <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
           </el-option>
-        </el-select>
+        </el-select> -->
       </el-form-item>
       <el-form-item label="货位码" prop="placeCode">
         <el-input v-model="queryParams.placeCode" placeholder="请输入货位码" />
@@ -45,6 +47,9 @@
 
       <el-col :span="1.5">
         <span class="classprice1">零售总金额:<span class="classprice2">{{ prices }}</span></span>
+      </el-col>
+      <el-col :span="1.5">
+        <span class="classprice1">总数量:<span class="classprice2">{{ prices }}</span></span>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['phastorage:add']" plain icon="plus" @click="handleAdd">
@@ -82,56 +87,61 @@
             </el-dropdown-menu>
           </template>
 </el-dropdown>
-</el-col>
-<el-col :span="1.5">
-  <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['phastorage:export']">
-    {{ $t('btn.export') }}
-  </el-button>
 </el-col> -->
+      <el-col :span="1.5">
+        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['phastorage:export']">
+          {{ $t('btn.export') }}
+        </el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table :data="dataList" v-loading="loading" ref="table" border header-cell-class-name="el-table-header-cell"
       highlight-current-row @sort-change="sortChange" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="drugDeptCode" label="库存科室" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="drugDeptCode" label="库存科室" align="center" width="90" :show-overflow-tooltip="true"
         v-if="columns.showColumn('drugDeptCode')" />
-      <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="drugCode" label="药品编码" align="center" width="120" :show-overflow-tooltip="false"
         v-if="columns.showColumn('drugCode')" />
-      <el-table-column prop="tradeName" label="药品商品名" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="tradeName" label="药品商品名" align="center" width="150" :show-overflow-tooltip="false"
         v-if="columns.showColumn('tradeName')" />
-      <el-table-column prop="specs" label="规格" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="specs" label="规格" align="center" width="140" :show-overflow-tooltip="true"
         v-if="columns.showColumn('specs')" />
-      <el-table-column prop="drugType" label="药品类别" align="center" v-if="columns.showColumn('drugType')">
-        <template #default="scope">
+      <el-table-column prop="drugType" label="药品类别" align="center" width="90" v-if="columns.showColumn('drugType')">
+        <!-- <template #default="scope">
           <dict-tag :options="options.drugTypeOptions" :value="scope.row.drugType" />
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column prop="drugQuality" label="药品性质" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="drugQuality" label="药品性质" width="90" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('drugQuality')" />
-      <el-table-column prop="retailPrice" label="参考零售价" align="center" v-if="columns.showColumn('retailPrice')" />
-      <el-table-column prop="packUnit" label="包装单位" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="retailPrice" label="参考零售价" width="100" align="center"
+        v-if="columns.showColumn('retailPrice')" />
+      <el-table-column prop="wholesalePrice" width="180" label="参考批发价" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('wholesalePrice')" />
+      <el-table-column prop="purchaseprice" width="180" label="最新购入价" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('purchaseprice')" />
+      <el-table-column prop="packUnit" label="包装单位" width="90" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('packUnit')" />
-      <el-table-column prop="packQty" label="包装数" align="center" v-if="columns.showColumn('packQty')" />
+      <el-table-column prop="packQty" label="包装数" width="70" align="center" v-if="columns.showColumn('packQty')" />
       <el-table-column prop="minUnit" label="最小单位" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('minUnit')" />
-      <el-table-column prop="validDate" label="有效期" :show-overflow-tooltip="true"
+      <el-table-column prop="validDate" label="有效期" width="140" :show-overflow-tooltip="true"
         v-if="columns.showColumn('validDate')" />
-      <el-table-column prop="storeSum" label="库存数量" align="center" v-if="columns.showColumn('storeSum')" />
-      <el-table-column prop="storeCost" label="库存金额" align="center" v-if="columns.showColumn('storeCost')" />
+      <el-table-column prop="storeSum" label="库存数量" width="88" align="center" v-if="columns.showColumn('storeSum')" />
+      <el-table-column prop="storeCost" label="库存金额" width="88" align="center" v-if="columns.showColumn('storeCost')" />
       <el-table-column prop="preSum" label="预扣库存数量" align="center" v-if="columns.showColumn('preSum')" />
       <el-table-column prop="preCost" label="预扣库存金额" align="center" v-if="columns.showColumn('preCost')" />
       <el-table-column prop="lowSum" label="最低库存量" align="center" v-if="columns.showColumn('lowSum')" />
       <el-table-column prop="topSum" label="最高库存量" align="center" v-if="columns.showColumn('topSum')" />
       <el-table-column prop="placeCode" label="货位码" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('placeCode')" />
-      <el-table-column prop="dailtycheckFlag" label="日盘点标志" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="dailtycheckFlag" label="日盘点标志" width="100" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('dailtycheckFlag')" />
-      <el-table-column prop="groupCode" label="批次号" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="groupCode" label="批次号" width="88" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('groupCode')" />
-      <el-table-column prop="batchNo" label="批号" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="batchNo" label="批号" width="88" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('batchNo')" />
-      <el-table-column prop="producerCode" label="生产厂家" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="producerCode" label="生产厂家" align="center" :show-overflow-tooltip="false" width="120"
         v-if="columns.showColumn('producerCode')" />
       <el-table-column label="操作" width="60">
         <template #default="scope">
@@ -177,10 +187,11 @@
 
           <el-col :lg="12">
             <el-form-item label="药品类别" prop="drugType">
-              <el-select v-model="form.drugType" placeholder="请选择药品类别">
+              <el-input v-model="form.drugType" placeholder="请选择药品类别" />
+              <!-- <el-select v-model="form.drugType" placeholder="请选择药品类别">
                 <el-option v-for="item in options.drugTypeOptions" :key="item.dictValue" :label="item.dictLabel"
                   :value="item.dictValue"></el-option>
-              </el-select>
+              </el-select> -->
             </el-form-item>
           </el-col>
 
@@ -327,24 +338,27 @@ const columns = ref([
   { visible: true, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: 'dict', prop: 'drugType', label: '药品类别', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugType', label: '药品类别', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'retailPrice', label: '参考零售价' },
+  { visible: true, align: 'center', type: '', prop: 'wholesalePrice', label: '参考批发价', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'purchaseprice', label: '最新购入价', showOverflowTooltip: true },
+
   { visible: true, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'packQty', label: '包装数' },
+  { visible: true, align: 'center', type: '', prop: 'packQty', label: '包装数' },
   { visible: false, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'validDate', label: '有效期', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'storeSum', label: '库存数量' },
-  { visible: false, align: 'center', type: '', prop: 'storeCost', label: '库存金额' },
+  { visible: true, align: 'center', type: '', prop: 'validDate', label: '有效期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'storeSum', label: '库存数量' },
+  { visible: true, align: 'center', type: '', prop: 'storeCost', label: '库存金额' },
   { visible: false, align: 'center', type: '', prop: 'preSum', label: '预扣库存数量' },
   { visible: false, align: 'center', type: '', prop: 'preCost', label: '预扣库存金额' },
-  { visible: false, align: 'center', type: '', prop: 'lowSum', label: '最低库存量' },
-  { visible: false, align: 'center', type: '', prop: 'topSum', label: '最高库存量' },
+  { visible: true, align: 'center', type: '', prop: 'lowSum', label: '最低库存量' },
+  { visible: true, align: 'center', type: '', prop: 'topSum', label: '最高库存量' },
   { visible: false, align: 'center', type: '', prop: 'placeCode', label: '货位码', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'dailtycheckFlag', label: '日盘点标志', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'groupCode', label: '批次号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'batchNo', label: '批号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'producerCode', label: '生产厂家', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'groupCode', label: '批次号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'batchNo', label: '批号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'producerCode', label: '生产厂家', showOverflowTooltip: true },
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)

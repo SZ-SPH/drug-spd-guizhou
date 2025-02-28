@@ -29,7 +29,7 @@
         <el-form-item label="出库单据号" prop="outListCode">
           <el-input v-model="PhaOutqueryParams.outListCode" placeholder="请输入出库单据号" />
         </el-form-item>
-        <!-- <el-form-item label="出库类型" prop="outType">
+        <el-form-item label="出库类型" prop="outType">
           <el-select clearable v-model="PhaOutqueryParams.outType" placeholder="请选择出库类型">
             <el-option v-for="item in PhaOutoptions.outTypePhaOutoptions" :key="item.dictValue" :label="item.dictLabel"
               :value="item.dictValue">
@@ -37,7 +37,7 @@
               <span class="fr" style="color: var(--el-text-color-secondary);">{{ item.dictValue }}</span>
             </el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <!-- <el-form-item label="出库分类" prop="class3MeaningCode">
           <el-input v-model="PhaOutqueryParams.class3MeaningCode" placeholder="请输入出库分类" />
         </el-form-item> -->
@@ -134,7 +134,7 @@
           :columns="PhaOutcolumns"></right-toolbar>
       </el-row>
 
-      <el-table :data="PhaOutdataList" v-loading="PhaOutloading" ref="PhaOuttable" border
+      <el-table :height="400" :data="PhaOutdataList" v-loading="PhaOutloading" ref="PhaOuttable" border
         header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="PhaOutsortChange"
         @selection-change="PhaOuthandleSelectionChange">
         <el-table-column type="selection" width="50" align="center" />
@@ -246,8 +246,11 @@
         <el-table-column prop="sequenceNo" label="处方流水号" align="center" v-if="PhaOutcolumns.showColumn('sequenceNo')" />
         <el-table-column prop="signPerson" label="签字人" align="center" :show-overflow-tooltip="true"
           v-if="PhaOutcolumns.showColumn('signPerson')" />
-        <el-table-column prop="getPerson" label="领药人" align="center" :show-overflow-tooltip="true"
-          v-if="PhaOutcolumns.showColumn('getPerson')" />
+        <!-- <el-table-column prop="getPerson" label="领药人" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('getPerson')" /> -->
+        <el-table-column prop="getPersonName" label="领取人" align="center" :show-overflow-tooltip="true"
+          v-if="PhaOutcolumns.showColumn('getPersonName')" />
+
         <el-table-column prop="strikeFlag" label="冲账标志" align="center" :show-overflow-tooltip="true"
           v-if="PhaOutcolumns.showColumn('strikeFlag')" />
         <el-table-column prop="mark" label="备注" align="center" :show-overflow-tooltip="true"
@@ -765,12 +768,12 @@
             :columns="OutOrdercolumns"></right-toolbar>
         </el-row>
 
-        <el-table @row-click="PhaOutQedatalist" :data="OutOrderdataList" v-loading="OutOrderloading" ref="OutOrdertable"
-          border header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutOrdersortChange"
-          @selection-change="OutOrderhandleSelectionChange">
+        <el-table :height="400" @row-click="PhaOutQedatalist" :data="OutOrderdataList" v-loading="OutOrderloading"
+          ref="OutOrdertable" border header-cell-class-name="el-table-header-cell" highlight-current-row
+          @sort-change="OutOrdersortChange" @selection-change="OutOrderhandleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="id" label="Id" align="center" v-if="OutOrdercolumns.showColumn('id')" />
-          <el-table-column prop="type" label="出库类型" align="center" v-if="OutOrdercolumns.showColumn('出库类型')">
+          <el-table-column prop="type" label="出库类型" align="center" v-if="OutOrdercolumns.showColumn('type')">
             <template #default="scope">
               <dict-tag :options="PhaOutoptions.outTypePhaOutoptions" :value="scope.row.type" />
             </template>
@@ -964,9 +967,9 @@
             :columns="OuWarehousetcolumns"></right-toolbar>
         </el-row>
 
-        <el-table :data="OuWarehousetdataList" v-loading="OuWarehousetloading" ref="OuWarehousettable" border
-          header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OuWarehousetsortChange"
-          @selection-change="OuWarehousethandleSelectionChange">
+        <el-table :height="400" :data="OuWarehousetdataList" v-loading="OuWarehousetloading" ref="OuWarehousettable"
+          border header-cell-class-name="el-table-header-cell" highlight-current-row
+          @sort-change="OuWarehousetsortChange" @selection-change="OuWarehousethandleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="id" label="Id" align="center" v-if="OuWarehousetcolumns.showColumn('id')" />
           <el-table-column prop="outorderID" label="OutorderID" align="center"
@@ -1567,6 +1570,8 @@ const OutOrdercolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'outBillCode', label: 'his出库单流水号' },
   { visible: true, align: 'center', type: '', prop: 'createTime', label: '创建时间', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'createBy', label: '创建人', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'type', label: '出库类型', showOverflowTooltip: true },
+
   //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const OutOrdertotal = ref(0)
@@ -1964,7 +1969,29 @@ const OuWarehousetstate = reactive({
   },
   OuWarehousetoptions: {
     // 出库类型 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    outTypeOuWarehousetoptions: [],
+    outTypeOuWarehousetoptions: [
+      { dictValue: "01", dictLabel: '一般出库' },
+      { dictValue: "20", dictLabel: '科室借药' },
+      { dictValue: "26", dictLabel: '特殊出库' },
+      { dictValue: "G1", dictLabel: '个人借药' },
+      { dictValue: "K3", dictLabel: '出库退药' },
+      { dictValue: "02", dictLabel: '出库退库' },
+      { dictValue: "27", dictLabel: '科室还药' },
+      { dictValue: "G2", dictLabel: '个人还药' },
+      { dictValue: "04", dictLabel: '出库审批' },
+      { dictValue: "05", dictLabel: '报损' },
+      { dictValue: "11", dictLabel: '特别出库审批' },
+      { dictValue: "12", dictLabel: '特别出库核准' },
+      { dictValue: "M1", dictLabel: '门诊摆药' },
+      { dictValue: "M2", dictLabel: '门诊咨询' },
+      { dictValue: "Z1", dictLabel: '住院摆药' },
+      { dictValue: "Z", dictLabel: '住院摆药' },
+      { dictValue: "Z2", dictLabel: '住院退药' },
+      { dictValue: "21", dictLabel: '一般出库' }, // 新增
+      { dictValue: "22", dictLabel: '出库退货' }, // 新增
+      { dictValue: "25", dictLabel: '出库审批' }, // 新增
+      { dictValue: "33", dictLabel: '特别出库' }, // 新增
+    ],
   }
 })
 
@@ -2207,15 +2234,16 @@ const PhaOutqueryParams = reactive({
   drugType: undefined,
   producerCode: undefined,
   companyCode: undefined,
-  drugDeptName: undefined,
+  drugDeptName: "西药库",
   drugStorageName: undefined,
 })
 const PhaOutcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'drugDeptName', label: '出库科室名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'getPersonName', label: '领取人', showOverflowTooltip: true },
 
   { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
+  { visible: false, align: 'center', type: '', prop: 'serialCode', label: '序号' },
   { visible: true, align: 'center', type: '', prop: 'groupCode', label: '批次号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outListCode', label: '出库单据号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: 'dict', prop: 'outType', label: '出库类型', showOverflowTooltip: true },
@@ -2240,7 +2268,7 @@ const PhaOutcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
   { visible: false, align: 'center', type: '', prop: 'wholesalePrice', label: '批发价' },
   { visible: false, align: 'center', type: '', prop: 'purchasePrice', label: '购入价' },
-  { visible: false, align: 'center', type: '', prop: 'outNum', label: '出库数量' },
+  { visible: true, align: 'center', type: '', prop: 'outNum', label: '出库数量' },
   { visible: false, align: 'center', type: '', prop: 'saleCost', label: '零售金额' },
   { visible: false, align: 'center', type: '', prop: 'tradeCost', label: '批发金额' },
   { visible: false, align: 'center', type: '', prop: 'approveCost', label: '购入金额' },
@@ -2270,7 +2298,7 @@ const PhaOutcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'strikeFlag', label: '冲账标志', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'mark', label: '备注', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'operCode', label: '操作员', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'arkFlag', label: '是否药房向药柜出库记录', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'arkBillCode', label: '药柜发药出库单流水号' },
   { visible: false, align: 'center', type: '', prop: 'outDate', label: '出库记录发生时间', showOverflowTooltip: true },
@@ -2290,6 +2318,7 @@ var PhaOutdictParams = [
 function PhaOutgetList() {
   PhaOutloading.value = true
   listPhaOut(PhaOutqueryParams).then(res => {
+    console.log("res", res)
     const { code, data } = res
     if (code == 200) {
       PhaOutdataList.value = data.result
@@ -2335,16 +2364,24 @@ function PhaOutsortChange(column) {
 }
 
 function AlladdOut() {
-
+  // 将 选择的 单据
   // const PhaOutids = row.outBillCode || PhaOutids.value
-  proxy
-    .$confirm('是否确认生成"' + selectrows.value.length + '"条出库单？', "警告", {
-      confirmButtonText: proxy.$t('common.ok'),
-      PhaOutcancelButtonText: proxy.$t('common.cancel'),
-      type: "warning",
-    })
+  var numsSet = new Set(); // 创建一个 Set 用于存储唯一值
+
+  selectrows.value.forEach(element => {
+    numsSet.add(element.outListCode + "\n"); // 将每个 outListCode 添加到 Set 中
+  });
+
+  var nums = Array.from(numsSet).join(","); // 将 Set 转换为数组并用逗号连接
+  proxy.$confirm(`是否确认生成单据号为
+${nums}
+的出库单？`, "警告", {
+    confirmButtonText: proxy.$t('common.ok'),
+    cancelButtonText: proxy.$t('common.cancel'),
+    type: "warning",
+  })
     .then(function () {
-      console.log("select2", selectrows)
+
       return addOut(selectrows.value)
     })
     .then(() => {

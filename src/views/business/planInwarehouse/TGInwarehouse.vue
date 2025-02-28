@@ -14,7 +14,7 @@
       </el-form-item>
       <el-form-item label="单据状态：" prop="state">
         <el-select clearable v-model="queryParams.state" placeholder="请选择单据状态 :">
-          <el-option v-for="item in options.sys_inwarehouse_state " :key="item.dictValue" :label="item.dictLabel"
+          <el-option v-for="item in options.sys_inwarehouse_state" :key="item.dictValue" :label="item.dictLabel"
             :value="item.dictValue">
             <span class="fl">{{ item.dictLabel }}</span>
           </el-option>
@@ -22,7 +22,7 @@
       </el-form-item>
       <el-form-item label="计划类型:" prop="planType">
         <el-select clearable v-model="queryParams.planType" placeholder="请选择计划类型:">
-          <el-option v-for="item in options.sys_inwarehouse_plantype " :key="item.dictValue" :label="item.dictLabel"
+          <el-option v-for="item in options.sys_inwarehouse_plantype" :key="item.dictValue" :label="item.dictLabel"
             :value="item.dictValue">
             <span class="fl">{{ item.dictLabel }}</span>
           </el-option>
@@ -105,9 +105,9 @@
           <dict-tag :options="options.sys_inwarehouseplan_status" :value="scope.row.status" />
         </template>
 </el-table-column> -->
-      <el-table-column prop="planNo" label="入库计划流水号" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="planNo" label="入库计划流水号" align="center" :show-overflow-tooltip="false"
         v-if="columns.showColumn('planNo')" />
-      <el-table-column prop="billCode" label="采购单号" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="billCode" label="采购单号" align="center" width="105" :show-overflow-tooltip="false"
         v-if="columns.showColumn('billCode')" />
       <el-table-column prop="state" label="单据状态" align="center" v-if="columns.showColumn('state')">
         <template #default="scope">
@@ -122,15 +122,15 @@
       </el-table-column>
       <el-table-column prop="companyCode" label="供应商编号" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('companyCode')" />
-      <el-table-column prop="companyName" label="供应商名称" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="companyName" label="供应商名称" align="center" width="105" :show-overflow-tooltip="false"
         v-if="columns.showColumn('companyName')" />
-      <el-table-column prop="endDate" label="截止日期" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="endDate" label="截止日期" align="center" width="105" :show-overflow-tooltip="false"
         v-if="columns.showColumn('endDate')" />
       <el-table-column prop="drugDeptCode" label="科室名称" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('drugDeptCode')" />
-      <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="drugCode" label="药品编码" align="center" width="105" :show-overflow-tooltip="false"
         v-if="columns.showColumn('drugCode')" />
-      <el-table-column prop="tradeName" label="药品名称" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="tradeName" label="药品名称" align="center" width="105" :show-overflow-tooltip="false"
         v-if="columns.showColumn('tradeName')" />
       <el-table-column prop="specs" label="规格" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('specs')" />
@@ -148,7 +148,7 @@
         v-if="columns.showColumn('minUnit')" />
       <el-table-column prop="producerCode" label="生产厂家编码" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('producerCode')" />
-      <el-table-column prop="producerName" label="生产厂家名称" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="producerName" label="生产厂家名称" align="center" width="125" :show-overflow-tooltip="false"
         v-if="columns.showColumn('producerName')" />
       <el-table-column prop="storeNum" label="本科室库存数量" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('storeNum')" />
@@ -162,19 +162,17 @@
         v-if="columns.showColumn('planNum')" />
       <el-table-column prop="qty" label="采购入库剩余量" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('qty')" />
-      <el-table-column prop="qty" label="入库剩余量（包装数）" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('qty')">
+      <el-table-column prop="qtys" label="入库剩余量（包装数）" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('qtys')">
         <template #default="scope">
-          <span>{{ scope.row.stockNum / scope.row.packQty }}</span>
+          <span>{{ scope.row.qty / scope.row.packQty }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="planEmpl" label="计划人" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('planEmpl')" />
       <el-table-column prop="planDate" label="计划日期" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('planDate')" />
-
-
-      <el-table-column prop="approveInfo" label="批准文号" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="approveInfo" label="批准文号" align="center" width="105" :show-overflow-tooltip="false"
         v-if="columns.showColumn('approveInfo')" />
       <el-table-column prop="stockEmpl" label="采购人" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('stockEmpl')" />
@@ -199,7 +197,7 @@
       @pagination="getList" />
 
     <div style='display: flex;gap: 30px;margin-top: 20px'>
-      <div style='max-width: 50%;'>
+      <div style='max-width: 30%;'>
         <el-row :gutter="15" class="mb10">
           <el-col :span="1.5">
             <el-button v-hasPermi="['tginwarehouse:delete']" @click="handleInwarehouseDelete(inwarehousestate.itemIds)"
@@ -230,7 +228,7 @@
             :columns="inwarehouseColumns"></right-toolbar>
         </el-row>
         <el-table :data="inwarehouseDataList" :row-key="(row) => { return row.id }" :reserve-selection="true"
-          :height='350' v-loading="inwarehouseLoading" ref="inwarehousetable" border
+          :height="400" v-loading="inwarehouseLoading" ref="inwarehousetable" border
           header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="inwarehouseSortChange"
           @row-click="handleInwarehouseItemRowClick" @current-change="handleInwarehousetableCurrentChange"
           @selection-change="handleInwarehousetableSelectionChange">
@@ -275,12 +273,12 @@
           v-model:limit="inwarehouseQueryParams.pageSize" @pagination="inwarehouseGetList" />
       </div>
       <!-- 第三个表格 -->
-      <div style="width: 48%;">
+      <div style="width: 70%;">
         <el-row :gutter="15" class="mb10">
           <right-toolbar v-model:showSearch="showSearch" @queryTable="inwarehouseitemGetList"
             :columns="inwarehouseitemColumns"></right-toolbar>
         </el-row>
-        <el-table :data="inwarehouseitemDataList" :height='350' v-loading="inwarehouseitemLoading"
+        <el-table :data="inwarehouseitemDataList" :height="400" v-loading="inwarehouseitemLoading"
           ref="inwarehouseitemtable" border header-cell-class-name="el-table-header-cell" highlight-current-row
           @sort-change="inwarehouseitemSortChange" @selection-change="handleInwarehouseitemtableSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
@@ -290,52 +288,67 @@
               {{ scope.row.tstars !== null && scope.row.tstars !== '' ? scope.row.tstars : '未推送' }}
             </template>
           </el-table-column> -->
-          <el-table-column prop="drugCode" width="200" label="药品编码" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="drugCode" width="150" label="药品编码" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('drugCode')" />
-          <el-table-column prop="tradeName" width="280" label="药品名称" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="tradeName" width="200" label="药品名称" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('tradeName')" />
-          <el-table-column prop="inwarehouseQty" width="180" label="入库数量" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="inwarehouseQtys" width="95" label="入库数量(包装单位)" align="center"
+            :show-overflow-tooltip="true" v-if="inwarehouseitemColumns.showColumn('inwarehouseQtys')">
+            <template #default="scope">
+              {{ scope.row.inwarehouseQty / scope.row.packQty }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="inwarehouseQty" width="95" label="入库数量" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('inwarehouseQty')" />
 
 
-          <el-table-column prop="inName" width="180" label="产地" align="center" :show-overflow-tooltip="true"
-            v-if="inwarehouseitemColumns.showColumn('inName')" />
-          <el-table-column prop="mixBuyPrice" width="180" label="购入价" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="mixBuyPrice" width="95" label="购入价" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('mixBuyPrice')" />
-          <el-table-column prop="mixOutPrice" width="180" label="零售价" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="mixOutPrice" width="95" label="零售价" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('mixOutPrice')" />
-          <el-table-column prop="tstars" width="180" label="推送结果" align="center" :show-overflow-tooltip="true"
-            v-if="inwarehouseitemColumns.showColumn('tstars')" />
-
-          <el-table-column prop="batchNo" width="180" label="批号" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="ALLmixBuyPrice" width="95" label="购入价格" align="center" :show-overflow-tooltip="true"
+            v-if="inwarehouseitemColumns.showColumn('inwarehouseQtys')">
+            <template #default="scope">
+              {{ scope.row.mixBuyPrice * (scope.row.inwarehouseQty / scope.row.packQty) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="ALLmixOutPrice" width="95" label="零售价格" align="center" :show-overflow-tooltip="true"
+            v-if="inwarehouseitemColumns.showColumn('inwarehouseQtys')">
+            <template #default="scope">
+              {{ scope.row.mixOutPrice * (scope.row.inwarehouseQty / scope.row.packQty) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="batchNo" width="95" label="批号" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('batchNo')" />
-          <el-table-column prop="approveInfo" width="180" label="批准文号" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="approveInfo" width="95" label="批准文号" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('approveInfo')" />
-          <el-table-column prop="valiDate" width="180" label="有效期" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="valiDate" width="95" label="有效期" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('valiDate')" />
-          <el-table-column prop="productDate" width="180" label="生产日期" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="productDate" width="95" label="生产日期" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('productDate')" />
 
+          <el-table-column prop="inName" width="95" label="产地" align="center" :show-overflow-tooltip="true"
+            v-if="inwarehouseitemColumns.showColumn('inName')" />
 
-          <el-table-column prop="specs" width="180" label="规格" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="specs" width="95" label="规格" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('specs')" />
-          <el-table-column prop="retailPrice" width="180" label="参考零售价" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="retailPrice" width="95" label="参考零售价" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('retailPrice')" />
-          <el-table-column prop="wholesalePrice" width="180" label="参考批发价" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="wholesalePrice" width="95" label="参考批发价" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('wholesalePrice')" />
-          <el-table-column prop="purchasePrice" width="180" label="最新购入价" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="purchasePrice" width="95" label="最新购入价" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('purchasePrice')" />
-          <el-table-column prop="packUnit" width="180" label="包装单位" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="packUnit" width="95" label="包装单位" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('packUnit')" />
-          <el-table-column prop="packQty" width="180" label="包装数量" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="packQty" width="95" label="包装数量" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('packQty')" />
-          <el-table-column prop="minUnit" width="180" label="最小单位" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="minUnit" width="95" label="最小单位" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('minUnit')" />
-          <el-table-column prop="producerCode" width="180" label="生产厂家编码" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="producerCode" width="95" label="生产厂家编码" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('producerCode')" />
           <el-table-column prop="producerName" width="180" label="生产厂家名称" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('producerName')" />
-          <el-table-column prop="storeNum" width="180" label="本科室库存数量" align="center" :show-overflow-tooltip="true"
+          <el-table-column prop="storeNum" width="95" label="本科室库存数量" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('storeNum')" />
           <el-table-column prop="storeTotsum" width="180" label="全院库存总和" align="center" :show-overflow-tooltip="true"
             v-if="inwarehouseitemColumns.showColumn('storeTotsum')" />
@@ -363,6 +376,8 @@
             v-if="inwarehouseitemColumns.showColumn('remark')" />
           <el-table-column prop="stockNo" width="180" label="采购流水号" align="center"
             :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="tstars" width="95" label="推送结果" align="center" :show-overflow-tooltip="true"
+            v-if="inwarehouseitemColumns.showColumn('tstars')" />
           <el-table-column fixed="right" label="操作" width="160">
             <template #default="scope">
               <el-button type="success" size="small" icon="edit" title="编辑"
@@ -467,6 +482,15 @@
               </el-form-item>
             </el-col>
             <el-col :lg="12">
+              <el-form-item label="生产厂家" prop="productCode">
+                <el-select filterable clearable v-model="inwarehouseDetailForm.productCode" placeholder="请选择生产厂家:">
+                  <el-option v-for="item in productOptions" :key="item.value" :label="item.label" :value="item.value">
+                    <span class="fl">{{ item.label }}</span>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="12">
               <el-form-item label="产地" prop="inName">
                 <el-input v-model="inwarehouseDetailForm.inName" placeholder="请输入产地" />
               </el-form-item>
@@ -544,25 +568,20 @@
                 <el-input v-model="form.num" placeholder="请输入入库数量" />
               </el-form-item>
             </el-col>
-            <!-- 
-            <el-col :lg="12">
-              <el-table-column prop="qty" label="入库剩余量（包装数）" align="center" :show-overflow-tooltip="true"
-                v-if="columns.showColumn('qty')">
-                <template #default="scope">
-                  <span>{{ scope.row.stockNum / scope.row.packQty }}</span>
-                </template>
-              </el-table-column>
-            </el-col> -->
+
+
 
             <el-col :lg="12">
-              <el-form-item label="生产厂家" prop="supplier">
-                <el-select filterable clearable v-model="form.producerCode" placeholder="请选择生产厂家:">
+              <el-form-item label="生产厂家" prop="producerCode">
+                <el-select filterable clearable v-model="form.producerCode" placeholder="请选择生产厂家:"
+                  @change="codehandleChange">
                   <el-option v-for="item in productOptions" :key="item.value" :label="item.label" :value="item.value">
                     <span class="fl">{{ item.label }}</span>
                   </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
+
             <el-col :lg="12">
               <el-form-item label="批号" prop="batchNo">
                 <el-input v-model="form.batchNo" placeholder="请输入批号" />
@@ -711,9 +730,7 @@ import {
   updateInwarehouse, addplan, TongBu, returnPush
 }
   from '@/api/business/tginwarehouse.js'
-import consola, { Consola } from 'consola'
-//import { NutuiResolve } from 'vite-plugin-style-import'
-// import { get } from 'axios'
+
 const { proxy } = getCurrentInstance()
 const ids = ref([])
 const generateInwarehouseRef = ref(null)
@@ -739,6 +756,7 @@ const inwarehouseDetailForm = reactive({
   approveInfo: undefined,
   mixBuyPrice: undefined,
   mixOutPrice: undefined,
+  productCode: undefined,
 })
 
 
@@ -780,6 +798,7 @@ const handleInwarehoueDetailUpdate = (row) => {
   getTInwarehousedetail(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
+      console.log("xq", data)
       inwarehouseDetailDialogOpen.value = true
       Object.assign(inwarehouseDetailForm, data)
     }
@@ -903,16 +922,16 @@ const inwarehouseitemColumns = ref([
   { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '科室编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'tradeName', label: '药品名称', showOverflowTooltip: true },
-  { visible: true, align: 'center', type: '', prop: 'InwarehouseQty', label: '入库数量', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
+  { visible: false, align: 'center', type: '', prop: 'InwarehouseQty', label: '入库数量', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'retailPrice', label: '参考零售价', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'wholesalePrice', label: '参考批发价', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'purchasePrice', label: '最新购入价', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'packQty', label: '包装数量', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'packQty', label: '包装数量', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'producerCode', label: '生产厂家编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'producerName', label: '生产厂家名称', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'producerName', label: '生产厂家名称', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'storeNum', label: '本科室库存数量', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'storeTotsum', label: '全院库存总和', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'outputSum', label: '全院出库总量', showOverflowTooltip: true },
@@ -1658,7 +1677,9 @@ function handleAdd() {
 }
 const mix = ref(0)
 const mixname = ref("")
-
+function codehandleChange() {
+  console.log(form.value.producerCode)
+}
 // 修改按钮操作
 function handleUpdate(row) {
   reset()
@@ -1679,9 +1700,9 @@ function handleUpdate(row) {
   form.value.mixBuyPrice = row.purchasePrice
   form.value.mixOutPrice = row.retailPrice
   form.value.producerCode = row.producerCode
-  form.value.num = row.qty
-
-  mix.value = row.qty
+  form.value.num = row.qty / row.packQty
+  form.value.packQty = row.packQty
+  mix.value = row.qty / row.packQty
   mixname.value = row.drugDeptCode
 
   inwarehousestate.ids = inwarehousestate.ids
@@ -1711,8 +1732,9 @@ const isValidPrice = (price) => {
 function submitForm() {
   form.value.mixBuyPrice = parseFloat(form.value.mixBuyPrice)
   form.value.mixOutPrice = parseFloat(form.value.mixOutPrice)
-  console.log(form.value);
-  if (form.value.num > mix.value) {
+
+
+  if (form.value.num > mix.value && mix.value === 0) {
     proxy.$modal.msgError("数量超过剩余量（剩余量为" + mix.value + ")")
     return
   }
@@ -1734,9 +1756,10 @@ function submitForm() {
     proxy.$modal.msgError("非中药！购入价格和零售价格必须一致");
     return;
   }
+  console.log(form.value.producerCode)
   //传递 流水号 以及form
   var addDecList = {
-    Num: form.value.num,
+    Num: form.value.num * form.value.packQty,
     PlanNo: form.value.planNo,
     BatchNo: form.value.batchNo,
     ValiDate: form.value.valiDate,
@@ -1746,7 +1769,6 @@ function submitForm() {
     MixOutPrice: form.value.mixOutPrice,
     InName: form.value.inName,
     ProductCode: form.value.producerCode,
-
     OnId: inwarehousestate.itemIds[0]
   };
 
@@ -1828,7 +1850,7 @@ function Exports() {
 
 function Exportss() {
   proxy
-    .$confirm("是否确认导出出库单?", "警告", {
+    .$confirm("是否确认导出入库单?", "警告", {
       confirmButtonText: "确定",
       PhaOutcancelButtonText: "取消",
       type: "warning",

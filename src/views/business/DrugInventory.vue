@@ -9,8 +9,8 @@
 
       <el-form :model="DrugInventoryqueryParams" label-position="right" inline ref="DrugInventoryqueryRef"
         v-show="DrugInventoryshowSearch" @submit.prevent>
-        <el-form-item label="退货单位" prop="companyName">
-          <el-input v-model="DrugInventoryqueryParams.companyName" placeholder="请输入退货单位" />
+        <el-form-item label="退货供应商" prop="companyName">
+          <el-input v-model="DrugInventoryqueryParams.companyName" placeholder="请输入供应商" />
         </el-form-item>
         <el-form-item label="退货药品" prop="drugName">
           <el-input v-model.number="DrugInventoryqueryParams.drugName" placeholder="请输入退货药品" />
@@ -77,9 +77,9 @@
           :columns="DrugInventorycolumns"></right-toolbar>
 
       </el-row>
-      <el-table :data="DrugInventorydataList" v-loading="DrugInventoryloading" ref="DrugInventorytable" border
-        header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="DrugInventorysortChange"
-        @selection-change="DrugInventoryhandleSelectionChange">
+      <el-table :data="DrugInventorydataList" :height="400" v-loading="DrugInventoryloading" ref="DrugInventorytable"
+        border header-cell-class-name="el-table-header-cell" highlight-current-row
+        @sort-change="DrugInventorysortChange" @selection-change="DrugInventoryhandleSelectionChange">
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column prop="drugDeptCode" label="库存科室" align="center" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('drugDeptCode')" />
@@ -89,18 +89,19 @@
           v-if="DrugInventorycolumns.showColumn('inBillCode')" />
         <el-table-column prop="serialCode" label="序号" align="center"
           v-if="DrugInventorycolumns.showColumn('serialCode')" />
-        <el-table-column prop="companyName" label="供货单位" align="center" :show-overflow-tooltip="true"
+        <el-table-column prop="companyName" label="供货单位" align="center" width="125" :show-overflow-tooltip="false"
           v-if="DrugInventorycolumns.showColumn('companyName')" />
         <el-table-column prop="groupCode" label="批次号" align="center" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('groupCode')" />
-        <el-table-column prop="inListCode" label="入库单据号" align="center" :show-overflow-tooltip="true"
+        <el-table-column prop="inListCode" label="入库单据号" align="center" width="130" :show-overflow-tooltip="false"
           v-if="DrugInventorycolumns.showColumn('inListCode')" />
-        <el-table-column prop="inType" label="入库类型" align="center" v-if="DrugInventorycolumns.showColumn('inType')">
+        <el-table-column prop="inType" label="入库类型" align="center" width="90" :show-overflow-tooltip="false"
+          v-if="DrugInventorycolumns.showColumn('inType')">
           <template #default="scope">
             <dict-tag :options="DrugInventoryoptions.inTypeDrugInventoryoptions" :value="scope.row.inType" />
           </template>
         </el-table-column>
-        <el-table-column prop="class3MeaningCode" label="入库分类" align="center" :show-overflow-tooltip="true"
+        <el-table-column prop="class3MeaningCode" label="入库分类" align="center" width="90" :show-overflow-tooltip="false"
           v-if="DrugInventorycolumns.showColumn('class3MeaningCode')">
           <template #default="scope">
             <dict-tag :options="DrugInventoryoptions.inTypeDrugInventoryoptions" :value="scope.row.class3MeaningCode" />
@@ -112,15 +113,15 @@
           v-if="DrugInventorycolumns.showColumn('outSerialCode')" />
         <el-table-column prop="outListCode" label="出库单据号" align="center" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('outListCode')" />
-        <el-table-column prop="drugCode" label="药品编码" align="center" :show-overflow-tooltip="true"
+        <el-table-column prop="drugCode" label="药品编码" align="center" width="120" :show-overflow-tooltip="false"
           v-if="DrugInventorycolumns.showColumn('drugCode')" />
-        <el-table-column prop="tradeName" label="药品商品名" align="center" :show-overflow-tooltip="true"
+        <el-table-column prop="tradeName" label="药品商品名" align="center" width="120" :show-overflow-tooltip="false"
           v-if="DrugInventorycolumns.showColumn('tradeName')" />
         <el-table-column prop="drugType" label="药品类别" align="center" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('drugType')" />
         <el-table-column prop="drugQuality" label="药品性质" align="center" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('drugQuality')" />
-        <el-table-column prop="specs" label="规格" align="center" :show-overflow-tooltip="true"
+        <el-table-column prop="specs" label="规格" align="center" width="120" :show-overflow-tooltip="false"
           v-if="DrugInventorycolumns.showColumn('specs')" />
         <el-table-column prop="packUnit" label="包装单位" align="center" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('packUnit')" />
@@ -135,8 +136,8 @@
           v-if="DrugInventorycolumns.showColumn('batchNo')" />
         <el-table-column prop="validDate" label="有效期" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('validDate')" />
-        <el-table-column prop="producerCode" label="生产厂家" align="center" :show-overflow-tooltip="true"
-          v-if="DrugInventorycolumns.showColumn('producerCode')" />
+        <el-table-column prop="companyName" label="生产厂家" align="center" width="130" :show-overflow-tooltip="false"
+          v-if="DrugInventorycolumns.showColumn('companyName')" />
         <el-table-column prop="companyCode" label="供货单位代码" align="center" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('companyCode')" />
         <el-table-column prop="retailPrice" label="零售价" align="center"
@@ -204,9 +205,9 @@
         </el-table-column>
         <el-table-column prop="operCode" label="操作员" align="center" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('operCode')" />
-        <el-table-column prop="operDate" label="操作日期" :show-overflow-tooltip="true"
+        <el-table-column prop="operDate" label="操作日期" width="120" :show-overflow-tooltip="false"
           v-if="DrugInventorycolumns.showColumn('operDate')" />
-        <el-table-column prop="mark" label="备注" align="center" :show-overflow-tooltip="true"
+        <el-table-column prop="mark" label="备注" align="center" width="120" :show-overflow-tooltip="false"
           v-if="DrugInventorycolumns.showColumn('mark')" />
         <el-table-column prop="extCode" label="扩展字段" align="center" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('extCode')" />
@@ -236,16 +237,16 @@
         </el-table-column>
         <el-table-column prop="productionDate" label="生产日期" :show-overflow-tooltip="true"
           v-if="DrugInventorycolumns.showColumn('productionDate')" />
-        <el-table-column label="操作" width="60">
+        <!-- <el-table-column label="操作" width="60">
           <template #default="scope">
             <el-button type="primary" size="small" icon="view" title="详情"
-              @click="DrugInventoryhandlePreview(scope.row)"></el-button>
-            <!-- <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['druginventory:edit']"
+              @click="DrugInventoryhandlePreview(scope.row)"></el-button> -->
+        <!-- <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['druginventory:edit']"
               @click="DrugInventoryhandleUpdate(scope.row)"></el-button>
             <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['druginventory:delete']"
               @click="DrugInventoryhandleDelete(scope.row)"></el-button> -->
-          </template>
-        </el-table-column>
+        <!-- </template>
+        </el-table-column> -->
       </el-table>
       <pagination :total="DrugInventorytotal" v-model:page="DrugInventoryqueryParams.pageNum"
         v-model:limit="DrugInventoryqueryParams.pageSize" @pagination="DrugInventorygetList" />
@@ -783,9 +784,9 @@
             :columns="OutOrdercolumns"></right-toolbar>
         </el-row>
 
-        <el-table @row-click="PhaOutQedatalist" :data="OutOrderdataList" v-loading="OutOrderloading" ref="OutOrdertable"
-          border header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutOrdersortChange"
-          @selection-change="OutOrderhandleSelectionChange">
+        <el-table @row-click="PhaOutQedatalist" :height="400" :data="OutOrderdataList" v-loading="OutOrderloading"
+          ref="OutOrdertable" border header-cell-class-name="el-table-header-cell" highlight-current-row
+          @sort-change="OutOrdersortChange" @selection-change="OutOrderhandleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="id" label="Id" align="center" v-if="OutOrdercolumns.showColumn('id')" />
           <el-table-column prop="outOrderCode" label="出库单据" align="center" :show-overflow-tooltip="true"
@@ -967,7 +968,7 @@
             :columns="OutDrugscolumns"></right-toolbar>
         </el-row>
 
-        <el-table :data="OutDrugsdataList" v-loading="OutDrugsloading" ref="OutDrugstable" border
+        <el-table :data="OutDrugsdataList" :height="400" v-loading="OutDrugsloading" ref="OutDrugstable" border
           header-cell-class-name="el-table-header-cell" highlight-current-row @sort-change="OutDrugssortChange"
           @selection-change="OutDrugshandleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
@@ -1629,7 +1630,7 @@ const DrugInventorycolumns = ref([
   { visible: true, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'drugType', label: '药品类别', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'packQty', label: '包装数' },
   { visible: false, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
@@ -1642,7 +1643,7 @@ const DrugInventorycolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
   { visible: false, align: 'center', type: '', prop: 'wholesalePrice', label: '批发价' },
   { visible: false, align: 'center', type: '', prop: 'purchasePrice', label: '购入价' },
-  { visible: false, align: 'center', type: '', prop: 'inNum', label: '退货数量（负数）' },
+  { visible: true, align: 'center', type: '', prop: 'inNum', label: '退货数量（负数）' },
   { visible: false, align: 'center', type: '', prop: 'retailCost', label: '零售金额' },
   { visible: false, align: 'center', type: '', prop: 'wholesaleCost', label: '批发金额' },
   { visible: false, align: 'center', type: '', prop: 'purchaseCost', label: '购入金额' },
@@ -1669,8 +1670,8 @@ const DrugInventorycolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'cashFlag', label: '现金标志', showOverflowTooltip: true },
   { visible: false, align: 'center', type: 'dict', prop: 'payState', label: '供货商结存付款状态 0 未付 1 未全付 2 付清', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'operCode', label: '操作员', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'mark', label: '备注', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'mark', label: '备注', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'extCode', label: '扩展字段', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'extCode1', label: '扩展字段1 存储草药产地', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'extCode2', label: '扩展字段2 存储生产日期', showOverflowTooltip: true },

@@ -10,8 +10,11 @@
       <!-- <el-form-item label="OutorderID" prop="outorderID">
         <el-input v-model.number="OuWarehousetqueryParams.outorderID" placeholder="请输入OutorderID" />
       </el-form-item> -->
-      <el-form-item label="出库科室编码" prop="drugDeptCode">
-        <el-input v-model="OuWarehousetqueryParams.drugDeptCode" placeholder="请输入出库科室编码" />
+      <el-form-item label="出库科室" prop="drugDeptCode">
+        <el-input v-model="OuWarehousetqueryParams.drugDeptCode" placeholder="请输入出库科室" />
+      </el-form-item>
+      <el-form-item label="领用部门" prop="drugStorageCode">
+        <el-input v-model="OuWarehousetqueryParams.drugStorageCode" placeholder="请输入领用部门" />
       </el-form-item>
       <el-form-item label="出库单流水号" prop="outBillCode">
         <el-input v-model.number="OuWarehousetqueryParams.outBillCode" placeholder="请输入出库单流水号" />
@@ -25,6 +28,11 @@
       <el-form-item label="药品商品名" prop="tradeName">
         <el-input v-model="OuWarehousetqueryParams.tradeName" placeholder="请输入药品商品名" />
       </el-form-item>
+      <el-form-item label="创建时间">
+        <el-date-picker v-model="dateRangeOperDate" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"
+          value-format="YYYY-MM-DD HH:mm:ss" :default-time="defaultTime" :shortcuts="dateOptions">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button icon="search" type="primary" @click="OuWarehousethandleQuery">{{ $t('btn.search') }}</el-button>
         <el-button icon="refresh" @click="OuWarehousetresetQuery">{{ $t('btn.reset') }}</el-button>
@@ -32,7 +40,7 @@
     </el-form>
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['ouwarehouset:add']" plain icon="plus" @click="OuWarehousethandleAdd">
           {{ $t('btn.add') }}
         </el-button>
@@ -68,8 +76,8 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
-        </el-dropdown>
-      </el-col>
+</el-dropdown>
+</el-col> -->
       <el-col :span="1.5">
         <el-button type="warning" plain icon="download" @click="OuWarehousethandleExport"
           v-hasPermi="['ouwarehouset:export']">
@@ -87,23 +95,31 @@
       <el-table-column prop="id" label="Id" align="center" v-if="OuWarehousetcolumns.showColumn('id')" />
       <el-table-column prop="outorderID" label="OutorderID" align="center"
         v-if="OuWarehousetcolumns.showColumn('outorderID')" />
-      <el-table-column prop="drugDeptCode" label="出库科室编码" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="drugDeptCode" label="出库科室" align="center" :show-overflow-tooltip="true"
         v-if="OuWarehousetcolumns.showColumn('drugDeptCode')" />
-      <el-table-column prop="outBillCode" label="出库单流水号" align="center"
+      <el-table-column prop="drugStorageCode" label="领药单位" align="center" :show-overflow-tooltip="true"
+        v-if="OuWarehousetcolumns.showColumn('drugStorageCode')" />
+      <el-table-column prop="outBillCode" label="出库单流水号" align="center" width="130"
         v-if="OuWarehousetcolumns.showColumn('outBillCode')" />
       <el-table-column prop="serialCode" label="序号" align="center"
         v-if="OuWarehousetcolumns.showColumn('serialCode')" />
       <el-table-column prop="groupCode" label="批次号" align="center" :show-overflow-tooltip="true"
         v-if="OuWarehousetcolumns.showColumn('groupCode')" />
-      <el-table-column prop="outListCode" label="出库单据号" align="center" :show-overflow-tooltip="true"
+      <el-table-column prop="outListCode" label="出库单据号" align="center" width="130" :show-overflow-tooltip="false"
         v-if="OuWarehousetcolumns.showColumn('outListCode')" />
-      <el-table-column prop="outType" label="出库类型" align="center" v-if="OuWarehousetcolumns.showColumn('outType')">
+      <el-table-column prop="outType" label="出库类型" align="center" width="90"
+        v-if="OuWarehousetcolumns.showColumn('outType')">
         <template #default="scope">
           <dict-tag :options="OuWarehousetoptions.outTypeOuWarehousetoptions" :value="scope.row.outType" />
         </template>
       </el-table-column>
-      <el-table-column prop="class3MeaningCode" label="出库分类" align="center" :show-overflow-tooltip="true"
-        v-if="OuWarehousetcolumns.showColumn('class3MeaningCode')" />
+      <el-table-column prop="class3MeaningCode" label="出库分类" width="90" align="center" :show-overflow-tooltip="true"
+        v-if="OuWarehousetcolumns.showColumn('class3MeaningCode')">
+        <template #default="scope">
+          <dict-tag :options="OuWarehousetoptions.outTypeOuWarehousetoptions" :value="scope.row.class3MeaningCode" />
+        </template>
+      </el-table-column>
+
       <el-table-column prop="inBillCode" label="入库单号" align="center"
         v-if="OuWarehousetcolumns.showColumn('inBillCode')" />
       <el-table-column prop="inSerialCode" label="入库单序号" align="center"
@@ -115,9 +131,9 @@
       <el-table-column prop="tradeName" label="药品商品名" align="center" :show-overflow-tooltip="true"
         v-if="OuWarehousetcolumns.showColumn('tradeName')" />
       <el-table-column prop="drugType" label="药品类别" align="center" v-if="OuWarehousetcolumns.showColumn('drugType')">
-        <template #default="scope">
+        <!-- <template #default="scope">
           <dict-tag :options="OuWarehousetoptions.drugTypeOuWarehousetoptions" :value="scope.row.drugType" />
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column prop="drugQuality" label="药品性质" align="center" :show-overflow-tooltip="true"
         v-if="OuWarehousetcolumns.showColumn('drugQuality')" />
@@ -159,9 +175,9 @@
       <el-table-column prop="specialFlag" label="特殊标记" align="center" :show-overflow-tooltip="true"
         v-if="OuWarehousetcolumns.showColumn('specialFlag')" />
       <el-table-column prop="outState" label="出库状态" align="center" v-if="OuWarehousetcolumns.showColumn('outState')">
-        <template #default="scope">
+        <!-- <template #default="scope">
           <dict-tag :options="OuWarehousetoptions.outStateOuWarehousetoptions" :value="scope.row.outState" />
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column prop="applyNum" label="申请出库量" align="center" v-if="OuWarehousetcolumns.showColumn('applyNum')" />
       <el-table-column prop="applyOpercode" label="申请出库人" align="center" :show-overflow-tooltip="true"
@@ -185,8 +201,7 @@
         v-if="OuWarehousetcolumns.showColumn('drugedBill')" />
       <el-table-column prop="medId" label="制剂序号" align="center" :show-overflow-tooltip="true"
         v-if="OuWarehousetcolumns.showColumn('medId')" />
-      <el-table-column prop="drugStorageCode" label="领药单位编码" align="center" :show-overflow-tooltip="true"
-        v-if="OuWarehousetcolumns.showColumn('drugStorageCode')" />
+
       <el-table-column prop="recipeNo" label="处方号" align="center" :show-overflow-tooltip="true"
         v-if="OuWarehousetcolumns.showColumn('recipeNo')" />
       <el-table-column prop="sequenceNo" label="处方流水号" align="center"
@@ -211,14 +226,14 @@
         v-if="OuWarehousetcolumns.showColumn('outDate')" />
       <el-table-column prop="applyNumber" label="申请单流水号" align="center"
         v-if="OuWarehousetcolumns.showColumn('applyNumber')" />
-      <el-table-column label="操作" width="160">
+      <el-table-column label="操作" width="65">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情"
             @click="OuWarehousethandlePreview(scope.row)"></el-button>
-          <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['ouwarehouset:edit']"
+          <!-- <el-button type="success" size="small" icon="edit" title="编辑" v-hasPermi="['ouwarehouset:edit']"
             @click="OuWarehousethandleUpdate(scope.row)"></el-button>
           <el-button type="danger" size="small" icon="delete" title="删除" v-hasPermi="['ouwarehouset:delete']"
-            @click="OuWarehousethandleDelete(scope.row)"></el-button>
+            @click="OuWarehousethandleDelete(scope.row)"></el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -657,40 +672,42 @@ const OuWarehousetqueryParams = reactive({
   drugDeptCode: undefined,
   outBillCode: undefined,
   groupCode: undefined,
+  operDate: undefined,
   drugCode: undefined,
   tradeName: undefined,
+  drugStorageCode: undefined,
 })
 const OuWarehousetcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'id', label: 'Id' },
   { visible: false, align: 'center', type: '', prop: 'outorderID', label: 'OutorderID' },
   { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '出库科室编码', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outBillCode', label: '出库单流水号' },
-  { visible: true, align: 'center', type: '', prop: 'serialCode', label: '序号' },
+  { visible: false, align: 'center', type: '', prop: 'serialCode', label: '序号' },
   { visible: true, align: 'center', type: '', prop: 'groupCode', label: '批次号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'outListCode', label: '出库单据号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: 'dict', prop: 'outType', label: '出库类型', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'class3MeaningCode', label: '出库分类', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'inBillCode', label: '入库单号' },
+  { visible: true, align: 'center', type: '', prop: 'class3MeaningCode', label: '出库分类', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'inBillCode', label: '入库单号' },
   { visible: false, align: 'center', type: '', prop: 'inSerialCode', label: '入库单序号' },
-  { visible: false, align: 'center', type: '', prop: 'inListCode', label: '入库单据号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'inListCode', label: '入库单据号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugCode', label: '药品编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'tradeName', label: '药品商品名', showOverflowTooltip: true },
   { visible: false, align: 'center', type: 'dict', prop: 'drugType', label: '药品类别', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'packQty', label: '包装数' },
+  { visible: true, align: 'center', type: '', prop: 'drugQuality', label: '药品性质', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'specs', label: '规格', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'packUnit', label: '包装单位', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'packQty', label: '包装数' },
   { visible: false, align: 'center', type: '', prop: 'minUnit', label: '最小单位', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'showFlag', label: '显示的单位标记', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'showUnit', label: '显示的单位', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'batchNo', label: '批号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'validDate', label: '有效期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'batchNo', label: '批号', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'validDate', label: '有效期', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'producerCode', label: '生产厂家', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'companyCode', label: '供货单位代码', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'retailPrice', label: '零售价' },
   { visible: false, align: 'center', type: '', prop: 'wholesalePrice', label: '批发价' },
   { visible: false, align: 'center', type: '', prop: 'purchasePrice', label: '购入价' },
-  { visible: false, align: 'center', type: '', prop: 'outNum', label: '出库数量' },
+  { visible: true, align: 'center', type: '', prop: 'outNum', label: '出库数量' },
   { visible: false, align: 'center', type: '', prop: 'saleCost', label: '零售金额' },
   { visible: false, align: 'center', type: '', prop: 'tradeCost', label: '批发金额' },
   { visible: false, align: 'center', type: '', prop: 'approveCost', label: '购入金额' },
@@ -710,15 +727,15 @@ const OuWarehousetcolumns = ref([
   { visible: false, align: 'center', type: '', prop: 'returnNum', label: '退库数量' },
   { visible: false, align: 'center', type: '', prop: 'drugedBill', label: '摆药单号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'medId', label: '制剂序号', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'drugStorageCode', label: '领药单位编码', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'drugStorageCode', label: '领药单位', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'recipeNo', label: '处方号', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'sequenceNo', label: '处方流水号' },
   { visible: false, align: 'center', type: '', prop: 'signPerson', label: '签字人', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'getPerson', label: '领药人', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'strikeFlag', label: '冲账标志', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'mark', label: '备注', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'operCode', label: '操作员', showOverflowTooltip: true },
-  { visible: false, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'operCode', label: '操作员', showOverflowTooltip: true },
+  { visible: true, align: 'center', type: '', prop: 'operDate', label: '操作日期', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'arkFlag', label: '是否药房向药柜出库记录', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'arkBillCode', label: '药柜发药出库单流水号' },
   { visible: false, align: 'center', type: '', prop: 'outDate', label: '出库记录发生时间', showOverflowTooltip: true },
@@ -728,14 +745,15 @@ const OuWarehousetcolumns = ref([
 const OuWarehousettotal = ref(0)
 const OuWarehousetdataList = ref([])
 const OuWarehousetqueryRef = ref()
-const OuWarehousetdefaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
+const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
+// 创建时间时间范围
+const dateRangeOperDate = ref([])
 
 
 var OuWarehousetdictParams = [
 ]
-
-
 function OuWarehousetgetList() {
+  proxy.addDateRange(OuWarehousetqueryParams, dateRangeOperDate.value, 'OperDate');
   OuWarehousetloading.value = true
   listOuWarehouset(OuWarehousetqueryParams).then(res => {
     const { code, data } = res
@@ -793,7 +811,29 @@ const OuWarehousetstate = reactive({
   },
   OuWarehousetoptions: {
     // 出库类型 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    outTypeOuWarehousetoptions: [],
+    outTypeOuWarehousetoptions: [
+      { dictValue: "01", dictLabel: '一般出库' },
+      { dictValue: "20", dictLabel: '科室借药' },
+      { dictValue: "26", dictLabel: '特殊出库' },
+      { dictValue: "G1", dictLabel: '个人借药' },
+      { dictValue: "K3", dictLabel: '出库退药' },
+      { dictValue: "02", dictLabel: '出库退库' },
+      { dictValue: "27", dictLabel: '科室还药' },
+      { dictValue: "G2", dictLabel: '个人还药' },
+      { dictValue: "04", dictLabel: '出库审批' },
+      { dictValue: "05", dictLabel: '报损' },
+      { dictValue: "11", dictLabel: '特别出库审批' },
+      { dictValue: "12", dictLabel: '特别出库核准' },
+      { dictValue: "M1", dictLabel: '门诊摆药' },
+      { dictValue: "M2", dictLabel: '门诊咨询' },
+      { dictValue: "Z1", dictLabel: '住院摆药' },
+      { dictValue: "Z", dictLabel: '住院摆药' },
+      { dictValue: "Z2", dictLabel: '住院退药' },
+      { dictValue: "21", dictLabel: '一般出库' }, // 新增
+      { dictValue: "22", dictLabel: '出库退货' }, // 新增
+      { dictValue: "25", dictLabel: '出库审批' }, // 新增
+      { dictValue: "33", dictLabel: '特别出库' }, // 新增
+    ],
   }
 })
 
