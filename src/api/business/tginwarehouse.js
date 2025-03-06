@@ -13,6 +13,13 @@ export function listTGInwarehouse(query) {
   })
 }
 
+export function sArea(query) {
+  return request({
+    url: 'business/GuiDrug/Area',
+    method: 'get',
+    params: query
+  })
+}
 export function listInwarehouse(query) {
   return request({
     url: 'business/Inwarehouse/list',

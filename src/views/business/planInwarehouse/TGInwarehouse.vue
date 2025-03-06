@@ -492,7 +492,13 @@
             </el-col>
             <el-col :lg="12">
               <el-form-item label="产地" prop="inName">
-                <el-input v-model="inwarehouseDetailForm.inName" placeholder="请输入产地" />
+                <!-- <el-input v-model="form.inName" placeholder="请输入产地" /> -->
+                <el-select filterable clearable v-model="inwarehouseDetailForm.inName" placeholder="请选择产地:"
+                  @change="codehandleChange">
+                  <el-option v-for="item in AreaDrugOptions" :key="item.value" :label="item.label" :value="item.value">
+                    <span class="fl">{{ item.value }}</span>
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :lg="12">
@@ -530,13 +536,17 @@
 
             <el-col :lg="12">
               <el-form-item label="生产日期" prop="productDate">
-                <el-input v-model="inwarehouseDetailForm.productDate" placeholder="请输入生产日期" />
+                <!-- <el-input v-model="inwarehouseDetailForm.productDate" placeholder="请输入生产日期" /> -->
+                <el-date-picker v-model="inwarehouseDetailForm.productDate" type="date" placeholder="请输入生产日期" size
+                  format="YYYY/MM/DD" value-format="YYYY-MM-DD" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
               <el-form-item label="有效期" prop="valiDate">
-                <el-input v-model="inwarehouseDetailForm.valiDate" placeholder="请输入有效期" />
+                <!-- <el-input v-model="inwarehouseDetailForm.valiDate" placeholder="请输入有效期" /> -->
+                <el-date-picker v-model="inwarehouseDetailForm.valiDate" type="date" placeholder="请输入生产日期" size
+                  format="YYYY/MM/DD" value-format="YYYY-MM-DD" />
               </el-form-item>
             </el-col>
 
@@ -561,6 +571,17 @@
             <el-col :lg="12">
               <el-form-item label="入库计划流水号" prop="planNo">
                 <el-input :disabled="true" v-model="form.planNo" placeholder="请输入入库计划流水号" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :lg="12">
+              <el-form-item label="药品名称" prop="drugName">
+                <el-input :disabled="true" v-model="form.drugName" placeholder="请输入药品名称" />
+              </el-form-item>
+            </el-col>
+            <el-col :lg="12">
+              <el-form-item label="药品规格" prop="drugSpec">
+                <el-input :disabled="true" v-model="form.drugSpec" placeholder="请输入药品规格" />
               </el-form-item>
             </el-col>
             <el-col :lg="12">
@@ -590,13 +611,20 @@
 
             <el-col :lg="12">
               <el-form-item label="有效期" prop="valiDate">
-                <el-input v-model="form.valiDate" placeholder="请输入有效期" />
+                <!-- <el-input v-model="form.valiDate" placeholder="请输入有效期" /> -->
+
+                <el-date-picker v-model="form.valiDate" type="date" placeholder="请输入有效期" size format="YYYY/MM/DD"
+                  value-format="YYYY-MM-DD" />
               </el-form-item>
             </el-col>
 
             <el-col :lg="12">
               <el-form-item label="生产日期" prop="productDate">
-                <el-input v-model="form.productDate" placeholder="请输入生产日期" />
+                <!-- <el-input v-model="form.productDate" placeholder="请输入生产日期" /> -->
+
+                <el-date-picker v-model="form.productDate" type="date" placeholder="请输入生产日期" size format="YYYY/MM/DD"
+                  value-format="YYYY-MM-DD" />
+
               </el-form-item>
             </el-col>
 
@@ -608,7 +636,12 @@
 
             <el-col :lg="12">
               <el-form-item label="产地" prop="inName">
-                <el-input v-model="form.inName" placeholder="请输入产地" />
+                <!-- <el-input v-model="form.inName" placeholder="请输入产地" /> -->
+                <el-select filterable clearable v-model="form.inName" placeholder="请选择产地:" @change="codehandleChange">
+                  <el-option v-for="item in AreaDrugOptions" :key="item.value" :label="item.label" :value="item.value">
+                    <span class="fl">{{ item.value }}</span>
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :lg="12">
@@ -621,6 +654,18 @@
                 <el-input v-model="form.mixOutPrice" placeholder="请输入零售价" />
               </el-form-item>
             </el-col>
+            <el-col :lg="12">
+              <el-form-item label="购入总价">
+                <el-input :disabled="true" :value="form.mixBuyPrice * form.num" placeholder="请输入零售价" />
+              </el-form-item>
+            </el-col> <el-col :lg="12">
+              <el-form-item label="零售总价">
+                <el-input :disabled="true" :value="form.mixOutPrice * form.num" placeholder="请输入零售价" />
+              </el-form-item>
+            </el-col>
+
+
+
             <!-- <el-col :lg="12">
             <el-form-item label="批文信息" prop="approveInfo">
               <el-input v-model="form.approveInfo" placeholder="请输入批文信息" />
@@ -703,7 +748,17 @@
                 </el-select>
               </el-form-item>
             </el-col>
-
+            <el-col :lg="12">
+              <el-form-item label="库房" prop="inwarehouseArea">
+                <el-select :disabled="true" filterable clearable v-model="inwarehouseForm.inwarehouseArea"
+                  placeholder="请选择库房 :">
+                  <el-option v-for="item in deptOptions" :key="item.dictValue" :label="item.dictLabel"
+                    :value="item.dictValue">
+                    <span class="fl">{{ item.dictLabel }}</span>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-form>
         <template #footer>
@@ -727,7 +782,7 @@ import {
   generateSelectiveInwarehouse, AppendSelectiveInwarehouse,
   updateInwarehouseDetailItem, getTInwarehousedetail,
   delTInwarehousedetail, getInwarehouse,
-  updateInwarehouse, addplan, TongBu, returnPush
+  updateInwarehouse, addplan, TongBu, returnPush, sArea
 }
   from '@/api/business/tginwarehouse.js'
 
@@ -758,8 +813,18 @@ const inwarehouseDetailForm = reactive({
   mixOutPrice: undefined,
   productCode: undefined,
 })
+const AreaDrugOptions = ref([]);
+const AreaDrug = () => {
+  sArea().then(res => {
+    console.log("res", res)
+    AreaDrugOptions.value = res.map((item) => ({
+      label: item.productAreaName,
+      value: item.productAreaName
+    }));
+    console.log("area", AreaDrugOptions)
 
-
+  })
+}
 const submitInwarehouseDetailForm = () => {
   inwarehouseDetailForm.mixBuyPrice = parseFloat(inwarehouseDetailForm.mixBuyPrice)
   inwarehouseDetailForm.mixOutPrice = parseFloat(inwarehouseDetailForm.mixOutPrice)
@@ -779,15 +844,56 @@ const submitInwarehouseDetailForm = () => {
     proxy.$modal.msgError("非中药！购入价格和零售价格必须一致");
     return;
   }
+  const Newdate = new Date(dayjs().format('YYYY-MM-DD'))
+  const productDates = new Date(form.value.productDate);
+  const valiDates = new Date(form.value.valiDate);
+  if (productDates >= Newdate) {
+    proxy.$modal.msgError("生产日期要大于当前日期");
+    return;
+  }
+  if (valiDates <= Newdate) {
+    proxy.$modal.msgError("有效期要大于当前日期");
+    return;
+  }
+  const addDatemonth = new Date(dayjs(Newdate).add(6, 'month').format('YYYY-MM-DD'))
+  var bools = true;
+  if (valiDates < addDatemonth) {
+    bools = false;
+  }
 
-  updateInwarehouseDetailItem(inwarehouseDetailForm).then((res) => {
-    if (res?.code != 200) return proxy.$message.error(res?.msg)
-    proxy.$message.success('操作成功')
-  }).catch((err) => {
-    proxy.$message.error(err)
-  }).finally(() => {
-    inwarehouseDetailDialogOpen.value = false
-  })
+  if (bools) {
+    updateInwarehouseDetailItem(inwarehouseDetailForm).then((res) => {
+      if (res?.code != 200) return proxy.$message.error(res?.msg)
+      proxy.$message.success('操作成功')
+    }).catch((err) => {
+      proxy.$message.error(err)
+    }).finally(() => {
+      inwarehouseDetailDialogOpen.value = false
+    })
+  } else {
+    proxy
+      .$confirm('有效期不足6个月是否继续添加', "警告", {
+        confirmButtonText: proxy.$t('common.ok'),
+        cancelButtonText: proxy.$t('common.cancel'),
+        type: "warning",
+      }).then(function () {
+        updateInwarehouseDetailItem(inwarehouseDetailForm).then((res) => {
+          if (res?.code != 200) return proxy.$message.error(res?.msg)
+          proxy.$message.success('操作成功')
+        }).catch((err) => {
+          proxy.$message.error(err)
+        }).finally(() => {
+          inwarehouseDetailDialogOpen.value = false
+        })
+
+      })
+  }
+
+
+
+
+
+
 }
 const inDept = ref("")
 //dialog 打开
@@ -1029,6 +1135,7 @@ const inwarehouseForm = reactive({
   billCode: undefined,
   billTime: undefined,
   supplierCode: undefined,
+  inwarehouseArea: undefined,
   id: undefined,
 })
 const inwarehouseDialogOpen = ref(false)
@@ -1045,6 +1152,8 @@ const handleInwarehouseUpdate = (row) => {
       inwarehouseForm.billCode = data.billCode
       inwarehouseForm.billTime = data.billTime
       inwarehouseForm.supplierCode = data.supplierCode
+      inwarehouseForm.inwarehouseArea = data.inwarehouseArea
+
     }
   })
 }
@@ -1613,6 +1722,7 @@ onMounted(() => {
   initSelectSupplierInfo()
   initSelectproductInfo()
   initSelectdeptInfo()
+  AreaDrug()
 
 });
 
@@ -1678,7 +1788,7 @@ function handleAdd() {
 const mix = ref(0)
 const mixname = ref("")
 function codehandleChange() {
-  console.log(form.value.producerCode)
+  console.log(form.value.inName)
 }
 // 修改按钮操作
 function handleUpdate(row) {
@@ -1700,6 +1810,10 @@ function handleUpdate(row) {
   form.value.mixBuyPrice = row.purchasePrice
   form.value.mixOutPrice = row.retailPrice
   form.value.producerCode = row.producerCode
+  form.value.drugName = row.tradeName
+  form.value.drugSpec = row.specs
+
+
   form.value.num = row.qty / row.packQty
   form.value.packQty = row.packQty
   mix.value = row.qty / row.packQty
@@ -1727,6 +1841,7 @@ const isValidPrice = (price) => {
 };
 
 // 使用示例
+import dayjs from 'dayjs'
 
 // 添加&修改 表单提交
 function submitForm() {
@@ -1756,7 +1871,24 @@ function submitForm() {
     proxy.$modal.msgError("非中药！购入价格和零售价格必须一致");
     return;
   }
-  console.log(form.value.producerCode)
+
+  const Newdate = new Date(dayjs().format('YYYY-MM-DD'))
+  const productDates = new Date(form.value.productDate);
+  const valiDates = new Date(form.value.valiDate);
+  if (productDates >= Newdate) {
+    proxy.$modal.msgError("生产日期要大于当前日期");
+    return;
+  }
+  if (valiDates <= Newdate) {
+    proxy.$modal.msgError("有效期要大于当前日期");
+    return;
+  }
+  const addDatemonth = new Date(dayjs(Newdate).add(6, 'month').format('YYYY-MM-DD'))
+  var bools = true;
+  if (valiDates < addDatemonth) {
+    bools = false;
+  }
+
   //传递 流水号 以及form
   var addDecList = {
     Num: form.value.num * form.value.packQty,
@@ -1771,30 +1903,39 @@ function submitForm() {
     ProductCode: form.value.producerCode,
     OnId: inwarehousestate.itemIds[0]
   };
+  if (bools) {
+    addplan(addDecList).then((result) => {
+      if (result.data == "成功") {
+        proxy.$modal.msgSuccess("成功")
+        open.value = false
+        getList()
+        inwarehouseGetList()
+        inwarehouseitemGetList()
+      } else {
+        proxy.$modal.msgError(result.data)
+      }
+    })
+  } else {
+    proxy
+      .$confirm('有效期不足6个月是否继续添加', "警告", {
+        confirmButtonText: proxy.$t('common.ok'),
+        cancelButtonText: proxy.$t('common.cancel'),
+        type: "warning",
+      }).then(function () {
+        addplan(addDecList).then((result) => {
+          if (result.data == "成功") {
+            proxy.$modal.msgSuccess("成功")
+            open.value = false
+            getList()
+            inwarehouseGetList()
+            inwarehouseitemGetList()
+          } else {
+            proxy.$modal.msgError(result.data)
+          }
+        })
+      })
+  }
 
-
-  addplan(addDecList).then((result) => {
-    if (result.data == "成功") {
-      proxy.$modal.msgSuccess("成功")
-      open.value = false
-      getList()
-      inwarehouseGetList()
-      inwarehouseitemGetList()
-    } else {
-      proxy.$modal.msgError(result.data)
-    }
-  })
-
-  // form.value
-  //   // proxy.$refs["formRef"].validate((valid) => {
-  //   if (valid) {
-  //     updateTGInwarehouse(form.value).then((res) => {
-  //       proxy.$modal.msgSuccess("修改成功")
-  //       open.value = false
-  //       getList()
-  //     })
-  //   }
-  // })
 }
 
 // 删除按钮操作

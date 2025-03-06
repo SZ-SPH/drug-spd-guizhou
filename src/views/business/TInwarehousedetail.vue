@@ -6,9 +6,15 @@
 <template>
   <div>
     <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
-      <el-form-item label="药品编码 关联 " prop="drugCode">
-        <el-input v-model="queryParams.drugCode" placeholder="请输入药品编码 关联 " />
+      <el-form-item label="药品编码 " prop="drugCode">
+        <el-input v-model="queryParams.drugCode" placeholder="请输入药品编码 " />
+
       </el-form-item>
+      <el-form-item label="药品名称" prop="drugName">
+        <el-input v-model="queryParams.drugName" placeholder="请输入药品名称" />
+
+      </el-form-item>
+
       <el-form-item label="创建时间">
         <el-date-picker v-model="dateRangeCreateTime" type="datetimerange" start-placeholder="开始日期"
           end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" :default-time="defaultTime"
@@ -312,6 +318,7 @@ const queryParams = reactive({
   drugCode: undefined,
   createTime: undefined,
   batchNo: undefined,
+  drugName: undefined,
 })
 const columns = ref([
   { visible: true, align: 'center', type: '', prop: 'drugDeptCode', label: '科室编码', showOverflowTooltip: true },

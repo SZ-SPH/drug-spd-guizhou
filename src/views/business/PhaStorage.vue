@@ -48,9 +48,9 @@
       <el-col :span="1.5">
         <span class="classprice1">零售总金额:<span class="classprice2">{{ prices }}</span></span>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <span class="classprice1">总数量:<span class="classprice2">{{ prices }}</span></span>
-      </el-col>
+      </el-col> -->
       <!-- <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['phastorage:add']" plain icon="plus" @click="handleAdd">
           {{ $t('btn.add') }}
@@ -114,6 +114,12 @@
       </el-table-column>
       <el-table-column prop="drugQuality" label="药品性质" width="90" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('drugQuality')" />
+      <el-table-column prop="groupCode" label="批次号" width="88" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('groupCode')" />
+      <el-table-column prop="batchNo" label="批号" width="88" align="center" :show-overflow-tooltip="true"
+        v-if="columns.showColumn('batchNo')" />
+      <el-table-column prop="producerCode" label="生产厂家" align="center" :show-overflow-tooltip="false" width="120"
+        v-if="columns.showColumn('producerCode')" />
       <el-table-column prop="retailPrice" label="参考零售价" width="100" align="center"
         v-if="columns.showColumn('retailPrice')" />
       <el-table-column prop="wholesalePrice" width="180" label="参考批发价" align="center" :show-overflow-tooltip="true"
@@ -137,12 +143,7 @@
         v-if="columns.showColumn('placeCode')" />
       <el-table-column prop="dailtycheckFlag" label="日盘点标志" width="100" align="center" :show-overflow-tooltip="true"
         v-if="columns.showColumn('dailtycheckFlag')" />
-      <el-table-column prop="groupCode" label="批次号" width="88" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('groupCode')" />
-      <el-table-column prop="batchNo" label="批号" width="88" align="center" :show-overflow-tooltip="true"
-        v-if="columns.showColumn('batchNo')" />
-      <el-table-column prop="producerCode" label="生产厂家" align="center" :show-overflow-tooltip="false" width="120"
-        v-if="columns.showColumn('producerCode')" />
+
       <el-table-column label="操作" width="60">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" title="详情" @click="handlePreview(scope.row)"></el-button>

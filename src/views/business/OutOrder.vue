@@ -2675,15 +2675,6 @@ function Exports() {
     })
 }
 function FExports() {
-  // console.log(OutOrderids.value)
-
-  // const outOrderIds = OutOrderids.value; // 假设这是一个数组
-  // const queryString = outOrderIds.map(id => `parm=${id}`).join('&');
-  // console.log(queryString)
-
-  // // const url = `/business/OutOrder/Exports?${queryString}`;
-  // fextendss(queryString).then()
-
   proxy
     .$confirm("是否确认导出出库单?", "警告", {
       confirmButtonText: "确定",

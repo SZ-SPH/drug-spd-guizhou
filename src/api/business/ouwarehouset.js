@@ -12,6 +12,14 @@ export function listOuWarehouset(query) {
     params: query,
   })
 }
+export function DaylistOuWarehouset(query) {
+  return request({
+    url: 'business/OuWarehouset/Alldaylist',
+    method: 'get',
+    params: query,
+  })
+}
+
 
 export function aLLADDplanStock(query) {
   return request({

@@ -79,6 +79,15 @@
 </el-dropdown>
 </el-col> -->
       <el-col :span="1.5">
+        <span>
+          总购入金额：{{ DayOuWarehousetdataList.AllPurchasePrice }}
+        </span>
+        <span>
+          总零售金额：{{ DayOuWarehousetdataList.AllRetailPrice }}
+        </span>
+
+      </el-col>
+      <el-col :span="1.5">
         <el-button type="warning" plain icon="download" @click="OuWarehousethandleExport"
           v-hasPermi="['ouwarehouset:export']">
           {{ $t('btn.export') }}
@@ -655,7 +664,7 @@ import {
   listOuWarehouset,
   addOuWarehouset, delOuWarehouset,
   updateOuWarehouset, getOuWarehouset,
-  clearOuWarehouset,
+  clearOuWarehouset, DaylistOuWarehouset
 }
   from '@/api/business/ouwarehouset.js'
 import importData from '@/components/ImportData'
@@ -744,16 +753,20 @@ const OuWarehousetcolumns = ref([
 ])
 const OuWarehousettotal = ref(0)
 const OuWarehousetdataList = ref([])
+const DayOuWarehousetdataList = ref({
+  AllPurchasePrice: 0,
+  AllRetailPrice: 0,
+})
+
 const OuWarehousetqueryRef = ref()
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 // 创建时间时间范围
 const dateRangeOperDate = ref([])
 
-
 var OuWarehousetdictParams = [
 ]
 function OuWarehousetgetList() {
-  proxy.addDateRange(OuWarehousetqueryParams, dateRangeOperDate.value, 'OperDate');
+  proxy.addDateRange(OuWarehousetqueryParams, dateRangeOperDate.value, 'CreateTime');
   OuWarehousetloading.value = true
   listOuWarehouset(OuWarehousetqueryParams).then(res => {
     const { code, data } = res
@@ -762,6 +775,16 @@ function OuWarehousetgetList() {
       OuWarehousettotal.value = data.totalNum
       OuWarehousetloading.value = false
     }
+  })
+  DaylistOuWarehouset(OuWarehousetqueryParams).then(res => {
+    const { code, data } = res
+    if (code == 200) {
+      DayOuWarehousetdataList.value = {
+        AllPurchasePrice: data.allPurchasePrice,
+        AllRetailPrice: data.allRetailPrice
+      };
+    }
+    console.log(DayOuWarehousetdataList)
   })
 }
 
